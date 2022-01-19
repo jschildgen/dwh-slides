@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MDC - Exercise Sheet 4</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Modern Database Concepts - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 4 (2021-04-23)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: SQL/JSON</h1>
+    <p>For this exercise, please use PostgreSQL. Either install PostgreSQL on your PC, or connect to the university's PostgreSQL server (VPN necessary, host hera.hs-regensburg.de, username, password, and database: your student ID token (e.g., xyz12345)). I recommend using the universal database client DBeaver.</p>
+
+    <p>Please prepare your products table by executing the following SQL commands:</p>
+
+    <pre><code class="sql">CREATE TABLE products (id int primary key, description VARCHAR(100), price DECIMAL(18,2), details JSONB);
+
+INSERT INTO products VALUES (1, 'Piano', 3499.99, 
+'{"category":"instruments","color":"black", "manufacturer":{"company":"Yomoho","country":"Japan"},
+"keywords":["keys","jazz","classic"]}');
+
+INSERT INTO products VALUES (2, 'Christmas Songbook', 12.95, 
+'{"category":"sheet music","pages":74,"withCD":false,"manufacturer":{"company":"Huba Publishing","country":"Germany"},
+"keywords":["christmas", "classic"]}');
+
+INSERT INTO products VALUES (3, 'Violin', 3000, 
+'{"category":"instruments","manufacturer":{"company":"Cathy","country":"Australia"},
+"keywords":["strings","classic"]}');
+
+INSERT INTO products VALUES (4, 'Instrument Tuner', 7.95, 
+'{"category":"accessories","batteries":"included", "manufacturer": {"company":"Yomoho","country":"Japan"},
+"color":"black","keywords":[]}');
+
+INSERT INTO products VALUES (5, 'Funky Guitar 5', 29.95, 
+'{"category":"sheet music","pages":60,"withCD":true,"author": "Bobby Bobman", 
+"manufacturer": {"company":"Huba Publishing","country":"Germany"},"keywords":["guitar","funk","book"]}');
+
+INSERT INTO products VALUES (6, 'Trumpet', 899.00, 
+'{"category":"instruments","tune":"Bb", "manufacturer":{"company":"Yomoho","country":"Japan"},
+"keywords":["brass","jazz","classic"]}');
+</code></pre>
+<p>Write SQL queries to solve the following tasks.<br>Try to evaluate predicates directly on the JSON data (e.g., don't use <code>WHERE details->>'category' = 'sheet music'</code>, use the <code>@></code> operator instead).</p>
+<ol>
+    <li>Find all products of the category &quot;sheet music&quot;.</li>
+    <li>Find all products of manufacturers from Japan.</li>
+    <li>Find all products with the keyword &quot;classic&quot;</li>
+    <li>List all keywords and for each one, count how many products there are with this keyword.</li>
+    <li>Find all &quot;sheet music&quot; and &quot;instruments&quot; products. Only use one single WHERE condition (no OR, no UNION).</li>
+    <li>Find all &quot;sheet music&quot; products that include a CD. Only use one single WHERE condition (no AND).</li>
+    <li>Create a GIN index which can be used for queries like finding all black products, finding all products of the author Bobby Bobman, or finding all products with the keyword &quot;classic&quot;.</li>
+    <li>Create another index that only helps you finding all products that have a specific keyword.</li>
+    <li>Add a column <code>category VARCHAR(30)</code> to the table and for each product, store its category in that column.</li>
+    <li>You probably need to use a search engine for this one: Use an UPDATE command to remove the category field from all JSON documents.</li>
+</ol>
+<p>You can use <code>EXPLAIN SELECT ...</code> to check whether an index is used. But mind that for small datasets, PostgreSQL will not use the index at all. You can blow up your dataset with the following command. Execute it multiple times until your products table has more than 50,000 rows:</p>
+<pre><code class="sql">INSERT INTO products SELECT id+(SELECT count(*) FROM products), description, price, details FROM products;</code></pre>
+</section>
+
+    
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MDC - Exercise Sheet 3</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Modern Database Concepts - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 3 (2021-04-16)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Scalar data types in SQL</h1>
+
+    <p>Transform the following book entity type into a relational schema (<code>CREATE TABLE</code> commands) and do not use any user-defined types, compound types, and no XML or JSON. Please use PostgreSQL. Either install PostgreSQL on your PC, or connect to the university's PostgreSQL server (VPN necessary, host hera.hs-regensburg.de, username, password, and database: your student ID token (e.g., xyz12345)). I recommend using the universal database client DBeaver.</p>
+
+    <p>Please store the author positions so that you can later distinguish between the first author of a book, the second author and so on.</p>
+
+    <div style="height: 7cm; overflow: hidden; margin-left: -2.5cm">
+        <div class="erd">
+                [[
+                 { _e: "Book", pos: [150, 100],
+                  attributes: [
+                   { _a:"ISBN", options:["primary"], pos: [89, 13] },
+                   { _a:"Title", pos: [245, 13] },
+                   { _a:"Authors", options:["multi"], pos: [345, 130],
+                    attributes: [ { _a:"Firstname", pos: [435, 70] }, 
+                                  { _a:"Lastname", pos: [435, 200] }  ] }
+                    ]
+                }
+                  ], [
+                 
+                ]]
+                            </div></div>
+
+    <p>Write the following queries on your schema with SQL:</p>
+    <ol>
+        <li>Insert a new book with the ISBN 12345, &quot;Green Book&quot; by Susan Miller and Peter Miller. If you want, insert some more books.</li>
+        <li>Find all books from an author with last name Miller (do not show it multiple times when multiple authors match).</li>
+        <li>For each book, show its ISBN, title, the first author, and the number of authors.</li>
+        <li>Find the authors' firstnames and lastnames of the book with ISBN 12345.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Exercise 2: ARRAYs and User-defined Data Types</h1>
+    <p>Recreate the book table from exercise 1, but now create a user-defined type <code>AUTHOR_T</code> and use <code>AUTHOR_T ARRAY</code> as the column type for the <code>authors</code> column. Then, write the queries for the problems described in exercise 1 again for the new schema.</p>
+</section>
+
+<section>
+    <h1>Exercise 3: SQL/XML</h1>
+    <p>As a third modeling alternative, use PostgreSQL's <code>XML</code> datatype for the <code>authors</code> column. Then, rewrite the queries from exercise 1 on this new table.</p>
+</section>
+
+
+
+    
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

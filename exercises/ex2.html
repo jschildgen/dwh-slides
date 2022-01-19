@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MDC - Exercise Sheet 2</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Modern Database Concepts - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 2 (2021-04-09)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: JSONPath</h1>
+    <p>Under this URL, you find a dataset of 809 monsters from the computer game Pokémon:</p>
+    <p><a href="https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json">https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json</a></p>
+    <p>Copy this URL into the JSONpath Expression tester at <a href="https://jsonpath.curiousconcept.com">https://jsonpath.curiousconcept.com</a> and write JSONpath queries for the following:</p>
+    <ol>
+        <li>Find the english names of all monsters.</li>
+        <li>What's the english name of the monster with id 115?</li>
+        <li>What's the first type of the monster with the id 149?</li>
+        <li>Did you use <code>..</code> for query 1? If no, rewrite your query one and use <code>..</code></li>    
+    </ol>
+
+    <p><em>Do not try out to do more complex queries in JSONpath ;-) The language is very limited.</em></p>
+</section>
+
+<section>
+    <h1>Exercise 2: JSON</h1>
+    <!-- 
+        mongoimport pokedex.json --jsonArray
+        db.pokedex.aggregate( [ {"$unwind":"$type"}, { "$group": { _id:"$type", cnt:{"$sum":1} }}, {"$sort":{"cnt":-1}} ])
+        Water: 131
+    -->
+    <p>Write a program in a language of your choice that accesses the JSON data from exercise 1 and returns the most frequently occurring monster type. Hint: the least frequently occurring type is Ice (only 34 monsters).</p>
+</section>
+
+    
+</body>
+</html>

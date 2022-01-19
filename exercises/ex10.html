@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MDC - Exercise Sheet 10</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Modern Database Concepts - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 10 (2021-07-02)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Temporal Data</h1>
+    <p>For this exercise, you need to install MariaDB. Write SQL queries for the following problems:</p>
+    <ol>
+        <li>Create two application-time period tables <code>emp</code> (employees) and <code>dept</code> (departments) with the following columns:<br>
+            <code>emp(emp_no, name, salary, dept_no, valid_from, valid_until);</code><br>
+            <code>dept(dept_no, department, manager, valid_from, valid_until);</code><br><br>
+            
+            For both tables, define a date period over the latter two columns and include it in a unique constraint to avoid overlapping intervals for one employee/department.<br><br>
+
+            emp(dept_no) is a foreign key to dept(dept_no),<br>
+            dept(manager) is a foreign key to emp(emp_no).<br>
+            In both cases, the time periods are included in the foreign keys, but do not create the foreign-keys as they are currently not supported by MariaDB.</li>
+        <li>Insert Peter and Mary. Both work in the Finance department. Mary is the manager of that department. Her salary is 100,000. Peter earns 50,000. All this data is valid since the company was founded on 01.01.2021.</li>
+        <li>Between 01.03.2021 and 31.05.2021 (both dates included), Peter was the manager of the Finance department and his salary was 60,000</li>
+        <li>Exactly in the same time interval, Mary was not working for the company at all.</li>
+        <li>On the 01.04.2021 - as an April Fool's joke -, the Finance department was renamed to FiNaNaNaNance for one day.</li>
+        <li>Find all departments together with a history of the names of their manager and the manager's salary (department, name, salary, valid_from, valid_until).</li>
+        <li>How many days (including today) was Mary the manager of the Finance department?</li>
+        <li>Add system-versioned support to the two tables.</li>
+        <li>Insert another department, the Developers department. It will start operating on 01.01.2030. Peter will be working in this department from that day on and he then will be its manager.</li>
+        <li>The plans changed: Even if he will be the manager then, Peter will start working in the Developers department on 01.02.2030</li>
+        <li>Find out the original date Peter should start working for the Developers department.</li>
+    </ol> 
+
+    </section>
+    
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

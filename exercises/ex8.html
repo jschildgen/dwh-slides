@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MDC - Exercise Sheet 8</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Modern Database Concepts - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 8 (2021-06-18)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Recursive SQL Queries</h1>
+    <p>The schema and data for this exercise is based on the <a href="https://github.com/wflyer/silberschatz-6th-university-dataset" target="_blank">university database from the Database System Concepts book from Silberschatz et al.</a>. For each university course, we store which other courses are a prerequisite for it. For example, BIO-101 (Introduction to Biology) is required to participate in the course BIO-301 (Genetics).</p>
+
+    <pre><code>CREATE TABLE course (
+ course_id varchar(8) PRIMARY KEY,
+ title varchar(50),
+ dept_name varchar(20),
+ credits decimal(2,0)
+);
+
+INSERT INTO course VALUES ('BIO-101','Intro. to Biology','Biology',4),('BIO-301','Genetics','Biology',4),
+('BIO-399','Computational Biology','Biology',3),('CS-101','Intro. to Computer Science','Comp. Sci.',4),
+('CS-190','Game Design','Comp. Sci.',4),('CS-315','Robotics','Comp. Sci.',3),
+('CS-319','Image Processing','Comp. Sci.',3),('CS-347','Database System Concepts','Comp. Sci.',3),
+('EE-181','Intro. to Digital Systems','Comp. Sci.',3),('FIN-201','Investment Banking','Finance',3),
+('HIS-351','World History','History',3),('MU-199','Music Video Production','Music',3),
+('PHY-101','Physical Principles','Physics',4), ('BIO-302','Super Advanced Genetics','Biology',4),
+('BIO-999','Computational  Biology 2','Biology',4), ('EE-182','More Digital Systems','Comp. Sci.',4),
+('EE-183','Even More Digital Systems','Comp. Sci.',4),('CS-400','Soccer Robot Project','Comp. Sci.',3);
+
+CREATE TABLE prereq (
+ course_id varchar(8) REFERENCES course(course_id) ON DELETE CASCADE,
+ prereq_id varchar(8) REFERENCES course(course_id),
+ PRIMARY KEY (course_id,prereq_id)
+);
+
+INSERT INTO prereq VALUES ('BIO-301','BIO-101'),('BIO-399','BIO-101'),('CS-190','CS-101'),('CS-315','CS-101'),
+('CS-319','CS-101'),('CS-347','CS-101'),('EE-181','PHY-101'),('BIO-302','BIO-301'),('BIO-999','BIO-399'),
+('BIO-999','CS-319'),('EE-182','EE-181'),('EE-183','EE-182'),('CS-400','CS-190'),('CS-400','CS-315');</code></pre>
+
+
+      <ol>
+        <li>After creating the tables and inserting the data, please list all courses (course_id and title) that have BIO-101 as a direct prerequisite.</li>
+        <li>List all courses that do not have any prerequisites.</li>
+        <li>For each course, show its course_id and the number of courses that directly require it. Also show courses with no prerequisites. E.g., 2 courses have BIO-101 as a direct prerequisite, 0 courses have EE-183 as a prerequisite.</li>
+        <li>Compute the transitive closure of the prereq table. Example result row: ('EE-183', 'PHY-101') (22 rows in total)</li>
+        <li>For each course, show its course_id and the number of (direct or indirect) prerequisites. Here, it's ok to only show courses that actually have prerequisites. E.g., BIO-302 has 2 requisites (BIO-301 and indirectly also BIO-101).</li>
+        <li>Generate a string (with SQL!) that shows all paths from PHY-101 to EE-183. The output should be this one row: PHY-101 -> EE-181 -> EE-182 -> EE-183</li>
+      </ol>
+    </section> 
+    
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>
