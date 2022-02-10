@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -47,20 +47,61 @@
                 </section>
                 <section>
 								<h2>Lecture and Exercises</h2>
-								<div style="position: absolute; top: 120px; right:50px; font-size:230px"><!--<i class="fas fa-university green">--><i class="fab fa-youtube green"></i></div>
-                <h4>Lecture (starting 2022-03-XX)</h4>
+								<div style="position: absolute; top: 120px; right:50px; font-size:230px"><!--<i class="fab fa-youtube green">--><i class="fas fa-university green"></i></div>
+                <h4>Lecture (starting 2022-03-17)</h4>
                 <ul>
-                    <li>XXX, XX:XX (XXX)</li>
+                    <li>Thu, 13:45 (D003)</li>
                 </ul>
 								
 								<h3>&nbsp;</h3>
 
-								<h4 class="fragment" data-fragment-index="1">Exercises (starting 2022-03-XX)</h4>
+								<h4 class="fragment" data-fragment-index="1">Exercises (starting 2022-03-23)</h4>
                 <ul class="fragment" data-fragment-index="1">
                     <li>Weekly exercises sheets (published after lecture)</li>
 										<li>12 exercise sheets in total</li>
-                    <li>XXX, XX:XX - XX:XX (XXX)</li>
+                    <li>Wed, 8:15 - 9:45 (K007) or</li>
+										<li>Fri, 13:45 - 15:15 (K007) or</li>
+										<li>Mon, 13:45 - 15:15 (K007)</li>
                 </ul>
+								</section>
+
+								<section>
+									<!--<h3>Semester Calendar</h3>-->
+									<div class="columns" style="font-size: 17pt; margin-top: 2mm;">
+										<div style="text-align: center;">
+											<span data-calendar="2022-03-14"
+		data-calendar-red="17,24,31"
+		data-calendar-blue="23,25,28,30"></span>
+											<p></p>
+											<span data-calendar="2022-04-01"
+														data-calendar-red="7,21,28"
+														data-calendar-blue="1,4,6,8,11,20,22,25,27,29"></span>
+
+
+											<p></p>
+														<table style="border: 0;">
+															<tr><td class="sl-block-content red">Lecture</td></tr>
+															<tr><td class="sl-block-content blue">Exercise</td></tr>
+															</table>
+										</div>
+										<div style="text-align: center;">
+											<span data-calendar="2022-05-01"
+														data-calendar-red="5,12,19"
+														data-calendar-blue="2,4,6,9,11,13,16,18,20,23"></span>
+											
+														<p></p>
+
+											<span data-calendar="2022-06-01"
+														data-calendar-red="2,9,23,30"
+														data-calendar-blue="1,3,15,20,22,24,27,29"></span>
+
+														<p></p>
+
+											<span data-calendar="2022-07-01"
+														data-calendar-blue="1,4"></span>
+										</div>
+									</div>
+											
 								</section>
 								
                 <section>
@@ -74,49 +115,1237 @@
                 
                 <section>
                 <h2>Contents</h2>
-								<div class="columns">
+								<div class="columns small">
 									<div>
-										<h4>...</h4>
+										<h4>Data Warehouses</h4>
 										<ul>
-											<li></li>
-											<li></li>
-											<li></li>
-											<li></li>
-											<li></li>
+											<li>OLAP</li>
+											<li>Data Warehouse Architecture</li>
+											<li>Data Modelling</li>
+											<li>ETL: Extract, Transform, Load</li>
+											<li>Data Analytics, Business Intelligence</li>
 									</ul>
 									</div>
 									<div>
-										<h4>...</h4>
+										<h4>SQL</h4>
 										<ul>
-											<li></li>
-											<li></li>
-											<li></li>
-											<li></li>
-											<li></li>
+											<li><code>IMPORT</code></li>
+											<li><code>MERGE</code></li>
+											<li><code>GROUPING SETS</code></li>
+											<li>Window Functions (<code>OVER</code>)</li>
+											<li>Skyline Queries (<code>PREFERRING</code>)</li>
 									</ul>
 									</div>
 								</div>	
 								</section>
 
 								<section>
-									<h2>Relational Databases</h2>
-									<p class="small fragment">Oracle, MySQL, Microsoft SQL Server, PostgreSQL, IBM Db2, SQLite, MariaDB, ...</p>
-									<table class="small" style="margin-left: 0cm;">
-										<thead><tr><th>product_id</th><th>description</th><th>price</th></tr></thead>
-										<tbody>
-											<tr><td>17</td><td>chocolate bar</td><td>0.89</td></tr> 
-											<tr><td>29</td><td>dishwasher tabs</td><td>3.99</td></tr>  
-										</tbody>
-									</table>
+									<h2>OLTP vs. OLAP</h2>
+									<h4>OLTP (OnLine Transaction Processing)</h4>
+									<ul class="small">
+										<li>simple queries with short response time (<code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, ...)</li>
+										<li>small transactions</li>
+										<li>high concurrency (many users)</li>
+									</ul>
+									<pre class="fragment"><code class="sql">SELECT description, price FROM products WHERE product_no = 88;</code></pre>
+									<pre class="fragment"><code class="sql">SELECT P.description, AVG(R.rating)
+FROM products P JOIN ratings R ON P.product_no = R.product_no 
+WHERE P.product_no = 88;</code></pre>
+<pre class="fragment"><code class="sql">INSERT INTO orders(order_id, customer_id) VALUES (101, 5);
+INSERT INTO orders_positions(order_id, product_no, amount) 
+       VALUES (101, 88, 1);
+COMMIT;</code></pre>
+									<aside class="notes">In OLTP applications, very many short and simple transactions read and write large amounts of data.</aside>
+							</section>
 
-									<img src="img/1/postgres.png" class="noborder" style="position: absolute; width: 5cm; right: 1cm; top: 4cm">
-								</section>
+							<section>
+									<h2>OLTP vs. OLAP</h2>
+									<h4>OLAP (OnLine Analytical Processing)</h4>
+									<p>Data Analytics<br>typically within a Data Warehouse</p>
+									<pre class="fragment" style="width:520px; left: -180px"><code class="nohighlight">For each category, which products in 
+that category generated the most 
+sales in the past month.</code></pre>
+									<aside class="notes">A data warehous is separated from the operational data. In regular time intervals (e.g. once per hour), changes from the operational DB are loaded into the data warehouse. There, complex analytical queries are running without disturbing the main workload on the operational DB.</aside>
+									<div id="db_dw">
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 763px; top: 321px;" data-block-id="0ffd60d8ef7c0655a2207bf39ace9269">
+											<div class="sl-block-content" data-line-x1="181" data-line-y1="247" data-line-x2="180" data-line-y2="142" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 12;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="105" viewBox="180 142 1 105">
+															<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="181" y1="235" x2="180" y2="142"></line>
+															<line stroke="#000000" stroke-width="8" x1="181" y1="235" x2="180" y2="142"></line>
+															<polygon fill="#000000" transform="translate(181,235) rotate(-0.546)" points="0,12 12,-12 -12,-12"></polygon>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 642px; top: 443px;" data-block-id="5eb402c85d0bf51f357b1ab04c0b5c46">
+											<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgba(66, 169, 170, 0.99)" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+															<rect width="245" height="59" rx="0" ry="0" class="shape-element" fill="rgba(66, 169, 170, 0.99)"></rect>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 642px; top: 420px;" data-block-id="8d92f1556e87a3d9012d543fdee4648d">
+											<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgba(66, 169, 170, 0.99)" data-shape-stretch="true" style="z-index: 15;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+															<defs>
+																	<clipPath id="shape-mask-8-1569441259701">
+																			<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+																	</clipPath>
+															</defs>
+															<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-8-1569441259701)" class="green shape-element" fill="rgba(66, 169, 170, 0.99)" stroke="#000000" stroke-width="10"></ellipse>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 642px; top: 480px;" data-block-id="9ee594f2fd24ec216af987d3437654f5">
+											<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgba(66, 169, 170, 0.99)" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+															<defs>
+																	<clipPath id="shape-mask-9-1569441259706">
+																			<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+																	</clipPath>
+															</defs>
+															<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-9-1569441259706)" class="green shape-element" fill="rgba(66, 169, 170, 0.99)" stroke="#000000" stroke-width="10"></ellipse>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 642px; top: 443px;" data-block-id="ec78cd31f59bdcdc404c72b0dde9d906">
+											<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 17;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+															<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+															<line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 886px; top: 443px;" data-block-id="9ecea33e0c1cf76e5e5eca1d2e4c00dd">
+											<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 19;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+															<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+															<line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 645px; top: 463px;" data-block-id="094fb404adcde088c09cacc310cc8557">
+											<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22;">
+													<p class="" style="text-align: center;">DW</p>
+											</div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 642px; top: 239px;" data-block-id="e98c758c658a2d4d5783a48e5ea1349f">
+											<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 24;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+															<rect width="245" height="59" rx="0" ry="0" class="green shape-element" fill="#5473b9"></rect>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 642px; top: 216px;" data-block-id="851c1924a61c3a68fbb0f0e37b4446b6">
+											<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 25;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+															<defs>
+																	<clipPath id="shape-mask-11-1569441277383">
+																			<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+																	</clipPath>
+															</defs>
+															<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-11-1569441277383)" class="green shape-element" fill="#5473b9" stroke="#000000" stroke-width="10"></ellipse>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 642px; top: 276px;" data-block-id="b23cf59b5dc4fbb19fb81ba69d9c7044">
+											<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 23;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+															<defs>
+																	<clipPath id="shape-mask-12-1569441277388">
+																			<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+																	</clipPath>
+															</defs>
+															<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-12-1569441277388)" class="green shape-element" fill="#5473b9" stroke="#000000" stroke-width="10"></ellipse>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 642px; top: 239px;" data-block-id="1878b4a64c9b7b2cecf2004b71973a41">
+											<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 26;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+															<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+															<line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 886px; top: 239px;" data-block-id="d20b212beb288a0733a58b2c31093af0">
+											<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 27;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+															<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+															<line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 735px; top: 259px;" data-block-id="c915b5aefb0e1a4336939d88588a5541">
+											<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+													<p>DB</p>
+											</div>
+									</div>
+									</div>
+							</section>
+
+							<section>
+								<h2>Why a separate system?</h2>
+								<table style="width: 16cm; margin-left: 5mm;" class="small">
+									<tr><th>Operational DB</th><th style="width: 7.6cm;">Data Warehouse</th></tr>
+									<tr class="fragment">
+										<td>optimized for OLTP</td>
+										<td>optimized for OLAP</td>
+									</tr>
+									<tr class="fragment">
+										<td>focus on current data</td>
+										<td>+ historical data</td>
+									</tr>
+									<tr class="fragment">
+										<td>redundance-free (3NF)</td>
+										<td>often denormalized</td>
+									</tr>
+									<tr class="fragment">
+										<td>detailed data</td>
+										<td>+ pre-aggregated data</td>
+									</tr>
+									<tr class="fragment">
+										<td>typically &lt; 1TB</td>
+										<td>often &gt; 1TB</td>
+									</tr>
+									<tr class="fragment">
+										<td>updates and queries</td>
+										<td>only queries</td>
+									</tr>
+									<tr class="fragment">
+										<td>few records read/written per operation</td>
+										<td>many records read<br>per operation</td>
+									</tr>
+									<tr>
+										<td><img src="img/1/postgres.png" class="noborder" style="height:1cm">
+											<img src="img/1/mariadb.png" class="noborder" style="height:1cm"><br>
+											<img src="img/1/oracle.png" class="noborder" style="height:5mm; margin-top:0mm"> <span style="top: -5mm; position: relative;";>...</span></td>
+											<td>
+												<img src="img/1/sap_hana.jpg" class="noborder" style="height:8mm">
+											<img src="img/1/exasol.png" class="noborder" style="height:8mm"><br>
+											<img src="img/1/oracle.png" class="noborder" style="height:5mm; margin-top:0mm"> <span style="top: -5mm; position: relative;";>...</span>
+											</td>
+									</tr>
+								</table>
+								<div data-clone="db_dw"></div>
+							</section>
+
+							<section>
+								<h2>Data Warehouse</h2>
+								<p class="small">A Data Warehouse is a physical database which allows an integrated view to arbitrary data for analysing them.</p>
+
+								<ul class="small">
+									<li>One large repository for the entire company</li>
+									<li>Dedicated hard- and software</li>
+								</ul>
+
+								<p></p>
+
+								<h4>Definition by Bill Inmon</h4>
+								<p class="small">A Data Warehouse is a <b>subject-oriented</b>, <b>integrated</b>, <b>non-volatile</b>, and <b>time-variant</b> collection of data in support of management decisions </p>
+							</section>
+
+							<section>
+								<h3>Date Warehouse: Properties</h3>
+								<h4>subject-orientation</h4>
+								<p class="small">Not for one single purpose. One DW for the whole company.<br>
+									<b>Subjects</b>: customers, products, activities, sales</p>
+
+								<div class="fragment">
+								<h4>integration</h4>
+								<div class="columns">
+									<div><img src="img/1/mariadb.png" class="noborder" style="height:1cm">
+									<br><span style="margin-left: 3cm;">&searrow;</span></div>
+									<div><img src="img/1/mongodb.png" class="noborder" style="height:1cm">
+										<br><span style="margin-left: 2cm;">&downarrow;</span></div>
+									<div><img src="img/1/oracle.png" class="noborder" style="height:5mm; margin-top: 6mm;">
+										<br><span style="margin-left: -3cm;">&swarrow;</span></div>
+								</div>
+								<div>
+									<img src="img/1/exasol.png" class="noborder" style="height:1cm">
+								</div>
+
+								<p class="small fragment"><b>Challenges:</b> Data Cleaning, information integration, overcoming heterogeneity.</p>
+							</div>
+								<aside class="notes">In a typical data warehouse, data is integrated from multiple input sources.</aside>
+							</section>
+
+							<section>
+								<h3>Date Warehouse: Properties</h3>
+								<h4>non-volatile</h4>
+								<p class="small">Typically, data in a data warehouse is not updated.<br>
+								&Rightarrow; stable and persistent data base.</p>
+
+								<div style="top: -8.5cm; position: relative;">
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 240px; top: 372px;" data-block-id="ab338c59d07e4db820787ff3535ddac1">
+									<div class="sl-block-content" data-line-x1="123" data-line-y1="0" data-line-x2="0" data-line-y2="2" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 11;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="123" height="2" viewBox="0 0 123 2">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<polygon fill="#000000" transform="translate(111.00158604283008,0.1950961619052019) rotate(269.068)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="green sl-block" data-block-type="shape" style="width: 245px; height: 59px; left: 362px; top: 345px;" data-block-id="90cecb86e189ac4cdfe684a0575917c1">
+									<div class="sl-block-content" data-shape-type="rect"  data-shape-stretch="true" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+													<rect width="245" height="59" rx="0" ry="0" class="shape-element green" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 362px; top: 322px;" data-block-id="ffd5631c2ce396bc68a688274474beae">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 13;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-4-1644327233950">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element green" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-4-1644327233950)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 362px; top: 382px;" data-block-id="b7dd4e1d0691670d925384d10c541b58">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-3-1644327233948">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-3-1644327233948)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 362px; top: 345px;" data-block-id="28a046a88a4670a4959257943ea71184">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 606px; top: 345px;" data-block-id="c5d1e0f77578e32ac86e4c1931865592">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 244px; left: 362px; top: 365px;" data-block-id="04eb157002cc5889d4106064bf90753b">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16;">
+											<p style="text-align: center;">DW</p>
+									</div>
+							</div>							
+							
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 240px; top: 349.5px;" data-block-id="db5eefa0b31b73cf747c3815bc188b57" data-name="line-87c013">
+									<div class="sl-block-content" data-line-x1="123" data-line-y1="0" data-line-x2="0" data-line-y2="2" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 17;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="123" height="2" viewBox="0 0 123 2">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<polygon fill="#000000" transform="translate(111.00158604283008,0.1950961619052019) rotate(269.068)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 240px; top: 396px;" data-block-id="ad41aa3d996e91b17b98f963f79b7894" data-name="line-1f18a5">
+									<div class="sl-block-content" data-line-x1="123" data-line-y1="0" data-line-x2="0" data-line-y2="2" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 18;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="123" height="2" viewBox="0 0 123 2">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="111.00158604283008" y1="0.1950961619052019" x2="0" y2="2"></line>
+													<polygon fill="#000000" transform="translate(111.00158604283008,0.1950961619052019) rotate(269.068)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 607px; top: 322px;" data-block-id="7f2d8706b6392b28a9653a157612555c" data-name="line-eb524e">
+									<div class="sl-block-content" data-line-x1="92" data-line-y1="0" data-line-x2="0" data-line-y2="31.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 19;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="92" height="31.5" viewBox="0 0 92 31.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="80.64702711222233" y1="3.8871591952716993" x2="0" y2="31.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="80.64702711222233" y1="3.8871591952716993" x2="0" y2="31.5"></line>
+													<polygon fill="#000000" transform="translate(80.64702711222233,3.8871591952716993) rotate(251.099)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 607px; top: 353.5px;" data-block-id="0c7fb41edcb0752950a24294e3676553" data-name="line-f51112">
+									<div class="sl-block-content" data-line-x1="92" data-line-y1="0" data-line-x2="0" data-line-y2="23" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 20;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="92" height="23" viewBox="0 0 92 23">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="80.35828999825603" y1="2.910427500435995" x2="0" y2="23"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="80.35828999825603" y1="2.910427500435995" x2="0" y2="23"></line>
+													<polygon fill="#000000" transform="translate(80.35828999825603,2.910427500435995) rotate(255.964)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 607px; top: 395px;" data-block-id="5b6dc405a25e576b1002b3991ea647a4" data-name="line-6c8ef3">
+									<div class="sl-block-content" data-line-x1="93" data-line-y1="0.5" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 21;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="93" height="1" viewBox="0 0 93 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="81.00017342669472" y1="0.43548480336932643" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="81.00017342669472" y1="0.43548480336932643" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(81.00017342669472,0.43548480336932643) rotate(-89.692)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 606px; top: 404.5px;" data-block-id="80ac8072fb8a1450879bb49df4caf367" data-name="line-8dbad8">
+									<div class="sl-block-content" data-line-x1="93" data-line-y1="31.5" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 22;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="93" height="31.5" viewBox="0 0 93 31.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="81.63426509246625" y1="27.65031559583534" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="81.63426509246625" y1="27.65031559583534" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(81.63426509246625,27.65031559583534) rotate(-71.288)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" data-name="text-95b1bd" data-block-id="786277023af9755d615e14f310f27bf7" style="height: auto; width: 151px; left: 165px; top: 355px;">
+								<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10;">
+										<p class="small">Load</p>
+								</div>
+						</div>
+						<div class="sl-block" data-block-type="text" data-name="text-95b1bd" data-block-id="786277023af9755d615e14f310f27bf7" style="height: auto; width: 151px; left: 705px; top: 355px;">
+							<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10;">
+									<p class="small">Access</p>
+							</div>
+					</div>
+				</div>
+
+							<div class="fragment" style="margin-top: 4cm;">
+								<h4>time-variant</h4>
+								<p class="small">Historical snapshots of the data with time references.</p>
+								<span data-sql-query="select * from products where pnr=17"></span>
+							</div>					
+
+							<aside class="notes">Non-valatile and time-variant storage allows for comparisons with the past.</aside>
+						</section>
+
+							<section>
+								<h3>Hardware</h3>
+								<h4>Example: Oracle Exadata X5-8</h4>
+								<div style="position: absolute; top: 140px; right:10px; font-size:230px"><img src="img/1/oracle_exadata.jpg" class="noborder" style="width:3cm"/></div>
+								<ul class="small">
+									<li>Up to 576 CPU cores and up to 24 TB of memory per rack</li>
+									<li>180 TB Exadata Smart Flash Cache</li>
+									<li>up to 1344 TB per rack raw disk capacity (508 TB usable)</li>
+									<li>InfiniBand 40 Gb/s interconnect</li>
+									<li>data load rate: 21 TB/h</li>
+								</ul>
+								<div class="poll fragment fade-in-then-out" style="bottom:-260px" data-fragment-index="1">
+									<h1>Guess the price of a full-rack Oracle Exadata X5 machine!</h1>
+											<ul>
+													<li>&gt; 10,000 USD</li>
+													<li>&gt; 50,000 USD</li>
+													<li>&gt; 100,000 USD</li>
+													<li data-poll="correct">&gt; 1 Million USD</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+							</div>
+							</section>
+
+							<section>
+								<h3>Full Data Warehouse Architecture</h3>
+
+								<p class="small">
+									<span style="margin-left: 1cm">Data Sources</span>
+									<span style="margin-left: 1.2cm">Staging Area</span>
+									<span style="margin-left: 1.4cm">Data Warehouse</span>
+									<span style="margin-left: 1.9cm">Data Marts</span>
+									<span style="margin-left: 0.8cm">Users</span>
+								</p>
+								<div style="position: absolute; top:-18mm">
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 214px; top: 261px;" data-block-id="c7be16372214d632a7a1989fd80a2174">
+									<div class="sl-block-content" data-line-x1="56" data-line-y1="75" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 11;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="75" viewBox="0 0 56 75">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="48.82052921018381" y1="65.3846373350676" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="48.82052921018381" y1="65.3846373350676" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(48.82052921018381,65.3846373350676) rotate(-36.747)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 245px; height: 221px; left: 421px; top: 269px;" data-block-id="68ef82528a82f3e4a5296c22316ea9c8">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 221">
+													<rect width="245" height="221" rx="0" ry="0" class="green shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 421px; top: 246px;" data-block-id="7e251f4d210b766e0b3467ad33be1642">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 13;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-4-1644401704842">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-4-1644401704842)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 421px; top: 467.5px;" data-block-id="aa5bc4a11ac016fd8086c6050257f039">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-3-1644401704833">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-3-1644401704833)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 421px; top: 269px;" data-block-id="b19bc7df5f8bfc308cf28c92f8e3abcc">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="221" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="221" viewBox="0 0 1 221">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="221.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="221.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 665px; top: 269px;" data-block-id="2d13cb1d24318a6c446164ef944237b7">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="221" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="221" viewBox="0 0 1 221">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="221.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="221.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 150px; left: 441px; top: 311.5px;" data-block-id="d8ebc9738a867b82fe87df198d963b24">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; border-style: solid; border-width: 1px;">
+										<p class="small" style="text-align: center;">Metadata</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 59px; left: 22px; top: 233px;" data-block-id="62831a223fc9663eb8291e08d2a9078c">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 59">
+													<rect width="181" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 45px; left: 22px; top: 210px;" data-block-id="53710739ba00760ac0f189bdc393312b">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 19;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 45">
+													<defs>
+															<clipPath id="shape-mask-2-1644401704792">
+																	<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-2-1644401704792)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 45px; left: 22px; top: 270px;" data-block-id="bea431d6fc82fe91d094fdee03192c86">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 17;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 45">
+													<defs>
+															<clipPath id="shape-mask-1-1644401704784">
+																	<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-1-1644401704784)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 22px; top: 233px;" data-block-id="b64c3c3591947c99ef094f59f92f4642">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 202px; top: 232.5px;" data-block-id="08120727b2745bb5c606143296bbd544">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="60" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 21;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="60" viewBox="0 0 1 60">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="60.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="60.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 180px; left: 22px; top: 253px;" data-block-id="98676b905cbb94e71bbafe91b726811a">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22;">
+											<p class="small" style="text-align: center;">Operat. DB</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 214px; top: 381px;" data-block-id="1fe4ed75496fec1f42d33791ee759cb8" data-name="line-232af1">
+									<div class="sl-block-content" data-line-x1="56" data-line-y1="0" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 23;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="1" viewBox="0 0 56 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="44" y1="0" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="44" y1="0" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(44,0) rotate(270)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 214px; top: 426px;" data-block-id="c0700fae521556f67f40d2175d73dac0" data-name="line-ad7a89">
+									<div class="sl-block-content" data-line-x1="56" data-line-y1="0" data-line-x2="0" data-line-y2="64" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 24;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="64" viewBox="0 0 56 64">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="48.09794470557778" y1="9.030920336482534" x2="0" y2="64"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="48.09794470557778" y1="9.030920336482534" x2="0" y2="64"></line>
+													<polygon fill="#000000" transform="translate(48.09794470557778,9.030920336482534) rotate(221.186)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 279px; top: 355px;" data-block-id="27d6e6baccb2bbebe35db70f2719b3ab" data-name="shape-2e634f">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 26;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 279px; top: 332px;" data-block-id="3754e1846d47f16e3b2d5b2d06e26ccc" data-name="shape-6e819e">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 28;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-11-1644401786442">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-11-1644401786442)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 279px; top: 400px;" data-block-id="1e8bd6a151c3da513238c7e66436891d" data-name="shape-d22de1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 25;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-12-1644401786448">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-12-1644401786448)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 279px; top: 356px;" data-block-id="7f861fadce30ab621c541f923534c34f" data-name="line-0ad3bb">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 50;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 352px; top: 358.25px;" data-block-id="62801ee750c4baa712a8ca4c997b50ea" data-name="line-b8c8e0">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 27;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 356px; top: 382.5px;" data-block-id="3d78c935fd7771107f1f5d0ccfc77e4a" data-name="line-39ffc3">
+									<div class="sl-block-content" data-line-x1="56" data-line-y1="0" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 29;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="1" viewBox="0 0 56 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="44" y1="0" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="44" y1="0" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(44,0) rotate(270)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 150px; left: 499px; top: 376.25px;" data-block-id="add444226ccda2c53143499f39764570" data-name="text-418b36">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 30; border-style: solid; border-width: 1px;">
+											<p class="small" style="text-align: center;">Raw Data</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 212px; left: 437px; top: 437.5px;" data-block-id="519f6aff8fb02b7aab7be5d1b1a84600" data-name="text-5c4a51">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 31; border-style: solid; border-width: 1px;">
+										<p class="small" style="text-align: center;">Summary Data</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 298.5px;" data-block-id="d2262cacc5487579950270f99fa2535f" data-name="line-a6faa8">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="0" data-line-x2="0" data-line-y2="32.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 32;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="32.5" viewBox="0 0 47 32.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<polygon fill="#000000" transform="translate(37.129915178594096,6.825058653099826) rotate(235.337)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 431px;" data-block-id="f901ea22f94168741815bbce14f0f3ff" data-name="line-e8bc06">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="36.5" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 33;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="36.5" viewBox="0 0 47 36.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="37.52234686589225" y1="29.139694906490792" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="37.52234686589225" y1="29.139694906490792" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(37.52234686589225,29.139694906490792) rotate(-52.167)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 298.5px;" data-block-id="2e0650537e402c72d7346293bee61560" data-name="line-742f8f">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="0" data-line-x2="0" data-line-y2="32.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 34;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="32.5" viewBox="0 0 47 32.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<polygon fill="#000000" transform="translate(37.129915178594096,6.825058653099826) rotate(235.337)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 385px;" data-block-id="78754e7c9690319ea673dab02846e70f" data-name="line-353b52">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="0" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 35;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="1" viewBox="0 0 47 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="35" y1="0" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="35" y1="0" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(35,0) rotate(270)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 298.5px;" data-block-id="d9b98275c0470d72b172f5afc0305633" data-name="line-7ed92c">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="0" data-line-x2="0" data-line-y2="32.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 36;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="32.5" viewBox="0 0 47 32.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<polygon fill="#000000" transform="translate(37.129915178594096,6.825058653099826) rotate(235.337)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 279px; top: 355px;" data-block-id="7d5877787e0c157cb8b5cec6528d5ceb" data-name="shape-c9e274">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 38;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 279px; top: 332px;" data-block-id="33d75a48b1b217adb289af07db7e8e1d" data-name="shape-c1a22a">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 40;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-13-1644402043731">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-13-1644402043731)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 279px; top: 400px;" data-block-id="9bed7a0406456e44cc64b59fc4873cc9" data-name="shape-9dfcaa">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 37;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-14-1644402043737">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-14-1644402043737)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 352px; top: 358.25px;" data-block-id="d53dfe6acf1c15efb4a8d6e3d3732ed1" data-name="line-f033f8">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 39;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 356px; top: 382.5px;" data-block-id="b9ccb4be318a0de34ea954206840c6c1" data-name="line-da1df4">
+									<div class="sl-block-content" data-line-x1="56" data-line-y1="0" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 41;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="1" viewBox="0 0 56 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="44" y1="0" x2="0" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="44" y1="0" x2="0" y2="0"></line>
+													<polygon fill="#000000" transform="translate(44,0) rotate(270)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 279px; top: 355px;" data-block-id="90aba6d70c7421470e92cab0b413e0ef" data-name="shape-94d88f">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 43;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 279px; top: 332px;" data-block-id="c742491ee24734f1501403f6947ca5c8" data-name="shape-9c94c1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 45;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-19-1644402079473">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-19-1644402079473)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 279px; top: 400px;" data-block-id="34bf20dddb7e5e56c4f353caa799c586" data-name="shape-a64be5">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 42;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-20-1644402079480">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-20-1644402079480)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 352px; top: 358.25px;" data-block-id="8f46c450d1c6629d3b244b6ab3225033" data-name="line-9e0f6c">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 44;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 279px; top: 355px;" data-block-id="9126073b385a6e238d96717ae4c105c6" data-name="shape-b753ed">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 47;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="yellow shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 279px; top: 332px;" data-block-id="511805b919d3e225330e82839b7bf9e6" data-name="shape-1d048d">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 49;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-21-1644402079498">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="yellow shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-21-1644402079498)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 279px; top: 400px;" data-block-id="aff305f76ee621a71b5950e896d9ed59" data-name="shape-279366">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 46;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-22-1644402079505">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="yellow shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-22-1644402079505)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 352px; top: 358.25px;" data-block-id="6fbac79da6e598b983ec8e72e13a621b" data-name="line-08ebbd">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 48;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 256px;" data-block-id="efbb723cd8943a0758175a4f20914a84" data-name="shape-b773a2">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 52;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 233px;" data-block-id="b432b5dedd325ec08050b37f3aeac111" data-name="shape-0019e1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 54;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-31-1644402105362">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-31-1644402105362)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 301px;" data-block-id="5105cda314a50bb1d9a41c976446f6e6" data-name="shape-29d908">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 51;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-32-1644402105367">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-32-1644402105367)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 740px; top: 257px;" data-block-id="f56359d204347b080a850e008362781b" data-name="line-9284a7">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 67;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 259.25px;" data-block-id="fad888b3461e33ad469c5dd171296ef2" data-name="line-f1c3e0">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 53;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 256px;" data-block-id="c85b542afc3e412ad1b9aadc2dc53d2a" data-name="shape-4fb7e9">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 56;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 233px;" data-block-id="989a804a86c0e7adf291669c2e122e00" data-name="shape-1f2d3b">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 58;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-33-1644402105389">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-33-1644402105389)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 301px;" data-block-id="15a0073e4ee7d423b5adbd835225a930" data-name="shape-4f04f7">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 55;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-34-1644402105394">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-34-1644402105394)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 259.25px;" data-block-id="888168f83851044c6b26b0bba37bd0d5" data-name="line-7dfdf8">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 57;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 256px;" data-block-id="d4d1bb7adcb528b3e33a6e7b053f0458" data-name="shape-f2a4e8">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 60;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 233px;" data-block-id="c97e3a6cb057d729b4a745dd77ebfc41" data-name="shape-a3d9e1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 62;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-35-1644402105413">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-35-1644402105413)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 301px;" data-block-id="50953771fa478cb71f657f9d41adb4e5" data-name="shape-9071a1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 59;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-36-1644402105418">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-36-1644402105418)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 259.25px;" data-block-id="53d7b1db49e5d45434b714a6020c829b" data-name="line-96e0d2">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 61;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 256px;" data-block-id="aa41358d6ce03ba98cdf418560431a5f" data-name="shape-bbcd53">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 64;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="red shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 233px;" data-block-id="6ab6b3b5a7cbd722621e04669c4095bb" data-name="shape-2cc8cf">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 66;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-37-1644402105432">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="red shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-37-1644402105432)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 301px;" data-block-id="b2ed9e9a475108f873e6644469d1482a" data-name="shape-4faa3b">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 63;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-38-1644402105437">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="red shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-38-1644402105437)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 259.25px;" data-block-id="fad1af50a7692d1b9cae37c0216b3d43" data-name="line-9755ef">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 65;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 362.5px;" data-block-id="539e7fe0d25d4ba6fff26be55b811949" data-name="shape-b4494a">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 69;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 339.5px;" data-block-id="d850a09e82342c7821586b3b287c666a" data-name="shape-053460">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 71;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-39-1644402124265">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-39-1644402124265)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 407.5px;" data-block-id="be6711e7831a217eb5662243f4165e35" data-name="shape-16bfd3">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 68;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-40-1644402124274">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-40-1644402124274)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 740px; top: 363.5px;" data-block-id="13ffb7aadd94f2145fb836952be2d6e4" data-name="line-d683ad">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 84;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 365.75px;" data-block-id="78f5400d2ae44f16fa4d77fdeff55ee0" data-name="line-433b00">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 70;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 362.5px;" data-block-id="c644e648d50666f5e8d4bcc230e8417d" data-name="shape-431028">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 73;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 339.5px;" data-block-id="de98326d769dc2ff135be1b377196a11" data-name="shape-5d45d4">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 75;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-41-1644402124306">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-41-1644402124306)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 407.5px;" data-block-id="d414e064a09022d25b6ddc8f3593fd7e" data-name="shape-4d16d1">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 72;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-42-1644402124315">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-42-1644402124315)"></ellipse>
+											</svg></div>
+							</div>
+							
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 362.5px;" data-block-id="b2004c90bea994e09c53d9022dc40ebb" data-name="shape-90f37b">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 81;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="red shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 339.5px;" data-block-id="0b0a3da15a3722cdde284b702dd39134" data-name="shape-386198">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 83;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-45-1644402124372">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="red shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-45-1644402124372)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 407.5px;" data-block-id="40c185f5c7cbb06334578a2674f22076" data-name="shape-57af4b">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 80;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-46-1644402124377">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="red shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-46-1644402124377)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 365.75px;" data-block-id="853a96f04dba759301a3f62378ae8ef7" data-name="line-434b71">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 82;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 740px; top: 468.5px;" data-block-id="7bdabe8060b3a599316085a5efebc805" data-name="line-6d76a6">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 101;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 470.75px;" data-block-id="65e178c6520689828b78bf3ae7327007" data-name="line-6f5aec">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 87;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 59px; left: 740px; top: 467.5px;" data-block-id="bfeba2b8082f11dbe119c0fad70d9235" data-name="shape-897dc0">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 98;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 59">
+													<rect width="74" height="59" rx="0" ry="0" class="red shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 52.5px; left: 740px; top: 444.5px;" data-block-id="61f5e1e88d29769643db927c74dda675" data-name="shape-8c5579">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 100;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 53">
+													<defs>
+															<clipPath id="shape-mask-53-1644402126762">
+																	<ellipse rx="37" ry="26.25" cx="37" cy="26.25" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="26.25" cx="37" cy="26.25" class="red shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-53-1644402126762)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 74px; height: 30px; left: 740px; top: 512.5px;" data-block-id="57ed1e759337e558fe97ac92b3f30065" data-name="shape-00967b">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 97;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 74 30">
+													<defs>
+															<clipPath id="shape-mask-54-1644402126768">
+																	<ellipse rx="37" ry="15" cx="37" cy="15" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="37" ry="15" cx="37" cy="15" class="red shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-54-1644402126768)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 813px; top: 470.75px;" data-block-id="6a6242c60dbc629fc1a7ddf73af9b1f0" data-name="line-0c4a97">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="59" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 99;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="0 0 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="59.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 59px; left: 22px; top: 347.75px;" data-block-id="7722c6722efeda0245847595f643b28e" data-name="shape-10119f">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 103;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 59">
+													<rect width="181" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 45px; left: 22px; top: 324.75px;" data-block-id="005eeb5371ac8d04779f3fbcd0618352" data-name="shape-fbffe0">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 104;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 45">
+													<defs>
+															<clipPath id="shape-mask-55-1644402235047">
+																	<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-55-1644402235047)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 181px; height: 45px; left: 22px; top: 384.75px;" data-block-id="9d65f12099b8ccec650f7f1195caf89d" data-name="shape-6d9b2c">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 102;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 181 45">
+													<defs>
+															<clipPath id="shape-mask-56-1644402235052">
+																	<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="90.5" ry="22.5" cx="90.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-56-1644402235052)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 22px; top: 347.75px;" data-block-id="6bd104b8a918c80471cf55ac57ddaa95" data-name="line-72f226">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 105;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 202px; top: 347.25px;" data-block-id="3110a0e6105945c3b609fc1ff5d2cf0d" data-name="line-802a9b">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="60" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 106;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="60" viewBox="0 0 1 60">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="60.5" x2="0.5" y2="0.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="0.5" y1="60.5" x2="0.5" y2="0.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 180px; left: 22px; top: 367.75px;" data-block-id="2dfb009f08f59aef6aa703a3ab4f9172" data-name="text-df9cce">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 107;">
+											<p class="small" style="text-align: center;">Operat. DB</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 180px; left: 22px; top: 480.5px;" data-block-id="68606c7d356e44798e9e53fba9afa1fa" data-name="text-af360b">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 113;">
+											<p class="small" style="text-align: center;"><i class="fas fa-file blue"></i> <i class="fas fa-file blue"></i> Flat files</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 829px; top: 388.5px;" data-block-id="8540412f9872479806315e58698f4b90" data-name="line-5371d7">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="34" data-line-y2="101.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 114;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="34" height="101.5" viewBox="0 0 34 101.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3.811544690802529" y1="11.378581944601668" x2="34" y2="101.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="3.811544690802529" y1="11.378581944601668" x2="34" y2="101.5"></line>
+													<polygon fill="#000000" transform="translate(3.811544690802529,11.378581944601668) rotate(161.48)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 298.5px;" data-block-id="c05404d7e5780eeabde980bf51c16a60" data-name="line-e76347">
+									<div class="sl-block-content" data-line-x1="47" data-line-y1="0" data-line-x2="0" data-line-y2="32.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 115;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="32.5" viewBox="0 0 47 32.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="37.129915178594096" y1="6.825058653099826" x2="0" y2="32.5"></line>
+													<polygon fill="#000000" transform="translate(37.129915178594096,6.825058653099826) rotate(235.337)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 829px; top: 291px;" data-block-id="c15635a901ce2aa397541e299a8a9327" data-name="line-d89add">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="47" data-line-y2="37.5" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 116;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="37.5" viewBox="0 0 47 37.5">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="9.380153310153478" y1="7.484164875122456" x2="47" y2="37.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="9.380153310153478" y1="7.484164875122456" x2="47" y2="37.5"></line>
+													<polygon fill="#000000" transform="translate(9.380153310153478,7.484164875122456) rotate(128.585)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 829px; top: 370.5px;" data-block-id="26571c33e49ccb654d849c38e1a3fe51" data-name="line-16373a">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="47" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 117;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="1" viewBox="0 0 47 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="11.999999999999998" y1="0" x2="47" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="11.999999999999998" y1="0" x2="47" y2="0"></line>
+													<polygon fill="#000000" transform="translate(11.999999999999998,0) rotate(90)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 829px; top: 255px;" data-block-id="d44a4cbf46e21590b499728e917efe6a" data-name="line-166d58">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="15" data-line-x2="40" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 118;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="40" height="15" viewBox="0 0 40 15">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="11.235950130828535" y1="10.7865187009393" x2="40" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="11.235950130828535" y1="10.7865187009393" x2="40" y2="0"></line>
+													<polygon fill="#000000" transform="translate(11.235950130828535,10.7865187009393) rotate(69.444)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 822px; top: 511.5px;" data-block-id="1d83495c1fa0e4329ba8b9f3cd2dbe22" data-name="line-49988b">
+									<div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="47" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 119;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="47" height="1" viewBox="0 0 47 1">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="11.999999999999998" y1="0" x2="47" y2="0"></line>
+													<line class="line-element" stroke="#000000" stroke-width="8" x1="11.999999999999998" y1="0" x2="47" y2="0"></line>
+													<polygon fill="#000000" transform="translate(11.999999999999998,0) rotate(90)" points="0,12 12,-12 -12,-12"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" data-name="text-9607ac" data-block-id="874103a95fff0e5aec4677499deed20c" style="height: auto; width: 95px; left: 863px; top: 235.5px;">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 120;">
+										<p style="text-align: center;"><i class="fas fa-chalkboard-user green"></i><br><span style="font-size: medium; top: -7mm; position: relative;">Analyst</span></p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 95px; left: 876px; top: 338.75px;" data-block-id="68e91669704b644daadd12d0b57f9134" data-name="text-9532cd">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 121;">
+											<p style="text-align: center;"><i class="fas fa-user-pen green"></i><br><span style="font-size: medium; top: -7mm; position: relative;">Reporting</span></p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 95px; left: 865px; top: 477.5px;" data-block-id="9865f4a82822d7c437be73456303727a" data-name="text-7fa9d4">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 122;">
+										<p style="text-align: center;"><i class="fas fa-user-tie green"></i><br><span style="font-size: medium; top: -7mm; position: relative;">Mining</span></p>
+									</div>
+							</div>
+							</div>
+							<div style="margin-top: 9.8cm;">
+							<p class="small">Source: Wolf-Tilo Balke. Data Warehousing & Mining Techniques.</p>
+							</div>
+							<aside class="notes">Data is extracted from the data sources (DBs, files, APIs, ...) and stored into a staging area for further processing, cleaning and transformation. Next, the data is loaded into the data warehouse, together with its metadata (origin, timestamps, ...). Summary data is pre-aggregated data that allows faster analytics. Different users access the same data via different data marts. A data mart contains a subset of the data warehouse for specific needs.</aside>
+							</section>
+
+							<section>
+								<h3>Architecture Alternatives</h3>
+								<p class="small">Variants of the full data warehouse architecture:</p>
+								<h4>Independent Data Marts</h4>
+								<ul class="small">
+									<li>Data is directly loaded from the sources into the data marts</li>
+									<li>Multiple "mini data warehouses"</li>
+									<li>No single point of truth</li>
+								</ul>
+
+								<p></p>
+								<h4>Virtual Data Marts</h4>
+								<ul class="small">
+									<li>Data marts as (logical) views on the data warehouse</li>
+								</ul>
+							</section>
+
+							<section>
+								<h2>ETL Process</h2>
+
+								<div style="position: absolute; top: 1cm">
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 668.5px; top: 240.5px;" data-block-id="a6c2013ae1198140bd41e07f9dd49860" data-name="shape-e3ef47">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+													<rect width="245" height="59" rx="0" ry="0" class="green shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 668.5px; top: 217.5px;" data-block-id="0e615a2567039232cf92a8ec2250d220" data-name="shape-5042b0">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 12;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-59-1644406538938">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-59-1644406538938)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 668.5px; top: 277.5px;" data-block-id="1df573d5b8922aa02893575574b63e7b" data-name="shape-efdf05">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-60-1644406538945">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-60-1644406538945)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 668.5px; top: 240.5px;" data-block-id="1659ecc6bfb17a49bd69595f4e23b21b" data-name="line-d29f9c">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 13;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 912.5px; top: 240.5px;" data-block-id="ef7d9ce5e3dbab97b0fbf723ddc673a2" data-name="line-de3b14">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 668.5px; top: 260.5px;" data-block-id="c6c0787b6ea56a7c087865f1b3d22e38" data-name="text-c82296">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;">
+											<p class="small" style="text-align: center;">DW</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 34.5px; top: 240.5px;" data-block-id="a2997b09b5225c75e79c0282cc910fe3" data-name="shape-470cfb">
+									<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+													<rect width="245" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 34.5px; top: 217.5px;" data-block-id="61477a43ba509ff142612622047b8d9f" data-name="shape-3d8636">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 18;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-61-1644406538979">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-61-1644406538979)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 34.5px; top: 277.5px;" data-block-id="552f49040964bfe2f3ae6a90d549f68b" data-name="shape-463e9c">
+									<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 16;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+													<defs>
+															<clipPath id="shape-mask-62-1644406538986">
+																	<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+															</clipPath>
+													</defs>
+													<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-62-1644406538986)"></ellipse>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 34.5px; top: 241px;" data-block-id="e5eba1ed4f1a1190865fa168d1402ea8" data-name="line-370647">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 19;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 278.5px; top: 240.5px;" data-block-id="7cd9c4721ba083e483c5daf9d07bba67" data-name="line-f8236f">
+									<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+													<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 34.5px; top: 260.5px;" data-block-id="88857d514b1c6cc1c5a3070c9f2122e0" data-name="text-542f6f">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 21;">
+											<p class="small" style="text-align: center;">Operat. DB</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="shape" data-name="shape-ca9997" data-block-id="c9403e3661d1c66a850c853d86240cfd" style="width: 103px; height: 220px; left: 308px; top: 160px;">
+									<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+													<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" data-name="text-6bfeb4" data-block-id="27d3ad9f9957044a583d49c4f7fbd2c9" style="height: auto; width: 103px; left: 308px; top: 250.5px;">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23;">
+											<p class="small" style="text-align: center; font-weight: bold;">E</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 103px; height: 220px; left: 419px; top: 160px;" data-block-id="909f42dc745ccfdbeebb12e421e16a70" data-name="shape-b56189">
+									<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 24;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+													<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 103px; left: 419px; top: 250.5px;" data-block-id="af9a72ab910b413b930267e7406cb371" data-name="text-ba4418">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 25;">
+											<p class="small" style="text-align: center; font-weight: bold;">T</p>
+									</div>
+							</div>
+							<div class="sl-block" data-block-type="shape" style="width: 103px; height: 220px; left: 537px; top: 160px;" data-block-id="a5d7e1360072b9a492a7a3b64b857d66" data-name="shape-5be0e9">
+									<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 26;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+													<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+											</svg></div>
+							</div>
+							<div class="sl-block" data-block-type="text" style="height: auto; width: 103px; left: 537px; top: 250.5px;" data-block-id="33e7bc3100afc0b74fcd0c6db34d58a6" data-name="text-51164b">
+									<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+											<p class="small" style="text-align: center; font-weight: bold;">L</p>
+									</div>
+							</div>
+						</div>
+
+							<p class="small">Data is periodically brought from the operational DBs into the data warehouse.</p>
+
+							<p class="" style="margin-top: 8cm;">
+								<b>Extract</b> data from multiple sources; change-data capture<br>
+								<b>Transform</b>: data cleaning, conform, deduplicate<br>
+								<b>Load</b> into data warehouse
+							</p>
+
+							</section>
+
+
+							<section>
+								<h2>Applications</h2>
+								<h4>Data Analytics</h4>
+								<div style="position: absolute; top: 140px; right:10px; font-size:230px"><img src="img/1/chart.png" class="noborder" style="width:7.5cm"/></div>
+								<pre style="width: 14cm; margin-left: 5mm;"><code class="nohighlight">Total revenue of the last 6 months</code></pre>
+								<h4>Decision Support / Strategic Analytics</h4>
+								<pre style="width: 14cm; margin-left: 5mm;"><code class="nohighlight">Which products were responsible for 
+the high revenue in October?</code></pre>
+								<h4>Predictive Analytics</h4>
+								<pre style="width: 20cm; margin-left: 5mm;"><code class="nohighlight">How many copies of each book will be sold next January?</code></pre>
+								<h4>Data Mining</h4>
+								<p class="small">Search for patterns, (ir)regularities, clusters, outliers, correlations, ... in the data.</p>
+							</section>
 
 								
 			<section>
 							<h2>Summary</h2>
-							<ul>
-								
+							<ul class="small">
+								<li>OLTP vs. OLAP</li>
+								<li>Data Warehouse = separate DB for OLAP</li>
+								<li>Architecture: Data Sources, Staging Area, DW, Data Marts, Users</li>
+								<li>ETL Process</li>
+								<li>Data Warehouse Applications</li>
 							</ul>
 			</section>
 
