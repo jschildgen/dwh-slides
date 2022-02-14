@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DWH - Chapter 2 - Exasol</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+			</script>
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h2>Data Warehousing</h2>
+                    <h4 style="text-align:center">&nbsp;</h4>
+                    <h3>Chapter 2: Exasol</h3>
+                    <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                </section>
+                
+								
+								<section>
+									<h2><img src="img/1/exasol.png" class="noborder" style="width:7.5cm"/></h2>
+									<p class="small">World's fastest analytics database.</p>
+									<ul class="small">
+										<li>in-memory distributed database (MPP: massive parallel processing)</li>
+										<li>column-based storage and compression</li>
+										<li>self-tuning: automatic index creation, ...</li>
+										<li>advanced analytics: UDF scripts in Python, R, Java, and Lua</li>
+									</ul>
+									<p></p>
+									<h4>Deployment options:</h4>
+									<ul class="small">
+										<li>On-premise: Community Edition (free), Exasol One, Enterprise Cluster</li>
+										<li>Cloud: AWS, Azure, Google Cloud Platform, Exacloud</li>
+									</ul>
+								<aside class="notes">Exasol is the winner of the TPC-H benchmark. This benchmark consists of business-orientated ad-hoc queries and concurrent data modifications on a large dataset.</aside>
+							</section>
+
+							<section>
+								<h3>Overview</h3>
+								<img src="img/2/exasoloverview.png" alt="Exasol Overview" class="stretch noborder" style="margin-top: -7mm;">
+								<aside class="notes">Left side of the picture: Data is loaded via an ETL or ELT process from the data sources, or these sources are integrated virtually (Virtual Schemas).<br>
+								Right side of the picture: Applications connect with the Exasol database and query the database with SQL.</aside>
+							</section>
+
+							<section>
+								<h3>Column-based storage</h3>
+								<p class="small">Data blocks contain multiple values of the one column (not one row).</p>
+								<p class="small" style="text-align: center;"><b>SALES</b></p>
+								<table class="small" style="margin-top: -7mm; font-size: 60%;">
+									<tr>
+										<th>SALES_ID</th>
+										<th>SALES_DATE</th>
+										<th>PRICE</th>
+										<th>MARKET_ID</th>
+										<th style="border: none;"></th>
+									</tr>
+									<tr style="background-color: #ffcb63;">
+										<td>1</td>
+										<td style="background-color:rgba(66, 169, 170, 0.99); color:#ffffff">2014-04-08</td>
+										<td>49.91</td>
+										<td>678</td>
+										<td style="border: none;">row</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td style="background-color:rgba(66, 169, 170, 0.99); color:#ffffff">2014-06-21</td>
+										<td>54.65</td>
+										<td>661</td>
+										<td style="border: none;"></td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td style="background-color:rgba(66, 169, 170, 0.99); color:#ffffff">2014-08-02</td>
+										<td>49.08</td>
+										<td>534</td>
+										<td style="border: none;"></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td style="background-color:rgba(66, 169, 170, 0.99); color:#ffffff; text-align: center;">column</td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</table>
+								<p class="small">&Rightarrow; Best for OLAP workloads (analytical queries on few columns)</p>
+								<h4>Compression</h4>
+								<p class="small" style="margin-top: -3mm;">Different compression algorithms are used to reduce the data size.<br>
+								&Rightarrow; Faster hard-disk access, less RAM required</p>
+							
+								<aside class="notes">In OLTP, a row-oriented storage is mostly used (good for queries like <code>SELECT * FROM tbl WHERE pk_column = 123</code>). In data warehouses, the data is typically stored column wise. Columns that are not part of the query do not need to be loaded from disk into RAM.</aside>
+							</section>
+
+							<section>
+								<h3>In-Memory Processing</h3>
+								<h4>Data Blocks</h4>
+								<ul class="small">
+									<li>persistent blocks (data stored in tables)</li>
+									<li>temporary blocks (intermediary query results: materializations)</li>
+									<li>indexes</li>
+								</ul>
+								<p class="small">Load the required blocks from disk to RAM (if not yet there).</p>
+								<table class="small">
+									<tr style="background-color:rgba(66, 169, 170, 0.99); color:#ffffff">
+										<th>RAM</th>
+										<td><span class="fragment" data-fragment-index="1"><span class="fragment fade-out" data-fragment-index="6">BL7</span></span><span class="fragment" data-fragment-index="6" style="margin-left:-11.6mm">BL2</span></td>
+										<td><span class="fragment" data-fragment-index="2"><span class="fragment fade-out" data-fragment-index="4">BL9</span></span><span class="fragment" data-fragment-index="4" style="margin-left:-11.6mm"><span class="fragment fade-out" data-fragment-index="6">BL2</span></span><span class="fragment" data-fragment-index="6" style="margin-left:-11.6mm">BL9</span></td>
+										<td><span class="fragment" data-fragment-index="3"><span class="fragment fade-out" data-fragment-index="4">BL2</span></span><span class="fragment" data-fragment-index="4" style="margin-left:-11.6mm"><span class="fragment fade-out" data-fragment-index="6">BL9</span></span><span class="fragment" data-fragment-index="6" style="margin-left:-11.6mm">BL8</span></td>
+										<td><span class="fragment" data-fragment-index="5"><span class="fragment fade-out" data-fragment-index="6">BL8</span></span><span class="fragment" data-fragment-index="6" style="margin-left:-11.6mm">BL4</span></td>
+									</tr>
+									<tr style="background-color:#ff6363; color:#ffffff">
+										<th>Disk</th>
+										<td>BL1</td>
+										<td>BL2</td>
+										<td>BL3</td>
+										<td>BL4</td>
+										<td>BL5</td>
+										<td>BL6</td>
+										<td>BL7</td>
+										<td>BL8</td>
+										<td>BL9</td>
+										<td>...</td>
+									</tr>
+								</table>
+								<aside class="notes">All query processing in done in RAM. If a block is not in RAM, it is loaded from disk. A LRU-based algorithm (least recently used) is used to keep those blocks in RAM which are most likely to be needed in the future. In a typical Exasol database, after some time, nearly all typical queries can be processed completely in RAM because all data is there. If this is not the case, more RAM is required or performance optimization should be done (index, distribution keys, ...).</aside>
+							</section>
+
+							<section>
+								<h3>Exasol Cluster</h3>
+								<p class="small">Example: 4+1 cluster (4 worker nodes + 1 reserve node)</p>
+								<img src="img/2/failover.png" alt="Exasol Cluster" class="noborder stretch">
+								<ul class="small">
+									<li>Typical redundancy factor: 2 (for persistent and index blocks)</li>
+									<li>When node fails, reserve node can jump in &Rightarrow; high-availability</li>
+								</ul>
+								<aside class="notes">Each block is stored in a master segment on one node and additionally on a neighbor's node's slave segment. A reserve node does not store any data and is inactive most of the time. But when a node fails (e.g. the second node in this picture), the reserve node can copy the data from node 3's slave segments and node 1's master-segments. The copying process runs in the background so that the database downtime only a few seconds. When the failed node is back again, it will be the new reserve node.</aside>
+							</section>
+
+							<section>
+								<h3>EXAClusterOS</h3>
+								<p class="small">Exasol's own operation system (based on Linux).</p>
+								<ul class="small">
+									<li>easy installation</li>
+									<li>easy administration via web interface EXAoperation</li>
+									<li>automatic failover mechanism</li>
+									<li>backup functionality
+										<ul>
+											<li>local backups on archive volumns</li>
+											<li>remote backups on file server or Amazon S3 bucket</li>
+										</ul>
+									</li>
+								</ul>
+
+								<aside class="notes">Exasol can be installed on a cluster via an ISO image (USB-Stick, network book, VMware, ...). During the installation, the MAC addresses of all other cluster nodes are configured so that the cluster installation is fully automated.</aside>
+							</section>
+			</div>
+		</div>
+
+		<script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+				<script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>
