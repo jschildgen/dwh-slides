@@ -183,6 +183,183 @@
 
 								<aside class="notes">Exasol can be installed on a cluster via an ISO image (USB-Stick, network book, VMware, ...). During the installation, the MAC addresses of all other cluster nodes are configured so that the cluster installation is fully automated.</aside>
 							</section>
+
+							<section>
+								<img class="noborder stretch" src="img/2/exasol_docs.png" alt="Exasol Documentation">
+								<p class="small"><a href="https://docs.exasol.com/" target="_blank">https://docs.exasol.com</a></p>
+							</section>
+
+							<section>
+								<h3>Schema Concept</h3>
+								<pre><code class="sql">CREATE SCHEMA [IF NOT EXISTS] new_schema;
+ALTER SCHEMA new_schema CHANGE OWNER peter;
+DROP SCHEMA [IF EXISTS] new_schema [CASCADE];</code></pre>
+								<ul class="small">
+									<li>a schema has one owner (user or role; default: user who created the schema)</li>
+									<li>tables, views, functions and scripts are within one schema</li>
+								</ul>
+
+								<pre class="fragment"><code class="sql">SELECT * FROM s1.tab1;   -- using schema prefix</code></pre>
+								<pre class="fragment"><code class="sql">OPEN SCHEMA s1;
+SELECT * FROM tab1;      -- tab1 in the current schema (s1)
+SELECT CURRENT_SCHEMA;   -- shows the current schema</code></pre>
+							</section>
+
+							<section>
+								<h3>Identifiers</h3>
+								<p class="small">Database Objects have a unique name (identifier) within their schema.<br>
+								Maximum length: 128 characters</p>
+
+								<table class="small">
+									<tr>
+										<th>&nbsp;</th>
+										<th>Regular Identifiers</th>
+										<th>Delimited Identifiers</th>
+									</tr>
+									<tr>
+										<td>quotes</td>
+										<td><i class="fa-solid fa-xmark"></i></td>
+										<td><i class="fa-solid fa-check"></i></td>
+									</tr>
+									<tr>
+										<td>case-sensitive</td>
+										<td><i class="fa-solid fa-xmark"></i></td>
+										<td><i class="fa-solid fa-check"></i></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td>not allowed:</td>
+										<td><code>"'+-*/&lt;>={}[]</code>...</td>
+										<td><code>.</code> (except in user names)</td>
+									</tr>
+									<tr>
+										<td>reserved keywords</td>
+										<td><i class="fa-solid fa-xmark"></i></td>
+										<td><i class="fa-solid fa-check"></i></td>
+									</tr>
+									<tr>
+										<td>stored in the DB catalog</td>
+										<td>in uppercase format</td>
+										<td>as specified</td>
+									</tr>
+								</table>
+
+								<pre><code class="sql">CREATE TABLE abc (x INT);                  -- regular identif.
+CREATE TABLE "User" ("Salary in €" INT);   -- delimited identif.</code></pre>
+		
+<aside class="notes">Within all queries, regular identifiers are converted into uppercase. This means it does not matter if you write <code>abc</code>, <code>ABC</code>, or <code>Abc</code>. The recommendation is to use regular identifiers. Reserved keywords (like <code>USER</code>, <code>TABLE</code>, <code>ALTER</code>) are not allowed there. They can be found in the system table <code>EXA_SQL_KEYWORDS</code>.</aside>
+		</section>
+		<section>
+			<h3>Exasol Data Types</h3>
+			<table class="small" style="width: 105%;">
+				<tr>
+					<td style="width: 11.4cm;"><code>BOOLEAN</code></td>
+					<td></td>
+					<td style=""><code>TRUE</code></td>
+				</tr>
+				<tr>
+					<td><code>CHAR(n)</code></td>
+					<td>$n \in [1; 2000]$</td>
+					<td><code>'Hi'</code></td>
+				</tr>
+				<tr>
+					<td><code>DATE</code></td>
+					<td></td>
+					<td><code>'2023-01-31'</code></td>
+				</tr>
+				<tr>
+					<td><code>DECIMAL(p,s)</code></td>
+					<td>$p \in [1;36], s \in [0;p]$</td>
+					<td><code>-3.95</code></td>
+				</tr>
+				<tr>
+					<td><code>DOUBLE PRECISION</code></td>
+					<td></td>
+					<td><code>-3.95</code></td>
+				</tr>
+				<tr>
+					<td><code>GEOMETRY[(srid)]</code></td>
+					<td>srid: spatial ref. id</td>
+					<td><code>'POINT (5 2)'</code></td>
+				</tr>
+				<tr>
+					<td><code>HASHTYPE[(n BYTE|m BIT)]</code></td>
+					<td>MD5 hashes, UUID,...</td>
+					<td><code>'b5548626-8c31'</code></td>
+				</tr>
+				<tr>
+					<td><code>INTERVAL ...</code></td>
+					<td></td>
+					<td><code>'1 2:03:04.123'</code></td>
+				</tr>
+				
+				<tr>
+					<td><code>TIMESTAMP</code><br><code>[WITH LOCAL TIME ZONE]</code></td>
+					<td></td>
+					<td><code>'2023-01-31 23:59:11.123'</code></td>
+				</tr>
+				<tr>
+					<td><code>VARCHAR(n)</code></td>
+					<td>$n \in [1; 2000000]$</td>
+					<td><code>'Hi'</code></td>
+				</tr>
+			</table>
+			<p class="small" style="width: 105%;">Aliases: <code>INT</code>, <code>INTEGER</code> &wedgeq; <code>DECIMAL(18,0)</code>, <code>DOUBLE</code> &wedgeq; <code>DOUBLE PRECISION</code>, ...</p>
+		</section>
+
+		<section>
+			<h3>Strings</h3>
+			<pre><code class="sql">CREATE TABLE people(name VARCHAR(100), gender CHAR(1));</code></pre>
+			<p class="small"><i class="fa-solid fa-triangle-exclamation"></i> In Exasol (and Oracle), the empty string <code>''</code> is converted into <code>NULL</code>!</p>
+			<pre><code class="sql">INSERT INTO people VALUES('Kim', '');
+SELECT * FROM people WHERE gender IS NULL;  -- finds Kim</code></pre>
+
+<div class="fragment" style="margin-top: 15mm;">
+<p class="small">String concatenation: <code>||</code></p>
+<pre><code class="sql">SELECT firstname||' '||lastname FROM people;</code></pre>
+</div>
+<div class="fragment">
+<p class="small"><code>GROUP_CONCAT([DISTINCT] e1 [ORDER BY e2] [SEPARATOR s])</code></p>
+<pre><code class="sql">SELECT city, GROUP_CONCAT(firstname SEPARATOR ', ')
+FROM people GROUP BY city;</code></pre>
+	</div>
+		</section>
+
+		<section>
+			<h3>Dates and Timestamps</h3>
+			<pre><code class="sql">SELECT CURRENT_DATE, CURRENT_TIMESTAMP;
+SELECT add_days(CURRENT_DATE, 2); -- day after tomorrow
+SELECT days_between('2023-12-25', CURRENT_DATE);
+SELECT year(CURRENT_DATE);
+SELECT to_char(CURRENT_DATE, 'DD. Month YYYY'); -- 05. May 2023</code></pre>
+
+<div class="fragment" style="margin-top: 15mm;">
+			<h4><code>TIMESTAMP WITH LOCAL TIME ZONE</code></h4>
+			<p class="small">When stored: converted (from current time zone) into UTC<br>
+			When read: converted into current time zone</p>
+			<pre><code class="sql">CREATE TABLE tbl(t TIMESTAMP WITH LOCAL TIME ZONE);
+INSERT INTO t VALUES(CURRENT_TIMESTAMP);
+SELECT * FROM t;   -- 2023-01-31 23:59:11.123
+-- Someone somewhere else in the world:
+SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
+</div>
+		</section>
+
+		<section>
+			<h3>Row Numbering</h3>
+			<h4 style="margin-bottom: -5mm;"><code>ROWNUM</code></h4>
+			<p class="small">Pseudo column which numbers the rows in a result set</p>
+			<pre><code class="sql">SELECT ROWNUM, * FROM people;</code></pre>
+			<span data-sql-query="SELECT 1 as ROWNUM, 'Peter' as NAME, 'm' AS GENDER union SELECT 2, 'Jane', 'f';"></span>
+
+			<div class="fragment">
+				<h4 style="margin-bottom: -5mm;"><code>ROWID</code></h4>
+			<p class="small">Internal unique row identifier</p>
+			<pre><code class="sql">SELECT ROWID, * FROM people;</code></pre>
+			<span data-sql-query="SELECT '321098139506691362218450234437009408' as ROWID, 'Peter' as NAME, 'm' AS GENDER;"></span>
+			</div>
+			<aside class="notes">The ROWID can be useful for deleting one specific row: <code>DELETE FROM people WHERE ROWID = ...;</code></aside>
+		</section>
 			</div>
 		</div>
 
