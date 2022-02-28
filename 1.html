@@ -143,8 +143,8 @@
 									<h2><img src="img/1/exasol.png" class="noborder" style="width:7.5cm"/></h2>
 									<p class="small">For the exercises, we will use the Exasol database.</p>
 									<ul class="small">
-										<li>Database Design: <code>CREATE TABLE</code>, ...</li>
-										<li>ETL: <code>IMPORT</code>, ...</li>
+										<li>Database Design: <code>CREATE TABLE / VIEW</code>, ...</li>
+										<li>ETL: <code>IMPORT</code>, <code>MERGE</code>, ...</li>
 										<li>System Tables: <code>SYS</code>, <code>EXA_STATISTICS</code></li>
 										<li>Analytics</li>
 									</ul>
@@ -321,7 +321,15 @@ sales in the past month.</code></pre>
 											</td>
 									</tr>
 								</table>
-								<div data-clone="db_dw"></div>
+								<div data-clone="db_dw" style="z-index: -1;"></div>
+								<div class="poll fragment" style="bottom:0px; z-index: 100;">
+									<h1>Show me all followers of the Twitter channel @OTH_Regensburg.</h1>
+											<ul>
+													<li data-poll="correct">That's OLTP</li>
+													<li>That's OLAP</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+							</div>
 							</section>
 
 							<section>
@@ -495,7 +503,7 @@ sales in the past month.</code></pre>
 									<li>InfiniBand 40 Gb/s interconnect</li>
 									<li>data load rate: 21 TB/h</li>
 								</ul>
-								<div class="poll fragment fade-in-then-out" style="bottom:-260px" data-fragment-index="1">
+								<div class="poll fragment fade-in-then-out" style="bottom:-350px" data-fragment-index="1">
 									<h1>Guess the price of a full-rack Oracle Exadata X5 machine!</h1>
 											<ul>
 													<li>&gt; 10,000 USD</li>
@@ -517,7 +525,7 @@ sales in the past month.</code></pre>
 									<span style="margin-left: 1.9cm">Data Marts</span>
 									<span style="margin-left: 0.8cm">Users</span>
 								</p>
-								<div style="position: absolute; top:-18mm">
+								<div style="position: absolute; top:-18mm; z-index: -1;">
 								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 214px; top: 261px;" data-block-id="c7be16372214d632a7a1989fd80a2174">
 									<div class="sl-block-content" data-line-x1="56" data-line-y1="75" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 11;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="56" height="75" viewBox="0 0 56 75">
 													<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="48.82052921018381" y1="65.3846373350676" x2="0" y2="0"></line>
@@ -1189,6 +1197,18 @@ sales in the past month.</code></pre>
 							<div style="margin-top: 9.8cm;">
 							<p class="small">Source: Wolf-Tilo Balke. Data Warehousing & Mining Techniques.</p>
 							</div>
+
+							<div class="poll fragment" style="bottom:-120px; z-index: 100;">
+								<h1>Which data should be included in a backup?</h1>
+										<ul>
+												<li>Only the base data in the data sources</li>
+												<li>+ the Raw Data in the data warehouse</li>
+												<li>+ the Summary Data</li>
+												<li data-poll="correct">Everything</li>
+										</ul>
+								<h2>https://fraage.de</h2>
+						</div>
+
 							<aside class="notes">Data is extracted from the data sources (DBs, files, APIs, ...) and stored into a staging area for further processing, cleaning and transformation. Next, the data is loaded into the data warehouse, together with its metadata (origin, timestamps, ...). Summary data is pre-aggregated data that allows faster analytics. Different users access the same data via different data marts. A data mart contains a subset of the data warehouse for specific needs.</aside>
 							</section>
 
@@ -1207,6 +1227,17 @@ sales in the past month.</code></pre>
 								<ul class="small">
 									<li>Data marts as (logical) views on the data warehouse</li>
 								</ul>
+
+								<div class="poll fragment" style="bottom:-230px; z-index: 100;">
+									<h1>What's the main benefit of materialized (non-virtual) data marts?</h1>
+											<ul>
+													<li data-poll="correct">Faster access</li>
+													<li>Less disk space</li>
+													<li>Less RAM usage</li>
+													<li>Always up-to-date</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+							</div>
 							</section>
 
 							<section>
@@ -1364,6 +1395,17 @@ the high revenue in October?</code></pre>
 								<li>ETL Process</li>
 								<li>Data Warehouse Applications</li>
 							</ul>
+
+							<div class="poll fragment" style="bottom:-380px; z-index: 100;">
+								<h1>What is Change-Data-Capture?</h1>
+										<ul>
+												<li>Keeping a history of data in the DWH</li>
+												<li>Mechanism to avoid transaction conflicts</li>
+												<li data-poll="correct">Detect how data changed since last ETL run</li>
+												<li>Propagate changes from the DWH back to the data sources</li>
+										</ul>
+								<h2>https://fraage.de</h2>
+						</div>
 			</section>
 
 			</div>

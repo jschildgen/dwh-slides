@@ -57,11 +57,13 @@
 										<li>advanced analytics: UDF scripts in Python, R, Java, and Lua</li>
 									</ul>
 									<p></p>
+									<div class="fragment">
 									<h4>Deployment options:</h4>
 									<ul class="small">
 										<li>On-premise: Community Edition (free), Exasol One, Enterprise Cluster</li>
 										<li>Cloud: AWS, Azure, Google Cloud Platform, Exacloud</li>
 									</ul>
+								</div>
 								<aside class="notes">Exasol is the winner of the TPC-H benchmark. This benchmark consists of business-orientated ad-hoc queries and concurrent data modifications on a large dataset.</aside>
 							</section>
 
@@ -114,9 +116,23 @@
 									</tr>
 								</table>
 								<p class="small">&Rightarrow; Best for OLAP workloads (analytical queries on few columns)</p>
+								
+								<div class="fragment">
 								<h4>Compression</h4>
 								<p class="small" style="margin-top: -3mm;">Different compression algorithms are used to reduce the data size.<br>
 								&Rightarrow; Faster hard-disk access, less RAM required</p>
+								</div>
+
+								<div class="poll fragment" style="bottom:-80px; z-index: 100;">
+									<h1>Why does compression work so well in a column-based storage?</h1>
+											<ul>
+													<li>blocks contain heterogeneous data</li>
+													<li data-poll="correct">blocks contain homogeneous data</li>
+													<li>the data changes often</li>
+													<li>no decompression needed</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+							</div>
 							
 								<aside class="notes">In OLTP, a row-oriented storage is mostly used (good for queries like <code>SELECT * FROM tbl WHERE pk_column = 123</code>). In data warehouses, the data is typically stored column wise. Columns that are not part of the query do not need to be loaded from disk into RAM.</aside>
 							</section>
@@ -163,6 +179,20 @@
 									<li>Typical redundancy factor: 2 (for persistent and index blocks)</li>
 									<li>When node fails, reserve node can jump in &Rightarrow; high-availability</li>
 								</ul>
+
+								<div class="poll fragment" style="bottom:-150px; z-index: 100;">
+									<h1>In a 4+1 cluster, when ... nodes fail, the database is unavailable.</h1>
+											<ul>
+													<li>0</li>
+													<li>1</li>
+													<li data-poll="correct">2</li>
+													<li>3</li>
+													<li>4</li>
+													<li>5</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+							</div>
+
 								<aside class="notes">Each block is stored in a master segment on one node and additionally on a neighbor's node's slave segment. A reserve node does not store any data and is inactive most of the time. But when a node fails (e.g. the second node in this picture), the reserve node can copy the data from node 3's slave segments and node 1's master-segments. The copying process runs in the background so that the database downtime only a few seconds. When the failed node is back again, it will be the new reserve node.</aside>
 							</section>
 
@@ -323,6 +353,18 @@ SELECT * FROM people WHERE gender IS NULL;  -- finds Kim</code></pre>
 <pre><code class="sql">SELECT city, GROUP_CONCAT(firstname SEPARATOR ', ')
 FROM people GROUP BY city;</code></pre>
 	</div>
+
+	<div class="poll fragment" style="bottom:-100px; z-index: 100;">
+		<h1>What's the result of the query at the bottom of this slide?</h1>
+				<ul>
+						<li>('Munich', 'Peter', 'Jane') ...</li>
+						<li data-poll="correct">('Munich', 'Peter, Jane') ...</li>
+						<li>('Munich', 'Peter Jane') ...</li>
+						<li>('Munich', 'PeterJane') ...</li>
+				</ul>
+		<h2>https://fraage.de</h2>
+</div>
+
 		</section>
 
 		<section>
@@ -358,6 +400,18 @@ SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 			<pre><code class="sql">SELECT ROWID, * FROM people;</code></pre>
 			<span data-sql-query="SELECT '321098139506691362218450234437009408' as ROWID, 'Peter' as NAME, 'm' AS GENDER;"></span>
 			</div>
+
+			<div class="poll fragment" style="bottom:-40px; z-index: 100;">
+				<h1>What do you think, why was ROWNUM so imporantant in Oracle before version 12?</h1>
+						<ul>
+								<li>Oracle did not support COUNT(*)</li>
+								<li>Oracle did not support AUTO_INCREMENT / SERIAL</li>
+								<li>Oracle did not support window functions / analytical functions / OVER</li>
+								<li data-poll="correct">Oracle did not support LIMIT / FETCH FIRST ... ROWS ONLY</li>
+						</ul>
+				<h2>https://fraage.de</h2>
+		</div>
+
 			<aside class="notes">The ROWID can be useful for deleting one specific row: <code>DELETE FROM people WHERE ROWID = ...;</code></aside>
 		</section>
 
@@ -466,6 +520,16 @@ SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 				</div>
 			</div>
 			<p class="small fragment" style="margin-top: -1mm;"><code>tmp</code> is a temporary table: never visible for other TAs, never written to disk.</p>
+			<div class="poll fragment" style="bottom:-190px; z-index: 100;">
+				<h1>What need to be different in this scenario so that the TMS would rollback a transaction?</h1>
+						<ul>
+								<li>TA1 or TA2 don't drop the table</li>
+								<li data-poll="correct">Both TA1 and TA2 don't drop the table</li>
+								<li>TA1 or TA2 don't commit but rollback</li>
+								<li>Both TA1 and TA2 don't commit but rollback</li>
+						</ul>
+				<h2>https://fraage.de</h2>
+		</div>
 			<aside class="notes">
 				If TA1 or TA2 would not drop table, the TMS would check on <code>COMMIT</code> whether there is no table with the name <code>tmp</code> yet. And if both TA1 and TA2 do not drop the table, a conflict is detected. The first <code>COMMIT</code> wins, the second <code>COMMIT</code> will fail and the whole transaction is rolled back.<br>
 				Other DBMSs (Oracle, MySQL, SQL Server, ...) support so-called temporary tables: <code>CREATE TEMPORARY TABLE ...</code>. These tables exists only for the current session until the connection is terminated. Exasol doesn't support temporary tables, but you can simply create a regular table, and before you commit, drop it again. This is very performant because Exasol only writes table data on disk when the TA is committed.</aside>
@@ -519,6 +583,18 @@ SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 SELECT * FROM EXA_ALL_TABLES;  -- no schema prefix required</code></pre>
 			<span class="small" data-sql-query="SELECT 'RETAIL' AS TABLE_SCHEMA, 'CITIES' AS TABLE_NAME, 'SYS' AS TABLE_ORDER, '...' as '...', 93 AS TABLE_ROW_COUNT, 0 AS DELETE_PERCENTAGE"></span>
 
+
+			<div class="poll fragment" style="bottom:-180px; z-index: 100;">
+				<h1>CREATE TABLE tmp(i INT); How to find that table in EXA_ALL_TABLES?</h1>
+						<ul>
+								<li>... WHERE table_name = 'tmp';</li>
+								<li>... WHERE table_name = 'tmp' AND table_schema = CURRENT_SCHEMA;</li>
+								<li>... WHERE table_name = 'tmp';</li>
+								<li data-poll="correct">... WHERE table_name = 'TMP' AND table_schema = CURRENT_SCHEMA;</li>
+						</ul>
+				<h2>https://fraage.de</h2>
+		</div>
+
 			<aside class="notes">System tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> start with the prefix <code>EXA_</code> (except the <code>CAT</code> and <code>DUAL</code> tables). The schema prefix is not required when querying this tables. But when there is a table or view with the same name in the current schema, that one will be chosen.</aside>
 		</section>
 
@@ -546,8 +622,8 @@ COMMENT ON COLUMN retail.cities.zip_code IS 'Postal Code';</code></pre>
 SELECT * FROM EXA_ALL_SESSIONS;  -- all sessions of all users
 SELECT * FROM EXA_DBA_SESSIONS;  -- all sessions (+ extra info)</code></pre>
 
-			<span class="small" data-sql-query="SELECT 1701364228155002637 AS SESSION_ID, 'PETER' AS USER_ID, 'EXECUTE_SQL' AS STATUS, 'SELECT' AS COMMAND_NAME, '0:04:38' AS DURATION, 8211.5 AS TEMP_DB_RAM, '...' as '...'
-			UNION SELECT 1701364227983931183, 'JANE', 'IDLE', 'NOT SPECIFIED', '1:28:55', 26.9, '...'
+			<span class="small" data-sql-query="SELECT '1701364228155002637' AS SESSION_ID, 'PETER' AS USER_ID, 'EXECUTE_SQL' AS STATUS, 'SELECT' AS COMMAND_NAME, '0:04:38' AS DURATION, 8211.5 AS TEMP_DB_RAM, '...' as '...'
+			UNION SELECT '1701364227983931183', 'JANE', 'IDLE', 'NOT SPECIFIED', '1:28:55', 26.9, '...'
 			UNION SELECT 4, 'SYS', 'IDLE', 'NOT SPECIFIED', '0:00:49', 18.8, '...'"></span>
 		
 		<p class="small">The <em>log server</em> (SESSION_ID = 4) stores statistics into <code>EXA_STATISTICS</code> system tables every 60 seconds.</p>
@@ -572,6 +648,21 @@ KILL STATEMENT IN SESSION 1701364228155002637;</code></pre>
 		<pre><code class="sql">ALTER SYSTEM SET QUERY_TIMEOUT = 30; -- for all future sessions</code></pre>
 
 		<aside class="notes">Database Parameters can be changed during a session to configure specific behavior, e.g. how dates or timestamps should be converted into strings. With the <code>ALTER SYSTEM</code> privilege, a user is allowed to change a system parameter. These define the default value for every session parameter when a new session starts.</aside>
+	</section>
+
+	<section>
+		<h3>Summary</h3>
+		<ul class="small">
+			<li>Exasol: in-memory, distributed, MPP</li>
+			<li>column-oriented storage, compression</li>
+			<li>Exasol cluster: automatic failover</li>
+			<li>Schemas: owner, identifiers, <code>OPEN SCHEMA</code>, <code>CURRENT_SCHEMA</code></li>
+			<li>Data Types, <code>GROUP_CONCAT</code>, functions for Strings, Dates, Timstamps, ...</li>
+			<li>Transactions in Exasol: MVCC, Locks</li>
+			<li>System Tables: <code>SYS</code> Schema</li>
+			<li>Sessions: <code>EXA_%_SESSIONS</code>, <code>KILL SESSION</code></li>
+			<li>Session and System Parameters: <code>EXA_PARAMETERS</code>, <code>ALTER SESSION</code></li>
+		</ul>
 	</section>
 
 			</div>
