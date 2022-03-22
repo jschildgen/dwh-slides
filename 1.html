@@ -59,9 +59,9 @@
                 <ul class="fragment" data-fragment-index="1">
                     <li>Weekly exercises sheets (published after lecture)</li>
 										<li>12 exercise sheets in total</li>
-                    <li>Wed, 8:15 - 9:45 (K007) or</li>
-										<li>Fri, 13:45 - 15:15 (K007) or</li>
-										<li>Mon, 13:45 - 15:15 (K007)</li>
+                    <li>Wed, 8:15 - 9:45 (K007, German) or</li>
+										<li>Fri, 13:45 - 15:15 (K007, German) or</li>
+										<li>Mon, 15:30 - 17:00 (K007, English)</li>
                 </ul>
 								</section>
 
@@ -106,12 +106,18 @@
 								
                 <section>
 								<h2>Exam</h2>
-								<h4>Oral or written exam</h4>
+								<h4>Written exam</h4>
                 <ul>
-                    <li>More details later this semester.</li>
+                    <li>Requirement to participate: none</li>
+                    <li>Written Exam</li>
+										<li>90 Minutes Time</li>
+										<li>Auxiliaries: 1 hand-written<br>double-sided DIN-A4 paper</li>
                 </ul>
-                <div style="position: absolute; top: 100px; right:50px; font-size:230px"><i class="fas fa-edit green"></i><div>
-                </section>
+                <div style="position: absolute; top: 100px; right:50px; font-size:230px"><i class="fas fa-edit green"></i></div>
+                
+									<aside class="notes">You are allowed to bring one DIN-A4 paper to the exam. Handwritten on both sides. Handwritten with a pen. No tablet, no print, no copy, no typing, no typewriter, no fax, no two single-sided pages.</aside>
+								
+</section>
                 
                 <section>
                 <h2>Contents</h2>
@@ -137,6 +143,7 @@
 									</ul>
 									</div>
 								</div>	
+								<p class="small">Prerequisites: Well-founded knowledge in SQL: <code>GROUP BY</code>, <code>LEFT|RIGHT|FULL JOIN</code>, <code>INSERT|UPDATE|DELETE</code>, Subqueries, <code>IN|EXISTS</code>, <code>CREATE TABLE</code>, Indexes, (Materialized) Views, Rights Management, SQL Data Types, Transactions.</p>
 								</section>
 
 								<section>
@@ -348,7 +355,7 @@ sales in the past month.</code></pre>
 							</section>
 
 							<section>
-								<h3>Date Warehouse: Properties</h3>
+								<h3>Data Warehouse: Properties</h3>
 								<h4>subject-orientation</h4>
 								<p class="small">Not for one single purpose. One DW for the whole company.<br>
 									<b>Subjects</b>: customers, products, activities, sales</p>
@@ -373,7 +380,7 @@ sales in the past month.</code></pre>
 							</section>
 
 							<section>
-								<h3>Date Warehouse: Properties</h3>
+								<h3>Data Warehouse: Properties</h3>
 								<h4>non-volatile</h4>
 								<p class="small">Typically, data in a data warehouse is not updated.<br>
 								&Rightarrow; stable and persistent data base.</p>
@@ -486,7 +493,8 @@ sales in the past month.</code></pre>
 							<div class="fragment" style="margin-top: 4cm;">
 								<h4>time-variant</h4>
 								<p class="small">Historical snapshots of the data with time references.</p>
-								<span data-sql-query="select * from products where pnr=17"></span>
+								<span data-sql-query="select *, '2022-01-01' as valid_from, '2022-03-01' as valid_until from products where productno = 17
+								union select productno, description, price+0.1, manufacturer, '2022-03-01' as valid_from, '9999-12-31' as valid_until from products where productno = 17"></span>
 							</div>					
 
 							<aside class="notes">Non-valatile and time-variant storage allows for comparisons with the past.</aside>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 1</title>
+    <title>Data Warehousing - Exercise Sheet 1</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,23 +12,38 @@
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 1 (2021-03-26)</b>
+            <b>Exercise Sheet 1 (2021-03-23/25/28)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: YAML-XML Converter</h1>
-    <p>Develop a program in a programming language of your choice (e.g., Python) which opens a YAML file and produces an XML file with the same content. You can use the YAML file on lecture 2, slide 5 as an example.</p>
+    <h1>Exercise 1: Exasol</h1>
+    <p>We will use the Exasol databases in almost all exercise sheets. In this exercise sheet, you set up and connect to an Exasol database (or use the OTH Exasol DB).</p>
+    <p>Exasol cannot simply be installed on Windows/Linux/MacOS. You have to install VirtualBox, VMWare or another VM player (or use Docker) and import the OVA image that you can download from the <a href="https://www.exasol.com" target="_blank">Exasol website</a> (do not install Exasol via the ISO file!). You need a lot of free disk space and more than 4 GB RAM. If you do not want to install Exasol on your machine, you can skip steps 1 and 5.</p>
     <ol>
-        <li>Use libraries to parse and work with YAML and XML data</li>
-        <li>The XML document you produce will not have any attributes</li>
-        <li>Transform a dictionary <code>a: b ...</code> into <code>&lt;a>b&lt;/a></code> elements with the dictionary key as its element name and value as its text content</li>
-        <li>Transform a list <code>a: - ...</code> into an element <code>&lt;a>&lt;a>...&lt/a>&lt;a>...&lt/a>&lt/a></code> with a child element for each list entry.</li>
+        <li>Download the Exasol database image (OVA file) and import it into VirtualBox. Then start the VM.</li>
+        <li>If you do not have the SQL client <a href="https://www.dbeaver.io" target="_blank">DBeaver</a> on your PC, install it.</li>
+        <li>Set up a connection to your Exasol database (connection details are shown in the VM). If you want to use the OTH database, the connection string is <code>194.95.108.54</code>, user and password: <code>STUDENT</code> </li>
+        <li>Download and unzip the retail_mini.zip from GRIPS. Open retail_mini.sql in DBeaver and take a look at the create table commands to inform yourself what the dataset is about.</li>
+        <li>Edit the file paths on all <code>IMPORT</code> commands. Then execute all commands - but not all together, one statement after the other to better see whether it worked! If you use the OTH database, the tables and the data are already there.</li>
+        <li>Take a look in the markets table: <code>select * from retail.markets;</code></li>
+        <li>Write an SQL query to list every state (<code>AREA</code> column) together with the number of markets in that area and the average <code>POPULATION</code> of the cities in that area.</li>
+        <li>Write an SQL query to find for every day in August 2014 the total revenue (<code>SUM(price)</code>) of all sales in markets in Hannover.</li>
+
+        <!--
+            select s.sales_date, sum(price)
+from retail.markets m join retail.sales s on m.market_id = s.market_id
+and m.city = 'Hannover'
+and s.sales_date between '2014-08-01' and '2014-08-31'
+group by 1 order by 1;
+        -->
+
+        <li>In DBeaver, write <code>SELECT CURRENT_</code> and the auto-completion feature shows to you some variables. Guess what they deliver and try them out.</li>
     </ol>
 </section>
 

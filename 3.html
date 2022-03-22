@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DWH - Chapter 3 - Data Modeling</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+			</script>
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h2>Data Warehousing</h2>
+                    <h4 style="text-align:center">&nbsp;</h4>
+                    <h3>Chapter 3: Data Modeling</h3>
+                    <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                </section>
+                
+
+							<section>
+								<h3>Dimensions and Facts</h3>
+								<p class="small">We want to store information about <em>business processes</em> (events)</p>
+								<p class="small" style="margin-top: -3mm;">Example: retail sale</p>
+								<p class="small" style="text-align: center; margin-top: -7mm;"><b>SALES</b></p>
+								<table class="small" style="margin-top: -7mm; font-size: 60%;">
+									<tr>
+										<th>SALES_ID</th>
+										<th>SALES_DATE</th>
+										<th>PRICE</th>
+										<th>MARKET_ID</th>
+										<th>CUSTOMER_ID</th>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td>2014-04-08</td>
+										<td>49.91</td>
+										<td>2315</td>
+										<td>15325</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>2014-06-21</td>
+										<td>54.65</td>
+										<td>661</td>
+										<td>42621</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>2014-08-02</td>
+										<td>49.08</td>
+										<td>534</td>
+										<td>15325</td>
+									</tr>
+								</table>
+								
+								<div class="columns" style="margin-top: 3mm;">
+									<div class="fragment" style="width: 50%;">
+										<h4>Dimensions</h4>
+										<ul class="small" style="margin-top: -4mm;">
+											<li>Refer to other entities</li>
+											<li>Describe context of events</li>
+											<li>Often used for filters and groupings</li>
+											<li>Often hierarchical</li>
+											<li>e.g., date, market, clerk, product, ...</li>
+											<li>When? Where? Who? What?</li>
+										</ul>
+									</div>
+									<div class="fragment" style="width: 50%;">
+										<h4>Facts / Measures</h4>
+										<ul class="small" style="margin-top: -4mm;">
+											<li>Measurement values</li>
+											<li>Typically numeric</li>
+											<li>Often used for computations and aggregations (sum, avg, max, ...)</li>
+											<li>e.g., price in Euro, amount, rating, ...</li>
+											<li>How many? How much? How often?</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="poll fragment" style="bottom:-30px; z-index: 100;">
+									<h1>CUSTOMER_ID is a ...</h1>
+											<ul>
+													<li data-poll="correct">dimensional attribute</li>
+													<li>fact</li>
+													<li>none</li>
+													<li>both</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+
+									<aside class="notes"><code>SALES_DATE</code> (when?), <code>MARKET_ID</code> (where?) and <code>CUSTOMER_ID</code> (who?) are dimensions, <code>PRICE</code> is a fact.</aside>
+							</div>
+							
+							</section>
+
+							<section>
+								<h3>Dimensions: Hierarchy</h3>
+								<p class="small">Dimensions often have a level of detail (grain).</p>
+								<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/hierarchy.png" style="width: 6cm;" class="noborder"></div>
+								<ul class="small" style="margin-left: 0mm;">
+									<li class="fragment"><b>Date</b>: timestamp &rightarrow; hour &rightarrow; day &rightarrow; month &rightarrow; quarter &rightarrow; year</li>
+									<li class="fragment"><b>Market</b>: MARKET_ID &rightarrow; city &rightarrow; state &rightarrow; region &rightarrow; country</li>
+									<li class="fragment"><b>Product</b>: PRODUCT_NO &rightarrow; subcategory &rightarrow; category &rightarrow; prod. type</li>
+								</ul>
+								<div class="fragment">
+								<p class="small">Flat table view of sales events:</p>
+								<table class="small" style="margin-top: -1mm; font-size: 60%;">
+									<tr>
+										<th>SALES_ID</th>
+										<th>SALES_DATE</th>
+										<th>QUARTER</th>
+										<th>MARKET_ID</th>
+										<th>CITY</th>
+										<th>AREA</th>
+										<th>...</th>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td>2014-04-08</td>
+										<td>Q2/2014</td>
+										<td>2315</td>
+										<td>Berlin</td>
+										<td>Berlin</td>
+										<td>...</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>2014-06-21</td>
+										<td>Q2/2014</td>
+										<td>661</td>
+										<td>Frechen</td>
+										<td>Nordrhein-W.</td>
+										<td>...</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>2014-08-02</td>
+										<td>Q4/2014</td>
+										<td>534</td>
+										<td>Herzogenrath</td>
+										<td>Nordrhein-W.</td>
+										<td>...</td>
+									</tr>
+								</table>
+								</div>
+								<aside class="notes">Dimensions are often hierarchical. A timestamp describes a higher level of detail than a date, or a quarter. The country is more coarse-grained than the city or market_id. Dimensions are often used for filters and groupings.</aside>
+							</section>
+
+							<section>
+								<h3>Multidimensional Data Cube</h3>
+								<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/cube.png" style="width: 9cm;" class="noborder"></div>
+								<p class="small">Alternative view on multi-dimensional data:<br>k-dimensional hypercube</p>
+								<ul class="small">
+									<li>Dimensions: axes of the (hyper-)cube</li>
+									<li>Facts: points in cube</li>
+								</ul>
+							</section>
+
+							<section>
+								<h3>Data-Cube Operations</h3>
+								<div style="position: absolute; top: 80px; right:-20px;"><p class="small" style="text-align: center; margin-bottom: -5mm;">slice:</p><img src="img/3/slice.png" style="width: 8cm;" class="noborder"></div>
+								<h4>Slice</h4>
+								<pre style="width: 18cm; margin-left: 0cm;"><code class="sql">SELECT sum(price) FROM sales
+WHERE product_no = 7208;</code></pre>
+
+								<h4>Dice</h4>
+								<pre style="width: 18cm; margin-left: 0cm;"><code class="sql">SELECT sum(price) FROM sales 
+WHERE product_no = 7208 AND
+sales_date BETWEEN '2014-01-01' AND '2014-01-31'
+AND clerk = 219;</code></pre>
+
+								<h4></h4>
+							</section>
+
+							
+	<section>
+		<h3>Summary</h3>
+		<ul class="small">
+		</ul>
+	</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+				<script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>
