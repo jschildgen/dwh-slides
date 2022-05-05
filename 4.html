@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DWH - Chapter 4 - ETL</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+			</script>
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h2>Data Warehousing</h2>
+                    <h4 style="text-align:center">&nbsp;</h4>
+                    <h3>Chapter 4: ETL</h3>
+										<h3><em>Extract, Transform, Load</em></h4>
+                    <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-80px;">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-80px; box-shadow:none">
+                </section>
+                
+
+							<section>
+								<h3>ETL Process</h3>
+							
+								<div style="position: absolute; top: 1cm">
+									<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 668.5px; top: 240.5px;" data-block-id="a6c2013ae1198140bd41e07f9dd49860" data-name="shape-e3ef47">
+										<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+														<rect width="245" height="59" rx="0" ry="0" class="green shape-element" fill="rgb(111, 168, 220)"></rect>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 668.5px; top: 217.5px;" data-block-id="0e615a2567039232cf92a8ec2250d220" data-name="shape-5042b0">
+										<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 12;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+														<defs>
+																<clipPath id="shape-mask-59-1644406538938">
+																		<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+																</clipPath>
+														</defs>
+														<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-59-1644406538938)"></ellipse>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 668.5px; top: 277.5px;" data-block-id="1df573d5b8922aa02893575574b63e7b" data-name="shape-efdf05">
+										<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+														<defs>
+																<clipPath id="shape-mask-60-1644406538945">
+																		<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+																</clipPath>
+														</defs>
+														<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="green shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-60-1644406538945)"></ellipse>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 668.5px; top: 240.5px;" data-block-id="1659ecc6bfb17a49bd69595f4e23b21b" data-name="line-d29f9c">
+										<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 13;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+														<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+														<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 912.5px; top: 240.5px;" data-block-id="ef7d9ce5e3dbab97b0fbf723ddc673a2" data-name="line-de3b14">
+										<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+														<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+														<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 668.5px; top: 260.5px;" data-block-id="c6c0787b6ea56a7c087865f1b3d22e38" data-name="text-c82296">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;">
+												<p class="small" style="text-align: center;">DW</p>
+										</div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 34.5px; top: 240.5px;" data-block-id="a2997b09b5225c75e79c0282cc910fe3" data-name="shape-470cfb">
+										<div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+														<rect width="245" height="59" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 34.5px; top: 217.5px;" data-block-id="61477a43ba509ff142612622047b8d9f" data-name="shape-3d8636">
+										<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 18;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+														<defs>
+																<clipPath id="shape-mask-61-1644406538979">
+																		<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+																</clipPath>
+														</defs>
+														<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-61-1644406538979)"></ellipse>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 34.5px; top: 277.5px;" data-block-id="552f49040964bfe2f3ae6a90d549f68b" data-name="shape-463e9c">
+										<div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 16;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+														<defs>
+																<clipPath id="shape-mask-62-1644406538986">
+																		<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+																</clipPath>
+														</defs>
+														<ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-62-1644406538986)"></ellipse>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 34.5px; top: 241px;" data-block-id="e5eba1ed4f1a1190865fa168d1402ea8" data-name="line-370647">
+										<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 19;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+														<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+														<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 278.5px; top: 240.5px;" data-block-id="7cd9c4721ba083e483c5daf9d07bba67" data-name="line-f8236f">
+										<div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+														<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+														<line class="line-element" stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 34.5px; top: 260.5px;" data-block-id="88857d514b1c6cc1c5a3070c9f2122e0" data-name="text-542f6f">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 21;">
+												<p class="small" style="text-align: center;">Operat. DB</p>
+										</div>
+								</div>
+								<div class="sl-block" data-block-type="shape" data-name="shape-ca9997" data-block-id="c9403e3661d1c66a850c853d86240cfd" style="width: 103px; height: 220px; left: 308px; top: 160px;">
+										<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+														<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="text" data-name="text-6bfeb4" data-block-id="27d3ad9f9957044a583d49c4f7fbd2c9" style="height: auto; width: 103px; left: 308px; top: 250.5px;">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23;">
+												<p class="small" style="text-align: center; font-weight: bold;">E</p>
+										</div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="width: 103px; height: 220px; left: 419px; top: 160px;" data-block-id="909f42dc745ccfdbeebb12e421e16a70" data-name="shape-b56189">
+										<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 24;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+														<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="text" style="height: auto; width: 103px; left: 419px; top: 250.5px;" data-block-id="af9a72ab910b413b930267e7406cb371" data-name="text-ba4418">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 25;">
+												<p class="small" style="text-align: center; font-weight: bold;">T</p>
+										</div>
+								</div>
+								<div class="sl-block" data-block-type="shape" style="width: 103px; height: 220px; left: 537px; top: 160px;" data-block-id="a5d7e1360072b9a492a7a3b64b857d66" data-name="shape-5be0e9">
+										<div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(255, 242, 204)" data-shape-stretch="true" style="z-index: 26;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 103 220">
+														<polygon points="0,66 51.5,66 51.5,0 103,110 51.5,220 51.5,154 0,154" class="yellow shape-element" fill="rgb(255, 242, 204)"></polygon>
+												</svg></div>
+								</div>
+								<div class="sl-block" data-block-type="text" style="height: auto; width: 103px; left: 537px; top: 250.5px;" data-block-id="33e7bc3100afc0b74fcd0c6db34d58a6" data-name="text-51164b">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+												<p class="small" style="text-align: center; font-weight: bold;">L</p>
+										</div>
+								</div>
+							</div>
+	
+								<p class="small">Data is periodically brought from the operational DBs into the data warehouse.</p>
+	
+								<p class="" style="margin-top: 8cm;">
+									<b>Extract</b> data from multiple sources; change-data capture<br>
+									<b>Transform</b>: data cleaning, conform, deduplicate<br>
+									<b>Load</b> into data warehouse
+								</p>
+								<aside class="notes">An ETL process is an important and the most complex task in a data warehouse. It performs a materialized data integration from different sources.</aside>
+							</section>
+
+							<section>
+								<h3 style="font-size: 145%;">Schema Integration vs. Data Integration</h3>
+								<h4>Schema Integration</h4>
+								<p class="small">Generate a <em>minimal</em>, <em>correct</em>, and <em>understandable</em> data-warehouse schema based on the existing schemas of the data sources.</p>
+								<p class="small"><b>Schema Matching:</b> Finding correspondences between the schemas.</p>
+
+								<div class="fragment" style="margin-top: 1.5cm;">
+								<h4>Data Integration</h4>
+								<p class="small">Transforming data from heterogeneous sources into the data-warehouse schema.</p>
+								<p class="small"><b>Data Cleaning:</b> Detection and solving of data-quality problems.</p>
+								<p class="small"><b>Entity Matching:</b> Detection of equivalent objects, deduplication.</p>
+								</div>
+								<aside class="notes">Schema Matching finds correspondences between two schemas, schema mapping defines how one data from one schema can be mapped to another.</aside>
+							</section>
+
+							<section>
+								<h3>Schema Integration: Requirements</h3>
+										<h4>Minimal</h4>
+										<ul class="small" style="width: 15cm; margin-top: -5mm;">
+											<li>Each concept only once</li>
+											<li>No redundancy within the schema</li>
+											<li>Mapping of same/similar concepts of the source schemas to a concept of the integrated schema</li>
+										</ul>
+
+										<div class="fragment" style="margin-top: 9mm;">
+										<h4>Correct</h4>
+										<ul class="small" style="margin-top: -5mm;">
+											<li>Each concept corresponds to a concept of at least one local schemas</li>
+										</ul>
+										</div>
+
+										<div class="fragment" style="margin-top: 9mm;">
+											<h4>Understandable</h4>
+											<ul class="small" style="margin-top: -5mm;">
+												<li>Humans can understand the integrated schema</li>
+												<li>Names of concepts should be preserved where possible</li>
+											</ul>
+											</div>
+
+										<div style="position: absolute; right:0px; top:1.5cm">
+										
+										<img style="width:2.5cm;" uml="entity Customer {
+											cust_no
+											--
+											email
+											firstname
+											lastname
+											city
+											phone
+										}"/>
+										<p style="text-align: center; margin-top: -12mm; margin-bottom: -6mm;">&uparrow;</p>
+										<img style="width:6cm;" uml="entity Customer {
+											cust_no
+											--
+											email
+											firstname
+											lastname
+											city
+										}
+										
+										entity User {
+											email_address
+											--
+											name
+											phone
+										}"/>
+										</div>
+								
+							</section>
+
+							<section>
+								<h3>Schema Integration</h3>
+								<div style="position: absolute; top: -30px; right:50px; font-size:230px"><span class="green">&uparrow;</span></div>
+								<h4>Bottom-Up Integration</h4>
+								<p class="small">Mix all source schemas in a global schema.</p>
+								<ol class="small">
+									<li><b>Schema Matching</b>: Find inter-schema correspondences and conflicts</li>
+									<li><b>Schema Mapping</b>: Define how to translate one schema into another</li>
+									<li><b>Schema Integration</b>: Define an integrated global schema</li>
+								</ol>
+
+								<div class="fragment" style="margin-top: 5mm;">
+									<div style="position: absolute; top: 250px; right:50px; font-size:230px"><span class="green">&downarrow;</span></div>
+								<h4>Top-Down Integration</h4>
+								<p class="small">Integrated schema is designed independently from the sources,<br>based on the application requirements.</p>
+								<ul class="small">
+									<li>Schema Mapping, Schema Merging</li>
+								</ul>
+							</div>
+							</section>
+
+							<section>
+								<h3>Heterogeneity</h3>
+								<p class="small">"Two information systems that do not provide the exact same methods, models, and structures to access their data are called heterogeneous."<br><small>-- translated from Leser, Naumann: Informationsintegration. 2007</small></p>
+								<div class="fragment">
+								<h4>Technical Heterogeneity</h4>
+										<p class="small">Different ways to access data.<br>
+										E.g., different protocols (HTTP, ...), APIs (JDBC, ...), exchange formats (XML, ...), query languages (SQL, ...).</p>
+									</div>		
+
+									<div class="fragment">
+										
+										<h4>Data-Model Heterogeneity</h4>
+										<p class="small">Different data models have different expressiveness.<br>
+										E.g., relational model, object-relational, XML, JSON, CSV, ...</p>
+									</div>
+
+									<div class="poll fragment" style="bottom:-100px; z-index: 100;">
+										<h1>How can we overcome technical and data-model heterogeneity?</h1>
+												<ul>
+														<li data-poll="correct">Write a wrapper script (e.g., in Python or Java)</li>
+														<li>With SQL</li>
+														<li>With special libraries and conversion functions</li>
+														<li>That's (almost) impossible</li>
+												</ul>
+										<h2>https://fraage.de</h2>
+										</div>
+							</section>
+
+							<section>
+								<h3>Heterogeneity</h3>
+										<h4>Syntactic Heterogeneity</h4>
+										<p class="small">Different representation of the same facts.<br>
+										E.g., different encodings, number/date formats (2022-01-31 vs. 31.03.22), ...</p>
+
+										<div class="fragment">
+										<h4>Semantic Heterogeneity</h4>
+										<p class="small">Different interpretation of data and metadata.<br>
+										E.g., synonyms (phone_no, mobile_no, phone), homonyms (title), ...</p>
+										<p class="small">Hard to resolve &Rightarrow; Schema Matching</p>
+									</div>
+							</section>
+
+							<section>
+								<h3>Heterogeneity</h3>
+										<h4>Structural Heterogeneity</h4>
+										<p class="small" style="margin-top: -4mm;">Different modelling of application concepts using the same modelling concept.<br>
+										E.g., normalized vs. denormalized schema.</p>
+										<p class="small" style="margin-top: -2mm;">
+											MARKETS(market_id, city_id)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CITIES(city_id, city)
+											<br>vs. MARKETS(market_id, city)
+										</p>
+
+										<div class="fragment">
+										<h4>Schematic Heterogeneity</h4>
+										<p class="small" style="margin-top: -4mm;">Different modelling of application concepts using the different modelling concept.<br>
+										E.g., attribute value vs. relation name conflict</p>
+										<p class="small" style="margin-top: -2mm;">
+											BOOKS(id, title, price)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MOVIES(id, title, price)
+											<br>vs. PRODUCTS(id, title, price, media_type)
+										</p>
+									</div>
+										<aside class="notes">Structural heterogeneity means that different modelling structures are used, but they use the same modelling concept. In the shown example, in both tables a city is stored using the modelling concept "attribute value". This can easily be resolved by joining the tables. Schematic heterogeneity means that different modelling concepts are used. In the first example, "book" is the name of a table (metadata level), in the second schema, "book" is a value in the attribute "media_type" (data level).</aside>
+							</section>
+
+							<section>
+								<h3>Schema Matching</h3>
+								<p class="small">Finding correspondences between two schemas</p>
+								<ul class="small">
+									<li><b>Input</b>: Multiple Schemas (optional: example data, background knowledge)</li>
+									<li><b>Output</b>: Pair-wise correspondences between schema elements</li>
+								</ul>
+
+								<p class="small"><em>Example</em>: A retailer sells its products on eBuy and Armason</p>
+								<img src="img/4/schema_matching.png" alt="Schema Matching" class="noborder" style="width:10cm">
+
+								<aside class="notes">Background knowledge can for example be a dictionary or thesaurus.</aside>
+							</section>
+
+							<section>
+								<h3>ETL vs. ELT</h3>
+								<h4>ETL</h4>
+								<pre><code class="plaintext">for each input row:
+  take input row              -- Extract
+  check data quality          -- Transform
+  deduplicate                 -- Transform
+  harmonize / normalize data  -- Transform
+  try to insert into target   -- Load
+  handle exceptions           -- Load</code></pre>
+
+	<div class="fragment">
+		<h4>ELT</h4>
+		<pre><code class="plaintext">identify possible error cases
+import all rows               -- Extract + Load
+check data quality            -- Transform
+deduplicate                   -- Transform
+harmonize / normalize data    -- Transform</code></pre>
+<aside class="notes">Typical ETL tools work tuple-wise. Each tuple is extracted from the data sources, transformed, and then loaded into the data warehouse. ELT is an alternative approach. Here, the source data is directly loaded into the data warehouse as it is. There, is is transformed.</aside>
+	</div>
+
+							</section>
+
+
+							<section>
+								<h3>Exasol's <code>IMPORT</code> command</h3>
+								<div class="columns">
+									<div>
+								<p class="small">Directly import / export data from / to</p>
+								<ul class="small">
+									<li>other Exasol databases,</li>
+									<li>Oracle databases,</li>
+									<li>generic databases (using JDBC),</li>
+									<li>files (CSV, FBV; local or on a server)</li>
+									<li>UDF scripts (written in Java, Lua, Python or R).</li>
+								</ul>
+								</div>
+								<div>
+									<p class="small"><code>IMPORT</code></p>
+									<p style="font-size: 65%;"><code>FROM EXA</code><br>
+										<code>FROM ORA</code><br>
+										<code>FROM JDBC</code><br>
+										<code>FROM CSV|FBV</code><br>
+										<code>FROM SCRIPT</code><br></p>
+								</div>
+								</div>
+								<pre><code class="sql">IMPORT INTO markets FROM EXA AT '10.10.10.11:8563'
+USER 'sys' IDENTIFIED BY 'exasol' TABLE retail.markets;</code></pre>
+
+								<pre><code class="sql">IMPORT INTO markets FROM JDBC
+AT 'jdbc:postgresql://10.10.50.1/my_db'
+USER 'myuser' IDENTIFIED BY 'mypassword'
+STATEMENT 'SELECT * FROM shop.markets WHERE country = ''DE'';';</code></pre>
+<aside class="notes">When importing data from an external data source into the Exasol database, the connection details (host, user, password) have to be provided, and the source file, table or statement. In the second example, a <code>SELECT</code> statement is sent to the PostgreSQL DB. Its results are imported into the Exasol table <code>markets</code>.</aside>
+							</section>
+
+							<section>
+								<h3>Connections in Exasol</h3>
+								<p class="small">Instead of directly writing connection details (host, user, password) in the <code>IMPORT</code> / <code>EXPORT</code> command, these credentials can be stored in a connection object:</p>
+								<pre><code class="sql">CREATE CONNECTION jdbc_conn
+TO 'jdbc:postgresql://10.10.50.1/my_db'
+USER 'myuser' IDENTIFIED BY 'mypassword';</code></pre>
+
+<pre><code class="sql">IMPORT INTO markets FROM JDBC AT jdbc_conn
+STATEMENT 'SELECT * FROM shop.markets WHERE country = ''DE'';';</code></pre>
+
+							<aside class="notes">The <code>EXPORT</code> command works in a similar way as the <code>IMPORT</code>: Data from either a table or a result of a <code>SELECT</code> query is written to a CSV file, external database, etc. For both <code>IMPORT</code> and <code>EXPORT</code> connections can be used.</aside>
+							</section>
+
+							<section>
+								<h3>Importing Files</h3>
+								<h4>File import from (S)FTP/HTTP(S) server</h4>
+								<pre><code class="sql">CREATE CONNECTION sftp_conn TO 'sftp://10.60.102.2'
+USER 'sftpuser' IDENTIFIED BY 'sftppassword';</code></pre>
+
+<pre><code class="sql">IMPORT INTO markets FROM CSV AT sftp_conn
+FILE '/data/shop/markets.csv';</code></pre>
+
+								<div class="fragment">
+									<h4>Importing local files (from client file system)</h4>
+									<pre><code class="sql">IMPORT INTO markets FROM LOCAL CSV FILE 'D:\shop\markets.csv';</code></pre>
+								</div>
+							</section>
+
+							<section>
+								<h3>Parameters for CSV Import</h3>
+								<pre><code class="sql">IMPORT INTO markets (market_id, city, last_modified) 
+FROM LOCAL CSV FILE '/data/shop/markets.csv'
+(1, 5, 8 FORMAT = 'YYYYMMDD')  -- Default: all columns
+ENCODING = 'latin-1'           -- Default: UTF8
+ROW SEPARATOR = 'CRLF'         -- Default: LF
+NULL = '-'                     -- Default: empty string
+COLUMN SEPARATOR = '|'         -- Default: ,
+COLUMN DELIMITER = '='         -- Default: "
+SKIP = 1;                      -- Default: 0</code></pre>
+
+<div class="poll fragment" style="bottom:-310px; z-index: 100;">
+	<h1>How should a row of the CSV file that is imported here look like?</h1>
+			<ul>
+					<li>1,2,3,4,5,6,7,8</li>
+					<li>1|2|3|4|a||b|6|-|20220530</li>
+					<li>1|2|3|4|"a||b"|6|-|20220530</li>
+					<li data-poll="correct">1|2|3|4|=a||b=|6|-|20220530</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+
+<aside class="notes">The <code>IMPORT ... FROM CSV</code> commands from the previous slide only work when the columns of the CSV file and the target table match. If not, target columns can be specified in the <code>IMPORT</code> command, columns in the file can be skipped, a date or number format can be specified, and other parameters can be set. The parameter <code>NULL = '-'</code> means: when column value in the CSV file is a minus symbol, it will be translated into a NULL value in the database. <code>SKIP = 1</code> means that the first line of the CSV file is skipped (that's often a header with column names).</aside>
+							</section>
+
+							<section>
+								<h3>Import - Error Handling</h3>
+								<p class="small">Default behavior: On error, the whole import is aborted, nothing will be imported.</p>
+								
+								<div class="fragment">
+									<h4>Error Table</h4>
+									<pre><code class="sql">IMPORT INTO markets FROM LOCAL CSV FILE 'D:\shop\markets.csv'
+ERRORS INTO my_error_table REJECT LIMIT UNLIMITED;</code></pre>
+
+										<pre><code class="sql">SELECT * FROM my_error_table;</code></pre>
+									<span style="font-size:90%" data-sql-query="SELECT 0 AS ROW_NR, 'col 0:  ETL-3050: Transformation of value=''market_id'' failed - invalid character value for cast; Value: ''market_id''' AS ERROR_TEXT, null as truncated, 'market_id,city' as csv_data"></span>
+								</div>
+								<div class="poll fragment" style="bottom:-170px; z-index: 100;">
+									<h1>How to solve this error?</h1>
+											<ul>
+													<li>Change file encoding</li>
+													<li data-poll="correct">SKIP=1</li>
+													<li>Change column delimiter</li>
+													<li>Change order of columns</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+									</div>
+								<aside class="notes">When you specify a reject limit, the import will succeed even if not all rows cannot be imported. In that case, erroneous rows can be written in an error table or error file on a file server. The error table on this slide shows that there was an error in row 0 in the csv file. It could not convert a string value <code>'market_id'</code> into a number (the target column is of type int).</aside>
+							</section>
+
+							<section>
+								<h3>Import in Exasol: Performance</h3>
+								<p class="small">Exasol supports imports of zipped CSV files:</p>
+								<pre><code class="sql">IMPORT INTO sales FROM LOCAL CSV FILE 'D:\shop\sales.tar.gz'</code></pre>
+
+								<div class="fragment">
+									<h4>Parallel Import</h4>
+									<pre><code class="sql">IMPORT INTO sales FROM CSV AT sftp_conn
+FILE '/data/shop/sales.zip.001'
+FILE '/data/shop/sales.zip.002'
+FILE '/data/shop/sales.zip.003';</code></pre>
+
+<pre class="fragment"><code class="sql">IMPORT INTO sales FROM JDBC AT jdbc_conn
+STATEMENT 'SELECT * FROM shop.sales WHERE sales_id < 1000000'
+STATEMENT 'SELECT * FROM shop.sales WHERE sales_id >= 1000000';</code></pre>
+									<p class="small">Best practice: Number of parts = number of cluster nodes.</p>
+								</div>
+							</section>
+
+
+							<section>
+								<h3><b>E</b>TL: Extract</h3>
+								<p class="small">Data is extracted from multiple sources.</p>
+								<h4>When?</h4>
+								<ul class="small">
+									<li>Initial load</li>
+									<li>Periodically propagate changes</li>
+								</ul>
+
+								<table class="fragment small" style="margin-top: 3mm;">
+									<tr><th>Data source...</th><th>Technique</th><th>Up-to-dateness</th><th>DWH load</th><th>Source load</th></tr>
+									<tr><td>periodically creates files</td><td>Batch jobs, snapshots</td><td>depends on frequency</td><td>low</td><td>low</td></tr>
+									<tr><td>propagates every change</td><td>trigger, replication</td><td>max</td><td>high</td><td>very high</td></tr>
+									<tr><td>extract on demand</td><td>triggered by application</td><td>depends on frequency</td><td>depends on frequency</td><td>depends on frequency</td></tr>
+								</table>
+							</section>
+
+							<section>
+							<h3>Change Data Capture</h3>
+							<p class="small">Find out what has changed since the previous run.</p>
+							<p class="small">Different approaches:</p>
+							<ul class="small">
+								<li><b>Audit Columns</b>: Data contains timestamps of creation / last modification
+								<span data-sql-query="select 17 as pid, 'chocolate bar' as description, 0.89 as price, '2022-04-01' as last_modified"></span><br>
+								</li>
+								<li><b>Snapshot Differential</b>: Keep the old snapshot of the data and<br>compute diff with current version
+								<br>$\Delta_{Insert} = S_x - S_{x-1}, \Delta_{Delete} = S_{x-1} - S_{x}$<br>&nbsp;
+								</li>
+								<li><b>Log-based</b>: The DB's write-ahead log contains all change information
+								<pre><code class="plaintext">2022-03-30 INS 17 description='chocolate bar' price=0.99
+2022-04-01 UPD 17 price=0.89</code></pre>
+								</li>
+							</ul>
+							</section>
+
+							<section>
+								<h3>Snapshot Differential with SQL</h3>
+								<p class="small">Given: P1 (previous snapshot of products file), P2 (new / current snapshot).</p>
+								<pre style="width: 98%;"><code class="sql">INSERT INTO delta
+  SELECT 'UPD', P2.* FROM P1, P2
+  WHERE P1.productno=P2.productno AND (P1.price!=P2.price OR ...)
+  UNION ALL
+  SELECT 'INS', P2.* FROM P2
+  WHERE NOT EXISTS(SELECT * FROM P1 WHERE P1.productno=P2.productno)
+  UNION ALL 
+  SELECT 'DEL', P1.* FROM P1
+  WHERE NOT EXISTS(SELECT * FROM P2 WHERE P1.productno=P2.productno);</code></pre>
+							<aside class="notes">This primitive approach is very expensive. Every file has to be read three times. There are optimizations, e.g. by using hash algorithms. The result of this query is a table that shows which rows changed, were added, and removed since the previous run of the ETL job.</aside>
+							</section>
+
+							<section>
+								<h3>Data Quality - Data Errors</h3>
+								<span data-sql-query="select 5 as pid, 'Peter' as firstname, 'Miller' as lastname, 'Green Street 5' as street, '93053' as zip, 'Regensburg' as city
+								union select 5, 'Jane', 'Smith', null, '93053', 'Regensurg'
+								union select 6, 'Bob', 'Smith', 'Red Street 9', '93053', 'Regensburg'
+								union select 7, 'Peter', 'Miller', 'Greenstreet 5', '93053', 'Regensbug'
+								union select 8, 'Bob', 'Smith', 'Red Street 8', '55555', 'Regensburg'
+								union select 9, 'Kate', 'Miller', '00000', '//////', '//////'
+								union select 10, 'Frank Smith', '', 'Blue Street 1', '93053', 'England'
+								union select 11, null, null, null, null, null"></span>
+
+								<aside class="notes">Many of the data errors on this slide can be avoided with constraints in the source databases (primary keys, foreign keys, <code>NOT NULL</code>, <code>CHECK</code>, ...). But this is not always the case. Thus, errors can occur such as: non-unique IDs, different representations, contradictory values, violates referential integrity, missing values, dummy values, wrong or forbidden values, typos, duplicate entries, ...</aside>
+							</section>
+
+							<section>
+								<h3>E<b>T</b>L: Transform</h3>
+								<p class="small">After extraction, data has to be normalized and cleaned.</p>
+								
+								<h4>Data Cleaning</h4>
+								<ol class="small">
+									<li>identify data-quality problems (data profiling)</li>
+									<li>identify causes for theses errors</li>
+									<li>standardize / normalize data items</li>
+									<li>correct errors</li>
+									<li>duplicate detection, merging</li>
+									<li>(aggregation, feature extraction)</li>
+									<li>(sampling)</li>
+									<li>...</li>
+								</ol>
+							</section>
+
+							<section>
+								<h3>Data Scrubbing</h3>
+								<p class="small">Resolve errors within individual data items</p>
+								<ul class="small">
+									<li><b>Normalization</b>: unify case, stemming, remove stopwords, expand acronyms<br>
+									<code style="font-size: 85%;">'CHEAPEST car with ACC' => 'cheap car automatic cruise control'</code><br>&nbsp;</li>
+									<li><b>Conversion</b>: convert numerical values to a single unit<br>
+										<code style="font-size: 85%;">70 => 177.8</code> (inch to cm)<br>&nbsp;</li>
+									<li><b>Outlier removal</b>: test if data fulfill constraints<br>
+									  <code style="font-size: 85%;">person's age = 5555</code> => remove record<br>&nbsp;</li>
+								</ul>
+							</section>
+
+							<section>
+								<!--
+									create table ebuy_prod(
+pid int primary key,
+descr varchar(80),
+price decimal(18,2));
+
+create table ebuy_pstat
+(pid int references ebuy_prod(pid),
+ sales_day date, num_sales int);
+ 
+create table armason_sales
+(axin varchar(20) primary key,
+ title varchar(80),
+ price decimal(18,2),
+ sales_date date,
+ amount int);
+ 
+create or replace table sales(pid varchar(20) primary key,
+ title varchar(80),
+ price decimal(18,2),
+ sales_date date,
+ amount int);
+								-->
+								<h3>Schema Mapping</h3>
+								<p class="small">In the transform phase, the data has to be mapped from the source schema to the target schema.</p>
+								<div class="columns">
+									<div><pre style="width:13.5cm"><code class="sql">INSERT INTO sales
+SELECT P.pid, P.descr AS title, 
+P.price, S.sales_day As sales_date,
+S.num_sales AS amount
+FROM ebuy_prod P JOIN ebuy_pstat S
+ON P.pid = S.pid;
+
+INSERT INTO sales
+SELECT axin AS pid, title, price, 
+sales_date, amount
+FROM armason_sales;</code></pre></div>
+									<div><img src="img/4/schema_mapping.png" alt="Schema Mapping" class="noborder" style="width:10cm">
+									</div>
+								</div>
+								
+							</section>
+
+							<section>
+								<h3>Entity Resolution</h3>
+								<p class="small">Resolve problems involving multiple data items</p>
+								<h4>Duplicate Detection</h4>
+								<span data-sql-query="select 5 as pid, 'Peter' as firstname, 'Miller' as lastname, 'Green Street 5' as street, 'Regensburg' as city
+								union select 7, 'Peter', 'Miller', 'Greenstreet 5', 'Regensbug'"></span>
+
+								<ul class="small" style="margin-top: 5mm;">
+									<li>Pair-wise comparison of data items, calculating similarity values</li>
+									<li>If similarity > threshold: duplicate detected</li>
+									<li>False positives and false negatives possible</li>
+									<li>Very expensive: $O(n²)$ comparisons</li>
+									<li>Optimization: Partition data and only compare items within a partition</li>
+								</ul>
+
+								<p class="small"><b>Data Fusion</b>: Combine detected duplicates into one data item</p>
+							</section>
+
+							<section>
+								<h3>Similarity Functions</h3>
+								<h4>Levenshtein Distance</h4>
+								<p class="small">Number of character insertions + deletions + replacements<br>to transform one string into the other.</p>
+								<p class="small">$sim_{levenshtein}("mouse", "home") = 3$</p>
+								<pre><code class="sql">SELECT edit_distance('mouse', 'home');</code></pre>
+								
+								<aside class="notes">mouse &rightarrow; house &rightarrow; homse &rightarrow; home (2 replacements and 1 deletion).</aside>
+							</section>
+
+							<section>
+								<h3>Jaccard Similarity</h3>
+								<p class="small">Similarity of two sets $S_1$ and $S_2$:</p>
+								<p class="small">$sim_{jaccard} = \frac{|S_1 \cap S_2|}{|S_1 \cup S_2|}$</p>
+
+									<h4>For String Similarity: q-grams</h4>
+								<p class="small">q-gram: Set of all substrings of length q.</p>
+								<p class="small">$qgram("hello") = \{he, el, ll, lo\}$</p>
+								<p class="small">$sim_{2gram}("food", "foot") = \frac{\{fo, oo\}}{\{fo, oo, od, ot\}}=\frac{2}{4}=0.5$</p>
+
+							</section>
+
+							<section>
+								<h3>Soundex</h3>
+								<p class="small">Words that sound similar have the same soundex value.</p>
+								<ol class="small">
+									<li>Retain the first letter</li>
+									<li>Of all other letters, remove A, E, I, O, U, H, W, Y.</li>
+									<li>Replace consonants with digits (if two adjacent letters in the original word have the same digit, only retain it once)
+										<table>
+											<tr><td>B, F, P, V</td><td>1</td></tr>
+											<tr><td>C, G, J, K, Q, S, X, Z</td><td>2</td></tr>
+											<tr><td>D, T</td><td>3</td></tr>
+											<tr><td>L</td><td>4</td></tr>
+											<tr><td>M, N</td><td>5</td></tr>
+											<tr><td>R</td><td>6</td></tr>
+										</table>
+									</li>
+									<li>If there are less than 3 digits, fill up with zeros.</li>
+								</ol>
+								<p style="font-size: 60%;">$soundex("food") = F300, soundex("foot") = F300, soundex("fool") = F400$</p>
+
+							</section>
+
+							<section>
+								<h3>Similarity Join</h3>
+								<p class="small">Bring together similar data, for deduplication.</p>
+								<pre><code class="sql" dontexecutesql>SELECT c1.name, c2.name, edit_distance(c1.name, c2.name)
+FROM customers c1, customers c2
+WHERE edit_distance(c1.name, c2.name) < 3;</code></pre>
+
+<pre><code class="sql" dontexecutesql>SELECT c1.name, c2.name, soundex(c1.name)
+FROM customers c1, customers c2 
+WHERE soundex(c1.name) = soundex(c2.name);</code></pre>
+
+							<p class="small">Problem: Very expensive! $O(n²)$ comparisons.</p>
+							</section>		
+							
+							<section>
+								<h3>Similarity Join: Blocking</h3>
+								<p class="small">Partition data into blocks and only compare within blocks.</p>
+								<p class="small">$n$ records, $b$ blocks &Rightarrow; $O(b \cdot (\frac{n}{b})^2) = O(\frac{n²}{b})$ comparisons.</p>
+								<p class="small">Partitioning Strategies:</p>
+								<ul class="small">
+									<li>Same zip code (asuming no typo in zip code)</li>
+									<li>First letter of name (again, assuming no typo here)</li>
+									<li>...</li>
+								</ul>
+								<p class="small">&Rightarrow; Risk of missing duplicates!</p>
+
+
+								<pre><code class="sql" dontexecutesql>SELECT c1.name, c2.name, soundex(c1.name)
+FROM customers c1, customers c2 
+WHERE substr(c1.name, 0, 1) = substr(c2.name, 0, 1)
+AND edit_distance(c1.name, c2.name) < 3;</code></pre>
+
+<div class="poll fragment" style="bottom:-100px; z-index: 100;" data-fragment-index="1">
+	<h1>Which duplicate names will be detected with the primitive approach but not with the query on this slide?</h1>
+			<ul>
+					<li>Klinger, Klingler</li>
+					<li>Klinger, Klingborn</li>
+					<li data-poll="correct">Klinger, Clinger</li>
+					<li>Klinger, Clingborn</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+
+							<aside class="notes">In the example query on this slide, the data is partitioned by the first letter of the customer name. The similarity is only computed for two customers within the same partition.</aside>
+							</section>
+
+							<section>
+								<h3>Data-Quality Checks with SQL</h3>
+								<p class="small">Step 1: Identify possible errors and set error codes accordingly.</p>
+								<pre style="width:98%"><code class="sql">ALTER TABLE staging.customer ADD COLUMN error_info VARCHAR(100);</code></pre>
+								<pre style="width:98%" class="fragment"><code class="sql">UPDATE staging.customer SET error_info = 'Invalid email'
+WHERE email NOT REGEXP_LIKE '.*@.*\.[a-z]{2,}';</code></pre>
+
+<pre class="fragment" style="width:98%"><code class="sql">UPDATE staging.customer SET error_info = 'Duplicate email address'
+WHERE cust_id IN (SELECT cust_id WITH INVALID UNIQUE(email)
+                  FROM staging.CUSTOMER);</code></pre>
+
+								<p class="small fragment">Step 2: Integrate error-free rows into data warehouse (using <code>INSERT</code> or <code>MERGE</code>).</p>
+
+								<pre class="fragment" style="width:98%"><code class="sql">INSERT INTO dwh.customer SELECT * FROM staging.customer 
+                         WHERE error_info IS NULL;</code></pre>
+
+								<pre class="fragment" style="width:98%"><code class="sql">DELETE FROM staging.customer WHERE error_info IS NULL;</code></pre>
+
+								<p class="small fragment">Step 3 (optional): Inspect erroneous rows and solve errors.</p>
+							</section>
+
+							<section>
+								<h3>ET<b>L</b>: Load</h3>
+								<p class="small">In the load phase, the data is integrated in the data warehouse.</p>
+
+								<p class="small">Techniques:</p>
+								<ul class="small">
+									<li>ETL Tools: insert data items via JDBC, ... (Push approach)</li>
+									<li>Alternative: bulk load (Pull approach)</li>
+								</ul>
+							</section>
+
+							<section>
+								<h3>SQL: <code>MERGE</code> Command</h3>
+								<p class="small">The <code>MERGE</code> command was introduced in SQL:2008 and combines <code>INSERT</code>, <code>UPDATE</code> and <code>DELETE</code>.</p>
+
+								<pre style="width: 100%;"><code class="sql">MERGE INTO &lt;target>	
+USING &lt;source>
+ON &lt;join_condition>
+WHEN [NOT] MATCHED THEN [INSERT... |UPDATE...|DELETE...] ...;</code></pre>
+<p class="small">Source row is inserted into target table if not yet present, otherwise updated (or deleted) there.</p>
+
+<!--
+	create or replace table products as
+select article_id as productno,
+description as title, BASE_SALES_PRICE as price from retail.article;
+
+create table products_new as select * from products where productno = 96082;
+update products_new set price = price*1.1;
+insert into products_new values(55551, 'Chocolate bar', 0.89);
+-->
+
+<pre class="fragment" style="width: 100%;"><code class="sql">MERGE INTO products P
+USING products_new N
+ON P.productno = N.productno
+WHEN MATCHED THEN UPDATE SET P.title = N.title, P.price = N.price
+                  DELETE WHERE N.title IS NULL
+WHEN NOT MATCHED THEN INSERT VALUES (N.productno, N.title, N.price);</code></pre>
+<aside class="notes">This slide shows the <code>MERGE</code> syntax in Oracle and Exasol. Other DBMSs have not implemented this feature or use a different syntax.</aside>
+							</section>
+
+							<section>
+								<h3>Summary</h3>
+								<ul class="small">
+									<li>ETL = Extract, Transform, Load</li>
+									<li>Schema Integration: Schema Matching, Schema Mapping</li>
+									<li>Forms of Heterogeneity</li>
+									<li>ETL vs. ELT</li>
+									<li><code>IMPORT</code></li>
+									<li>Extract Phase: Change-Data-Capture</li>
+									<li>Transform Phase: Data Cleaning, Normalization, Schema Mapping, Entity Resolution, Deduplication...</li>
+									<li>Load Phase: Load data into DWH</li>
+									<li><code>MERGE</code></li>
+								</ul>
+							</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+				<script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

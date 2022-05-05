@@ -369,11 +369,12 @@ FROM people GROUP BY city;</code></pre>
 
 		<section>
 			<h3>Dates and Timestamps</h3>
-			<pre><code class="sql">SELECT CURRENT_DATE, CURRENT_TIMESTAMP;
+			<pre style="width: 95%;"><code class="sql">SELECT CURRENT_DATE, CURRENT_TIMESTAMP;
 SELECT add_days(CURRENT_DATE, 2); -- day after tomorrow
 SELECT days_between('2023-12-25', CURRENT_DATE);
 SELECT year(CURRENT_DATE);
-SELECT to_char(CURRENT_DATE, 'DD. Month YYYY'); -- 05. May 2023</code></pre>
+SELECT trunc(current_timestamp, 'HH'); -- 2022-03-24 10:00:00.000
+SELECT to_char(CURRENT_DATE, 'DD. Month YYYY'); -- 24. March 2022</code></pre>
 
 <div class="fragment" style="margin-top: 15mm;">
 			<h4><code>TIMESTAMP WITH LOCAL TIME ZONE</code></h4>
@@ -385,6 +386,7 @@ SELECT * FROM t;   -- 2023-01-31 23:59:11.123
 -- Someone somewhere else in the world:
 SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 </div>
+<aside class="notes"><code>trunc</code> rounds down a date or timestamp to the last full hour (<code>'HH'</code>), month (<code>'MM')</code>, Monday (<code>'IW'</code> ), ...</aside>
 		</section>
 
 		<section>
@@ -450,7 +452,7 @@ SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 			<h3>Locking</h3>
 			<div style="position: absolute; top: 100px; right:50px; font-size:130px"><i class="fa-solid fa-lock green"></i></div>
 			<ul class="small">
-				<li><b>Read Lock</b>: indicate that version must not be thrown away</li>
+				<li><b>Read Lock</b>: indicate that this version must not be thrown away</li>
 				<li><b>Write Lock</b>: nobody else can write the table
 					<br>&Rightarrow; other TAs have to wait</li>
 			</ul>

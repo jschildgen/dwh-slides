@@ -54,7 +54,7 @@
 								<p class="small" style="text-align: center; margin-top: -7mm;"><b>SALES</b></p>
 								<table class="small" style="margin-top: -7mm; font-size: 60%;">
 									<tr>
-										<th>SALES_ID</th>
+										<th><u>SALES_ID</u></th>
 										<th>SALES_DATE</th>
 										<th>PRICE</th>
 										<th>MARKET_ID</th>
@@ -108,18 +108,33 @@
 								</div>
 
 								<div class="poll fragment" style="bottom:-30px; z-index: 100;">
-									<h1>CUSTOMER_ID is a ...</h1>
+									<h1>What's a measure in the table shown on this slide?</h1>
 											<ul>
-													<li data-poll="correct">dimensional attribute</li>
-													<li>fact</li>
+													<li>sales_id</li>
+													<li>sales_date</li>
+													<li data-poll="correct">price</li>
+													<li>market_id</li>
+													<li>customer_id</li>
 													<li>none</li>
-													<li>both</li>
+													<li>multiple columns</li>
 											</ul>
 									<h2>https://fraage.de</h2>
+									</div>
 
 									<aside class="notes"><code>SALES_DATE</code> (when?), <code>MARKET_ID</code> (where?) and <code>CUSTOMER_ID</code> (who?) are dimensions, <code>PRICE</code> is a fact.</aside>
-							</div>
 							
+							</section>
+
+
+							<section>
+								<h3>Multidimensional Data Cube</h3>
+								<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/cube.png" style="width: 9cm;" class="noborder"></div>
+								<p class="small">Alternative view on multi-dimensional data:<br>k-dimensional hypercube</p>
+								<ul class="small">
+									<li>Dimensions: axes of the (hyper-)cube</li>
+									<li>Facts: points in cube</li>
+								</ul>
+								<aside class="notes">Each sale can be seen as a point in a k-dimensional data cube.</aside>
 							</section>
 
 							<section>
@@ -131,7 +146,7 @@
 									<li class="fragment"><b>Market</b>: MARKET_ID &rightarrow; city &rightarrow; state &rightarrow; region &rightarrow; country</li>
 									<li class="fragment"><b>Product</b>: PRODUCT_NO &rightarrow; subcategory &rightarrow; category &rightarrow; prod. type</li>
 								</ul>
-								<div class="fragment">
+								<!--<div class="fragment">
 								<p class="small">Flat table view of sales events:</p>
 								<table class="small" style="margin-top: -1mm; font-size: 60%;">
 									<tr>
@@ -171,23 +186,395 @@
 										<td>...</td>
 									</tr>
 								</table>
-								</div>
+								</div>-->
 								<aside class="notes">Dimensions are often hierarchical. A timestamp describes a higher level of detail than a date, or a quarter. The country is more coarse-grained than the city or market_id. Dimensions are often used for filters and groupings.</aside>
 							</section>
 
 							<section>
-								<h3>Multidimensional Data Cube</h3>
-								<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/cube.png" style="width: 9cm;" class="noborder"></div>
-								<p class="small">Alternative view on multi-dimensional data:<br>k-dimensional hypercube</p>
+								<h3>Facts and Measures</h3>
+								<h4>Fact</h4>
+									<p class="small">Concept that is relevant for decision-making processes,<br>e.g., a sale or a complaint</p>
+								
+								
+								<h4>Measure</h4>
+								<p class="small" style="width: 105%;">Numerical attribute of a fact that is relevant to analysis; directly captured or derived,<br>e.g., units sold, unit price, total revenue, profit, ...</p>
+								
+								<div class="fragment">
+								<p class="small">Example:</p>
 								<ul class="small">
-									<li>Dimensions: axes of the (hyper-)cube</li>
-									<li>Facts: points in cube</li>
+									<li>attribute name: units_sold</li>
+									<li>data type: int</li>
+									<li>range: [0, MAXINT]</li>
+									<li>aggregation type*: FLOW</li>
 								</ul>
+								<p class="small">* see next slide</p>
+							</div>
 							</section>
 
 							<section>
+								<h3>Measures: Aggregation Types</h3>
+									<table class="tablewithborder" style="position: absolute; right: 1cm;">
+									<thead>
+										<tr>
+											<th></th>
+											<th style="text-align: center;">FLOW</th>
+											<th style="text-align: center;" colspan="2">STOCK</th>
+											<th style="text-align: center;">VPU</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td style="text-align: center;" colspan="2">Aggregation over<br>temporal Dimension?</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td style="text-align: center;">Yes</td>
+											<td style="text-align: center;">No</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td style="text-align: center;">MIN/MAX</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+										</tr>
+										<tr>
+											<td style="text-align: center;">SUM</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">-</td>
+											<td style="text-align: center;">-</td>
+										</tr>
+										<tr>
+											<td style="text-align: center;">AVG</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+										</tr>
+										<tr>
+											<td style="text-align: center;">COUNT</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+											<td style="text-align: center;">+</td>
+										</tr>
+									</tbody>
+									</table>
+
+									<h4>FLOW</h4>
+									<p class="small">Can be aggregated in arbitrary ways,<br>e.g., units sold</p>
+
+									<h4>STOCK</h4>
+									<p class="small">Cannot be summed up over time,<br>e.g. current inventory amount, population of a country, ...</p>
+
+									<h4>VALUE-PER-UNIT (VPU)</h4>
+									<p class="small">Current states; cannot be summed up,<br>e.g. current exchange rate, tax, ...</p>
+									
+									<div class="poll fragment" style="bottom:-90px; z-index: 100;" data-fragment-index="1">
+										<h1>What's the aggregation type for &quot;the number of students attending an exam&quot;?</h1>
+												<ul>
+														<li data-poll="correct">FLOW</li>
+														<li>STOCK</li>
+														<li>VPU</li>
+												</ul>
+										<h2>https://fraage.de</h2>
+										</div>
+							</section>
+
+							<section>
+								<h3>Measures: Aggregation Types</h3>
+								
+<p class="small"><b>FLOW</b> example: units sold</p>
+<table class="tablewithborder">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Bikes</th>
+			<th>E-Bikes</th>
+			<td>SUM</td>
+			<td>AVG</td>
+			<td>MIN</td>
+			<td>MAX</td>
+			<td>COUNT</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Monday</b></td>
+			<td>50</td>
+			<td>20</td>
+			<td>70</td>
+			<td>35</td>
+			<td>20</td>
+			<td>50</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td><b>Tuesday</b></td>
+			<td>30</td>
+			<td>30</td>
+			<td>60</td>
+			<td>30</td>
+			<td>30</td>
+			<td>30</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>SUM</td>
+			<td>80</td>
+			<td>50</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>AVG</td>
+			<td>40</td>
+			<td>25</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MIN</td>
+			<td>30</td>
+			<td>20</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MAX</td>
+			<td>50</td>
+			<td>30</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>COUNT</td>
+			<td>2</td>
+			<td>2</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+
+	<div class="poll fragment" style="bottom:-30px; z-index: 100;" data-fragment-index="1">
+		<h1>Which numbers do not make sense in the table below?</h1>
+				<ul>
+						<li data-poll="correct">850 and 380</li>
+						<li>600 and 630</li>
+						<li>425 and 190</li>
+						<li>300 and 315</li>
+				</ul>
+		<h2>https://fraage.de</h2>
+		</div>
+
+<p class="small"><b>STOCK</b> example: current inventory</p>
+<table class="tablewithborder">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Bikes</th>
+			<th>E-Bikes</th>
+			<td>SUM</td>
+			<td>AVG</td>
+			<td>MIN</td>
+			<td>MAX</td>
+			<td>COUNT</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Monday</b></td>
+			<td>400</td>
+			<td>200</td>
+			<td>600</td>
+			<td>300</td>
+			<td>200</td>
+			<td>400</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td><b>Tuesday</b></td>
+			<td>450</td>
+			<td>180</td>
+			<td>630</td>
+			<td>315</td>
+			<td>180</td>
+			<td>450</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>SUM</td>
+			<td><span class="fragment fade-out" data-fragment-index="2">850</span></span><span class="fragment" data-fragment-index="2" style="margin-left:-5.45mm"><strike>850</strike></span></td>
+			<td><span class="fragment fade-out" data-fragment-index="2">380</span></span><span class="fragment" data-fragment-index="2" style="margin-left:-5.45mm"><strike>380</strike></span></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>AVG</td>
+			<td>425</td>
+			<td>190</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MIN</td>
+			<td>400</td>
+			<td>180</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MAX</td>
+			<td>450</td>
+			<td>200</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>COUNT</td>
+			<td>2</td>
+			<td>2</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+							</section>
+
+							<section>
+								<h3>Measures: Aggregation Types</h3>
+								
+<p class="small"><b>VPU</b> example: exchange rate EUR &rightarrow; other currency</p>
+<table class="tablewithborder">
+	<thead>
+		<tr>
+			<th></th>
+			<th>USD</th>
+			<th>JPY</th>
+			<td>SUM</td>
+			<td>AVG</td>
+			<td>MIN</td>
+			<td>MAX</td>
+			<td>COUNT</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Monday</b></td>
+			<td>1.0939</td>
+			<td>134.002</td>
+			<td>-</td>
+			<td>67.54795</td>
+			<td>1.0939</td>
+			<td>134.002</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td><b>Tuesday</b></td>
+			<td>1.0923</td>
+			<td>133.918</td>
+			<td>-</td>
+			<td>67.50515</td>
+			<td>1.0923</td>
+			<td>133.918</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>SUM</td>
+			<td>-</td>
+			<td>-</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>AVG</td>
+			<td>1.0931</td>
+			<td>133.96</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MIN</td>
+			<td>1.0923</td>
+			<td>133.918</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>MAX</td>
+			<td>1.0939</td>
+			<td>134.002</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>COUNT</td>
+			<td>2</td>
+			<td>2</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<aside class="notes">VPU measures cannot be summed up at all. The sum of two exchange rates does not make any sense. Neither over time, nor between different currencies.</aside>
+	</section>
+
+							<!--<section>
 								<h3>Data-Cube Operations</h3>
-								<div style="position: absolute; top: 80px; right:-20px;"><p class="small" style="text-align: center; margin-bottom: -5mm;">slice:</p><img src="img/3/slice.png" style="width: 8cm;" class="noborder"></div>
+								<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/slice.png" style="width: 7cm;" class="noborder"></div>
+								<div style="position: absolute; top: 9cm; right:-20px;"><img src="img/3/dice.png" style="width: 6cm;" class="noborder"></div>
 								<h4>Slice</h4>
 								<pre style="width: 18cm; margin-left: 0cm;"><code class="sql">SELECT sum(price) FROM sales
 WHERE product_no = 7208;</code></pre>
@@ -198,13 +585,341 @@ WHERE product_no = 7208 AND
 sales_date BETWEEN '2014-01-01' AND '2014-01-31'
 AND clerk = 219;</code></pre>
 
-								<h4></h4>
+								<aside class="notes">Slicing means fixing one of the dimensions to a constant value. Dicing provides interval restrictions on one or more dimensions. </aside>
+							</section>-->
+
+							<section>
+								<h3>Conceptual Modeling</h3>
+								<div class="stretch erd" style="max-height: 6cm;">
+									[[
+									 { _e: "Market", pos: [150, 10],
+										attributes: [
+										]
+									 },
+									 { _e: "Product", pos: [360, 140],
+										 attributes: [
+										
+										 ]
+									 },
+									 { _e: "Date", pos: [580, 10],
+										 attributes: [
+										
+										 ]
+									 }
+									],
+									[
+									 { _r: "Sale",
+										 _e: ["Product", "Market", "Date"],
+										 card: ["", "", ""],
+										 attributes: [
+										{ _a:"Amount", pos: [320, 3]},
+										{ _a:"Revenue", pos: [450, 3]},
+										]
+									 }
+									]]
+															</div>
+
+									<p class="small">Weaknesses of ER diagrams:</p>
+									<ul class="small">
+										<li>How to model dimension hierarchies?</li>
+										<li>How to to model facts and measures?</li>
+									</ul>
+
+									<div class="poll fragment" style="bottom:-200px; z-index: 100;" data-fragment-index="1">
+										<h1>What's the relationship type for the sales relationship?</h1>
+												<ul>
+														<li>1:1:1</li>
+														<li>1:1:N</li>
+														<li>1:N:M</li>
+														<li data-poll="correct">N:M:P</li>
+												</ul>
+										<h2>https://fraage.de</h2>
+										</div>
 							</section>
 
+	<section>
+		<h3>The ME/R Model</h3>
+		<p class="small">Multidimensional Entity/Relatioship Model.</p>
+		<div style="position: absolute; top:3cm; right: 5mm;">
+			<img src="img/3/mer.svg" alt="" class="noborder" style="width: 12.5cm;">
+		</div>
+		<h4>Fact Relationship</h4>
+		<p class="small">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="133px" height="133px" viewBox="-0.5 -0.5 133 133" content="&lt;mxfile host=&quot;app.diagrams.net&quot; modified=&quot;2022-04-04T07:16:45.579Z&quot; agent=&quot;5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36&quot; etag=&quot;AVhIUjvfxt6OUHYnHeFR&quot; version=&quot;17.4.0&quot; type=&quot;device&quot;&gt;&lt;diagram id=&quot;ffaw00dHx8nQNK3oEriH&quot; name=&quot;Page-1&quot;&gt;jZNda8IwFIZ/TS8nMfEDL6dTx3B4IWOXIzaxDSZNiadru1+/xJ62FhGEQk+evCcf5z2J2MpUW8fz9NMKqSNKRBWxt4jSMaU0Ch8RdUPmDEHilEBRDw7qTyIkSAsl5GUgBGs1qHwIY5tlMoYB487Zcig7WT3cNeeJvAOHmOt7+q0EpA2lhPT8XaokxZ1n7YThrRbBJeXCljeIrSO2ctZCE5lqJXWoXVuWJm/zYLY7l5MZPJPw8+pmH+fl6WsD3GyNofWueMFVfrku8L54WKjbAvhz5yGMi6P/LctUgTzkPA6s9J57loLRfjT24dEWmZBid+wAj8+JC3RfgFaZRC64O+/9MgpCY5ARmQ4hvdKgdBY4KJt5MAmik80A+8RfmS3xCtKBrB7WZtxV3HeqtEaCq70EE+iUNSnYpBP0rOwdX0walN6YvSCjOWKObZZ0a/dW+ADdaIe969e5m6fD1v8=&lt;/diagram&gt;&lt;/mxfile&gt;"><defs/><g><path d="M 19 20 L 93 20 L 113 40 L 113 110.74 L 39 110.74 L 19 90.74 L 19 20 Z" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" transform="rotate(45,66,65.37)" pointer-events="all"/><path d="M 19 20 L 93 20 L 113 40 L 39 40 Z" fill-opacity="0.05" fill="#000000" stroke="none" transform="rotate(45,66,65.37)" pointer-events="all"/><path d="M 19 20 L 39 40 L 39 110.74 L 19 90.74 Z" fill-opacity="0.1" fill="#000000" stroke="none" transform="rotate(45,66,65.37)" pointer-events="all"/><path d="M 39 110.74 L 39 40 L 19 20 M 39 40 L 113 40" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" transform="rotate(45,66,65.37)" pointer-events="all"/></g></svg>
+		</p>
+
+		<h4>Roll-up Relationship</h4>
+		<p class="small">		
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18px" height="88px" viewBox="-0.5 -0.5 18 88" content="&lt;mxfile host=&quot;app.diagrams.net&quot; modified=&quot;2022-04-04T07:20:27.087Z&quot; agent=&quot;5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36&quot; etag=&quot;0YWMXR5yN6Kte-p0ekPc&quot; version=&quot;17.4.0&quot; type=&quot;device&quot;&gt;&lt;diagram id=&quot;ffaw00dHx8nQNK3oEriH&quot; name=&quot;Page-1&quot;&gt;jZPbTsMwDIafppdIWcI2cbmNdQiBhBiISxQ1XhuRw5Sm28rTk1KnByoEUi/iL/Zvx3YTttGXnePH4tEKUAkl4pKw24TSGaU0aT4i6pYsGYLcSYFOPdjLT0BIkFZSQDly9NYqL49jmFljIPMjxp2z57Hbwapx1iPPYQL2GVdT+iaFL1pKCen5Hci8wMyLeKF59EVQFlzY8wCxbcI2zlrfnvRlA6rpXWxLG5f+ctvV5cD4/wS8r9zi/mN9eE091zutaf1QXc1blRNXFb4Xi/V1bAAYsWr6GKxM8bKU2UshTcLWhdcqwFk4OlsZAU0iEqzSc+djzPZZc1NHmkql0CvootUoHKzxOHza3LZlgJgMp3/urGtiWD6wGryrg8u5n9IcW18MBhSZA8W9PI3lOS5L3sl1GZ6sDIkpwcWmN6iDa02XZCxR2splgFHDsfwhxK5/CIW25eAnQuEweHaPvqcezX67Wvf+F2XbLw==&lt;/diagram&gt;&lt;/mxfile&gt;"><defs/><g><path d="M 8 8 L 8 71.63" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 4 8 L 8 16 L 12 8" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/><path d="M 8 76.88 L 5.67 69.88 L 8 71.63 L 10.33 69.88 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/></g></svg>
+		</p>
+	</p>
+	<aside class="notes">There are multiple modelling approaches for conceptual modelling of data warehouses. On of them is the M/ER model, an extension to the ER model. Fact relationships connect dimensions. Dimensions can consist of multiple hierarchy levels.</aside>
+	</section>
+
+	<section>
+		<h3>Relational Mapping of Multidimensional Structures<br>(ROLAP)</h3>
+
+		<p class="small">Requirements:</p>
+		<ul class="small">
+			<li>No loss of application-specific semantics (e.g., the classification hierarchy).</li>
+			<li>Efficient translation of multi-dimensional queries in SQL queries.</li>
+			<li>Efficient execution of SQL queries.</li>
+			<li>Easy maintenance, efficient ETL, index support.</li>
+		</ul>
+		<p class="small">Multiple Variants: Star Schema, Snowflake Schema (= normalized Star Schema), ...</p>
+		<aside class="notes">ROLAP (Relational OLAP) stands for the mapping of a multidimensional data model to a relational schema (tables).</aside>
+	</section>
+
+	<section>
+		<h3>Snowflake Schema</h3>
+		<!--
+			create schema snowflake;
+
+create table regions(region_id int primary key, region varchar(500));
+create table cities(city_id int primary key, city varchar(500), region_id int references regions(region_id));
+create table markets(market_id int primary key, street varchar(500), city_id int references cities(city_id));
+
+create table categories(category_id int primary key, category varchar(500));
+create table products(product_id int primary key, description varchar(500), price decimal(18,2), category_id int references categories(category_id));
+
+create table dim_date(date_id int primary key, "DATE" date);
+
+create table sales(market_id int references markets(market_id),
+				   product_id int references products(product_id),
+				   date_id int references dim_date(date_id),
+				   amount int, revenue decimal(18,2));
+		-->
+		<div style="position: absolute; right: 5mm; top:2.3cm;">
+			<img src="img/3/snowflake.png" alt="Snowflake Schema" class="noborder" style="width: 12cm;">
+			<p class="small" style="margin-left: 2.2cm; margin-top: -5mm;">
+				Date dimension table typically not necessary.</p>
+		</div>
+		<h4>Dimension Tables</h4>
+		<ul class="small" style="margin-top: -5mm;">
+			<li>ID</li>
+			<li>descriptive attributes<br>(e.g, product description)</li>
+			<li>foreign key to the next<br>classification table</li>
+		</ul>
+		<p></p>
+		<h4>Facts Table</h4>
+		<ul class="small" style="margin-top: -5mm;">
+			<li>foreign key to each<br>dimension (lowest level)</li>
+			<li>measures</li>
+			<li>primary key: combination<br>of all foreign-key columns<br>or own ID</li>
+		</ul>
+	</section>
+
+	<section>
+		<h3>Star Schema</h3>
+<!--
+	create schema star;
+
+create table markets(market_id int primary key, street varchar(500), city varchar(500), region varchar(500));
+
+create table products(product_id int primary key, description varchar(500), price decimal(18,2), category varchar(500));
+
+create table dim_date(date_id int primary key, "DATE" date);
+
+create table sales(market_id int references markets(market_id),
+				   product_id int references products(product_id),
+				   date_id int references dim_date(date_id),
+				   amount int, revenue decimal(18,2),
+				   primary key(market_id, product_id, date_id));
+-->
+		<div style="position: absolute; right: 5mm; top:2.3cm;">
+			<img src="img/3/star.png" alt="Snowflake Schema" class="noborder" style="width: 10cm;">
+		</div>
+
+		<p class="small">Denormalized dimension tables<br>
+			&Rightarrow; only 1 table per dimension</p>
+
+		<p class="small">(-) Redundancy<br>
+		(-) Updates of dimension tables is harder<br>
+		(+) Performance (less joins required)</p>
+
+		<p class="small" style="margin-top: 2cm;">&Rightarrow; Star schema often the better choice than a snowflake schema.</p>
+		<p class="small fragment">Mix of star/snowflake also possible:<br>only denormalize small dimensions with low frequency of changes.</p>
+		<aside class="notes">The fact table is the same as in the snowflake schema. The dimension tables are in 3NF.</aside>
+	</section>
+
+	<section>
+		<h3>Redundancy in Dimension Tables</h3>
+		<pre><code class="sql">SELECT * FROM dim_date</code></pre>
+		<span class="sqlresult" style="font-size: 99%;"></span>
+
+		<p class="small">Why such a redudancy? Why have a dim_date table at all?</p>
+
+		<div class="poll fragment" style="bottom:-100px; z-index: 100;" data-fragment-index="1">
+			<h1>Why do we introduce redundancy in dimension tables?</h1>
+					<ul>
+							<li>More accurate query results</li>
+							<li>Protects against data loss</li>
+							<li>Security</li>
+							<li data-poll="correct">Performance</li>
+					</ul>
+			<h2>https://fraage.de</h2>
+			</div>
+
+		<ul class="fragment small" data-fragment-index="2">
+			<li>redundancy is convenient and allows fast access<br>(e.g., no date-function calls required)</li>
+			<li>redundancy won't hurt <ul><li>often small tables (|dim_date| &le; 366 rows per year)</li><li>no consistency problems as in OLTP systems</li></ul></li>
+		</ul>
+
+		<aside class="notes">As many dimension tables are small, the storage overhead of denormalization and precomputations does not hurt. In OLTP systems, redundancy can become problematic due to insertion/deletion/change anomalies. In data warehouses, this is typically no problem because changes only happen in ETL jobs.</aside>
+	</section>
+
+	<section>
+		<h3>Star vs. Snowflake Schema</h3>
+
+		<pre><code class="sql">SELECT sum(revenue)                              -- Star Schema
+FROM sales s, products p, markets m, dim_date d 
+WHERE s.product_id=p.product_id
+  AND s.market_id=m.market_id
+  AND s.date_id=d.date_id
+  AND p.category = 'Food' 
+  AND m.region = 'Bavaria'
+  AND d."DATE" > add_days(CURRENT_DATE, -28);</code></pre>
+
+		<pre><code class="sql">SELECT sum(revenue)                         -- Snowflake Schema 
+FROM sales s, products p, categories c, 
+     markets m, cities ci, regions r, dim_date d 
+WHERE s.product_id=p.product_id
+  AND p.category_id=c.category_id
+  AND s.market_id=m.market_id
+  AND m.city_id=ci.city_id
+  AND ci.region_id=r.region_id
+  AND s.date_id=d.date_id
+  AND c.category = 'Food' 
+  AND r.region = 'Bavaria'
+  AND d."DATE" > add_days(CURRENT_DATE, -28);</code></pre>
+	</section>
+
+	<section>
+		<h3>Slowly changing dimensions</h3>
+		<p class="small">Dimension tables are relatively static. They change slowly and unpredictably.</p>
+		<h4>Methods how to track changes in dimensions:</h4>
+		<ul class="small" style="margin-bottom: 5mm;">
+			<li>Type 0: No changes at all.<br>Original record stays the same all the time, only insertions<br>&nbsp;</li>
+			<li>Type 1: Simply overwrite old data with new data.<br>Historical data is not tracked</li>
+		</ul>
+		<span data-sql-pk="product_id" data-sql-query="SELECT product_id, description, 'Food' as category FROM products where product_id=17"></span>
+		<p class="small" style="text-align: center; margin-top: 0mm; margin-bottom: 0mm;">&darr;</p>
+		<span data-sql-pk="product_id" data-sql-query="SELECT product_id, description, category FROM products where product_id=17"></span>
+	</section>
+
+	<section>
+		<h3>Slowly changing dimensions</h3>
+		<ul class="small" style="margin-bottom: 5mm;">
+			<li>Type 2: Changes are tracked using timestamps.<br>Each record has valid_from and valid_until value. Primary key must include valid_from.</li>
+		</ul>
+		<span data-sql-pk="product_id,valid_from" style="font-size: 95%;" data-sql-query="SELECT product_id, description, 'Food' as category, '2022-01-01 09:34:28' as valid_from, '9999-12-31 23:59:59' as valid_until FROM products where product_id=17"></span>
+		<p class="small" style="text-align: center; margin-top: 0mm; margin-bottom: 0mm;">&darr;</p>
+		<span data-sql-pk="product_id,valid_from"  style="font-size: 95%;" data-sql-query="SELECT product_id, description, 'Food' as category, '2022-01-01 09:34:28' as valid_from, '2022-03-17 16:09:54' as valid_until FROM products where product_id=17
+		union SELECT product_id, description, category, '2022-03-17 16:09:54' as valid_from, '9999-12-31 23:59:59' as valid_until FROM products where product_id=17"></span>
+	</section>
+
+	<section>
+		<h3>Slowly changing dimensions</h3>
+		<ul class="small" style="margin-bottom: 5mm;">
+			<li>Type 3: Store the original and the current value.<br>Additional columns are used to store original values	</li>
+		</ul>
+		<span data-sql-pk="product_id" style="font-size: 95%;" data-sql-query="SELECT product_id, description, 'Food' as category, 'Food' as category_orig FROM products where product_id=17"></span>
+		<p class="small" style="text-align: center; margin-top: 0mm; margin-bottom: 0mm;">&darr;</p>
+		<span data-sql-pk="product_id" style="font-size: 95%;" data-sql-query="SELECT product_id, description, category, 'Food' as category_orig FROM products where product_id=17"></span>
+		<aside class="notes">This method is typically used on company reorganizations not for attributes that change unpredictably.</aside>
+	</section>
+	
+	<section>
+		<h3>Types of Fact Tables</h3>
+		<h4>Transactional Fact Table</h4>
+		<p class="small">Each record represents one specific business event (sale, shipping, complaint, ...).</p>
+		<span data-sql-pk="sales_id" style="font-size: 95%;" data-sql-query="SELECT sales_id, customer_id, market_id, product_id, date_id, amount, revenue as price FROM sales WHERE sales_id=557"></span>
+
+		<div class="fragment" style="margin-top: 15mm;">
+		<p class="small"><b>Variants:</b> One fact table per event type* vs. one for all event types.</p>
+		<span data-sql-pk="tx_id" style="font-size: 95%;" data-sql-query="SELECT 1779 as tx_id, 'sale' as tx_type, customer_id, market_id, product_id, date_id, amount, revenue as price FROM sales WHERE sales_id=557
+		union SELECT 2118 as tx_id, 'return' as tx_type, customer_id, market_id, product_id, 9 as date_id, amount, revenue as price FROM sales WHERE sales_id=557"></span>
+		<p class="small">* they use the same dimension tables.</p>
+		<aside class="notes">The measures in these kind of fact tables have the type FLOW.</aside>
+	</div>
+	</section>
+
+	<section>
+		<h3>Types of Fact Tables</h3>
+		<h4>Periodic Snapshot Fact Table</h4>
+		<p class="small">Captures states at a specific point in time.</p>
+		<span style="font-size: 95%;" data-sql-query="SELECT market_id, product_id, '2022-01' as d_month, 5230 as in_stock FROM sales WHERE sales_id=557"></span>
+
+		<h4 style="margin-top: 5mm;">Accumulated Snapshot Fact Table</h4>
+		<p class="small">Record in fact table is updated during a specific process.</p>
+		<span style="font-size: 95%;" data-sql-query="SELECT 751 as complain_id, 27 as clerk_id, '2022-01-26' as d_start, 'OPEN' as status, 0 as minutes_spend, null as date_resolved"></span>
+
+		<aside class="notes">Periodic snapshot fact table contain states that were periodically captured. They contain data that were true at that specific point in time for a specific product, market, etc. (no relation to customer). The measures are typically semi-additive (type STOCK) and cannot be summed up across time.<br>
+		The rows in the accumulated snapshot table are updated when the fact changes. The status can change, the minutes_spend will increase and the date_resolved will be eventually set to a date value. </aside>
+	</section>
+
+	<section>
+		<h3>DB Design in Exasol</h3>
+		<p class="small">Best practices:</p>
+		<ul class="small">
+			<li>All data models work fine (star, snowflake, ...)</li>
+			<li>Storing detailed data in facts table (no pre-aggregation)</li>
+			<li>Views for aggregations</li>
+			<li>Views for virtual data marts</li>
+			<li>Views instead of denormalized storage</li>
+		</ul>
+		<aside class="notes">In Exasol, normalization is recommended. But for performance reasons it can make sense to introduce redundancy for specific cases.</aside>
+	</section>
+
+	<section>
+		<h3>Multi-Tenancy</h3>
+		<p class="small">The same application and the same database is used by different customers (tenants). Tenants must not see data from other tenants.</p>
+		<div class="fragment">
+			<h4>Approach 1: Separate DB for each tenant</h4>
+		<div class="columns">
+			<div><p class="small">
+				(+) secure<br>
+				(-) no cross-tenant analytics<br>
+				(-) only for a small number of tenants
+			</p></div>
+			<div><img src="img/3/tenant1.png" class="noborder" style="width: 9cm;"></div>
+		</div>
+	</div>
+		
+		<div class="columns">
+			<div class="fragment"><h4>Approach 2: Shared DB</h4>
+				<img src="img/3/tenant2.png" class="noborder" style="width: 9cm;"></div>
+			<div class="fragment">	<h4>Approach 3: Shared Schema</h4>
+				<img src="img/3/tenant3.png" class="noborder" style="width: 9cm;"></div>
+		</div>
+		
+	</section>
+
+	<section>
+		<h3>Views</h3>
+		<p class="small" style="margin-bottom: -3mm;">Best practice: Shared DB for multi-tenancy<br>Using views for row- or column-level security.</p>
+		<img src="img/3/tenant4.png" class="noborder" style="width:18cm">
+		<pre style="margin-top: -3mm;"><code class="sql">CREATE VIEW BUSINESS_LAYER.V_TENANT32_CUSTOMERS AS
+SELECT * FROM CORE.CUSTOMERS WHERE TENANT_ID = 32;</code></pre>
+
+<pre><code class="sql">GRANT SELECT ON BUSINESS_LAYER.V_TENANT32_CUSTOMERS TO TENANT32;</code></pre>
+<p class="small">Views are executed with the privileges of the owner!</p>
+
+<aside class="notes">The owner of the view's schema needs the privileges on the tables in the view's <code>FROM</code> clause. Here, the owner of the schema BUSINESS_LAYER needs the <code>SELECT</code> privilege on the table <code>CORE.CUSTOMERS</code>.</aside>
+	</section>
 							
 	<section>
 		<h3>Summary</h3>
 		<ul class="small">
+			<li>Dimensions and Facts</li>
+			<li>Multidimensional Data Cube</li>
+			<li>The ME/R Model</li>
+			<li>ROLAP: Relational Mapping</li>
+			<li>Star Schema</li>
+			<li>Snowflake Schema</li>
+			<li>Slowly Chaning Dimensions; tracking updates</li>
+			<li>Fact Table</li>
+			<li>Exasol: DB Design, Multi-Tenancy, Views</li>
 		</ul>
 	</section>
 

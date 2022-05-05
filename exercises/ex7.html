@@ -4,53 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 7</title>
+    <title>Data Warehousing - Exercise Sheet 7</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 7 (2021-06-11)</b>
+            <b>Exercise Sheet 7 (2022-05-11/13/16)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: SPARQL</h1>
-    <p>Explore <a href="https://yago-knowledge.org/sparql" target="_blank">Yago</a> and write SPARQL queries for the following problems:
+    <h1>Exercise 1: Schema Integration</h1>
+    <p>For this exercise sheet, download the following two CSV files that contain german cities data:</p>
+    <ul>
+        <li>ww-german-postal-codes.csv from <a href="https://www.wiwald.com/ds/kostenlose-liste-deutscher-postleitzahlen-und-zugehoeriger-orte/id/ww-german-postal-codes" target="_blank">https://www.wiwald.com/ds/kostenlose-liste-deutscher-postleitzahlen-und-zugehoeriger-orte/id/ww-german-postal-codes</a></li>
+        <li>zuordnung_plz_ort.csv from <a href="https://www.suche-postleitzahl.org/downloads#google_vignette" target="_blank">https://www.suche-postleitzahl.org/downloads#google_vignette</a></li>
+    </ul>
 
-      <ol>
-        <li>Where was <a href="https://yago-knowledge.org/resource/yago:Coldplay" target="_blank">Coldplay</a> founded?</li>
-        <li>List the firstnames and lastnames of all members of Coldplay.</li>
-        <li>List all songs composed by members of Coldplay.</li>
-        <li>For each song composed by members of Coldplay, list the number of composers.</li>
-      </ol>
-    </section> 
+    <p>When you solve this exercise on your local database, create a new schema for this exercise: <code>CREATE SCHEMA IF NOT EXISTS ex7;</code> If you use the OTH database, use your <code>FIRSTNAME_LASTNAME</code> user and schema.</p>
     
-<script src="../lib/jquery.js"></script>
-<script src="../lib/lodash.js"></script>
-<script src="../lib/backbone.js"></script>
-<script src="../lib/joint.min.js"></script>
-<script type="text/javascript">
-Reveal = document;
-Reveal.registerPlugin = function(pluginname, plugin) {
-    plugin.init()
-};
-Reveal.addEventListener = function(event, f) {
-    if(event == 'ready') {
-        f();
-    }
-}
-</script>
-<script type="text/javascript" src="../src/erd.js"></script>
+    <ol>
+        <li>Open the CSV files in a text editor (not in Excel!) to inspect their format.</li>
+        <li>Prepare your staging area: For each CSV file, create a table in the Exasol database with the same attributes as in the CSV file.</li>
+        <li>Which forms of heterogeneity exists between the two data sources? Give examples.</li>
+        <li>Perform a schema mapping between the two schemas.</li>
+        <li>Create an integrated schema in the Exasol database (use <code>CREATE TABLE</code>).</li>
+    </ol>
+</section>
 
+<section>
+    <h1>Exercise 2: IMPORT</h1>
+    <ol>
+        <li>Write two <code>IMPORT</code> commands to import the CSV files in your staging area.</li>
+        <li>For each of your two tables, how many rows were imported?</li>
+        <li>How many cities are in the first dataset but not in the second, and vice versa?</li>
+    </ol>
+</section>
+
+
+    
 </body>
 </html>

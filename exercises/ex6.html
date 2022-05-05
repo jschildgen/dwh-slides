@@ -4,72 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 6</title>
+    <title>Data Warehousing - Exercise Sheet 6</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 6 (2021-05-21)</b>
+            <b>Exercise Sheet 6 (2022-05-04/06/09)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: MongoDB</h1>
-    <p>In this exercise sheet, you work on the same Pokémon dataset as on exercise sheet 2, but this time you should use MongoDB.</p>
-
-      <ol>
-        <li>Install MongoDB and find out how to import the Pokemón dataset from <a href="https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json">https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json</a></li>
-        <li>Find the english names of all monsters.</li>
-        <li>What's the english name of the monster with id 115?</li>
-        <li>What's the first type of the monster with the id 149?</li>
-        <li>Use the aggregation pipeline to find the most frequently occurring monster type. Hint: the least frequently occurring type is Ice (only 34 monsters).</li>
-      </ol>
-    </section>      
-
-<section>
-  <h1>Exercise 2: Gremlin</h1>
-  <p>Downlaod and start the Gremlin Console from <a href="https://tinkerpop.apache.org/gremlin.html">https://tinkerpop.apache.org/gremlin.html</a></p>.
-
-  <img src="img/tinkerpop-modern.png" alt="Modern Graph" style="width:12cm">
-
-  <ol>
-    <li>Create the &quot;modern&quot; example graph:<br>
-    <code>graph = TinkerFactory.createModern()</code><br>
-  <code>g = traversal().withEmbedded(graph)</code></li>
-    <li>List the names of people that know Marko (knows is a symmetric relationship)</li>
-    <li>Who created Java software that was also created by Peter? Show their names.</li>
-    <li>What would this query (3.) be in Cypher?</li>
-  </ol>
-
-
-</section>
+    <h1>Exercise 1: Slowly changing dimensions</h1>
+    <p>In this exercise, you will extend your star schema from the previous exercise sheet.</p>
     
-<script src="../lib/jquery.js"></script>
-<script src="../lib/lodash.js"></script>
-<script src="../lib/backbone.js"></script>
-<script src="../lib/joint.min.js"></script>
-<script type="text/javascript">
-Reveal = document;
-Reveal.registerPlugin = function(pluginname, plugin) {
-    plugin.init()
-};
-Reveal.addEventListener = function(event, f) {
-    if(event == 'ready') {
-        f();
-    }
-}
-</script>
-<script type="text/javascript" src="../src/erd.js"></script>
+    <ol>
+        <li>Implement the slowly-changing-dimensions approach type 2 by adding <code>valid_from</code> and <code>valid_until</code> columns to your dimension tables. Use <code>DEFAULT</code> specifications so that <code>valid_from</code> is the current timestamp and <code>VALID_UNTIL</code> is <code>'9999-12-31 23:59:59.999</code> by default.</li>
+        <li>For the existing data, set all <code>valid_from</code> values to <code>'1900-01-01 0:00:00'</code>.</li>
+        <li>Insert a customer Jane that registered on 1st April 2022 with the "FREE" plan. She changed her plan to the "FLAT" plan on 15th April.</li>
+        <li>Insert three rentals of customer Jane, one from the 5th April, one from the 20th April, and one from the 1st May.</li>
+        <li>Write a <code>SELECT</code> query to generate a report that shows for each month and plan, the average duration of rides. Make sure to correctly include the timestamps of validity of the dimension tables!
+          <table><tr><th>MON</th><th>PLAN</th><th>AVG_DURATION</th></tr>
+            <tr><td>2022-01</td><td>FREE</td><td>12.82</td></tr>
+            <tr><td>2022-01</td><td>FLAT</td><td>28.43</td></tr>
+            <tr><td>2022-02</td><td>FREE</td><td>15.11</td></tr>
+            <tr><td>2022-02</td><td>FLAT</td><td>29.70</td></tr>
+          </table><br>
+        </li>
+        <li>Create a view <code>AVG_DURATIONS_PER_MONTH_AND_PLAN</code> for the report from the previous task.</li>
+        <li>Create a view <code>RENTAL_DENORMALIZED</code> that includes all data from the fact and dimension tables in a denormalized form.</li>
+        <li>Rewrite your query from task 5 on the denormalized view.</li>
+    </ol>
 
+    <p>Hints:</p>
+    <ul>
+        <li>If you have defined foreign-key columns in your rental table, you need to drop them for this exercise. Take a look in the system table <code>SYS.EXA_USER_CONSTRAINT_COLUMNS</code> and drop the foreign-key constraint with <code>ALTER TABLE rental DROP CONSTRAINT [constraint_name];</code></li>
+        <li>Dropping the primary key is much easier: <code>ALTER TABLE ... DROP PRIMARY KEY;</code></li>
+    </ul>
+</section>
+
+
+    
 </body>
 </html>

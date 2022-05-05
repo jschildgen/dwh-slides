@@ -68,50 +68,67 @@ function errorFunction(tx, e) {
 
 function create_db() {
     
-    db = openDatabase("SQL", "1", "SQL", 5*1024*1024);
+    db = openDatabase("DWH", "1", "DWH", 5*1024*1024);
     
     db.transaction(function(tx) {
-        tx.executeSql("DROP TABLE IF EXISTS bestellungen_positionen");
-        tx.executeSql("DROP TABLE IF EXISTS bestellungen");
-        tx.executeSql("DROP TABLE IF EXISTS bewertungslikes");
-        tx.executeSql("DROP TABLE IF EXISTS bewertungen");
-        tx.executeSql("DROP TABLE IF EXISTS produkte");
-        tx.executeSql("DROP TABLE IF EXISTS hersteller");
-        tx.executeSql("DROP TABLE IF EXISTS kunden");
-        tx.executeSql("CREATE TABLE kunden (kundennr INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(500) UNIQUE, passwort CHAR(32), land VARCHAR(100), geworben_von INT REFERENCES kunden(kundennr) ON DELETE SET NULL)");
-        tx.executeSql("CREATE TABLE hersteller (firma VARCHAR(50) PRIMARY KEY, land VARCHAR(100))");
-        tx.executeSql("CREATE TABLE produkte (produktnr INT PRIMARY KEY, bezeichnung VARCHAR(100) NOT NULL, preis DECIMAL(9,2), hersteller VARCHAR(50) REFERENCES hersteller(firma) ON UPDATE CASCADE)");
-        tx.executeSql("CREATE TABLE bewertungen (kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr), sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5), bewertungstext VARCHAR(100000), PRIMARY KEY(kundennr, produktnr))");
-        tx.executeSql("CREATE TABLE bewertungslikes (liker INT REFERENCES kunden(kundennr), kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr))");
-        tx.executeSql("CREATE TABLE bestellungen (bestellnr INT PRIMARY KEY, kundennr INT REFERENCES kunden(kundennr), zeit TIMESTAMP, preis DECIMAL(9,2))");
-        tx.executeSql("CREATE TABLE bestellungen_positionen (bestellnr INT REFERENCES bestellungen(bestellnr), produktnr INT REFERENCES produkte(produktnr), anzahl INT, PRIMARY KEY(bestellnr, produktnr))");
+        query = function(sql) { 
+            onError = function(tx, e) {
+                alert(e.message+"\n"+sql);
+            }
+            tx.executeSql(sql, [], null, onError); 
+        }
+        query("DROP TABLE IF EXISTS dim_date");
+        query("CREATE TABLE dim_date (date_id INTEGER PRIMARY KEY AUTOINCREMENT, d_date date, d_year int, d_month int, d_week int, d_yearmonth char(7), holiday boolean)");
+        query("INSERT INTO dim_date (d_date, holiday) VALUES('2022-01-01', true)");
+        query("INSERT INTO dim_date (d_date, holiday) VALUES('2022-01-02', false)");
+        query("INSERT INTO dim_date (d_date, holiday) VALUES('2022-01-03', false)");
+        query("UPDATE dim_date SET d_year = strftime('%Y', d_date), d_month = strftime('%m', d_date), d_week = strftime('%W', d_date), d_yearmonth = strftime('%Y-%m', d_date)")
 
-        
-        tx.executeSql("INSERT INTO kunden VALUES(4,'Ute', 'ute@example.com', NULL, 'Deutschland', NULL)");                              
-        tx.executeSql("INSERT INTO kunden VALUES(5,'Peter', 'peter@example.com', NULL, 'Deutschland', 4)");
-        tx.executeSql("INSERT INTO kunden VALUES(8,'Anna', 'anna@example.com', 5, 'Italien', 5)");
-        tx.executeSql("INSERT INTO hersteller VALUES ('Calgonte', 'Italien')");
-        tx.executeSql("INSERT INTO hersteller VALUES ('Monsterfood', 'USA')");
-        tx.executeSql("INSERT INTO hersteller VALUES ('Holzkopf', 'Österreich')");
-        tx.executeSql("INSERT INTO produkte VALUES(17, 'Schokoriegel', 0.89, 'Monsterfood')");
-        tx.executeSql("INSERT INTO produkte VALUES(18, 'Müsliriegel', 1.19, 'Monsterfood')");
-        tx.executeSql("INSERT INTO produkte VALUES(29, 'Spülmaschinentabs', 3.99, 'Calgonte')");
-        tx.executeSql("INSERT INTO produkte VALUES(88, 'Katzenfutter', 4.99, NULL)");
-        tx.executeSql("INSERT INTO produkte VALUES(91, 'Maschinenbau-Lehrbuch', 22.90, NULL)");
-        tx.executeSql("INSERT INTO produkte VALUES(92, 'Regal', 100.00, NULL)");
-        tx.executeSql("INSERT INTO produkte VALUES(998, 'Geschenkverpackung', 0.00, NULL)");
-        tx.executeSql("INSERT INTO produkte VALUES(999, 'Katalog', 0.00, NULL)");
-        tx.executeSql("INSERT INTO bewertungen VALUES(5, 17, 4, 'Guter Schokoriegel, aber die Verpackung geht schwer auf')");
-        tx.executeSql("INSERT INTO bewertungen VALUES(5, 29, 1, 'Mein Geschirr wird nicht sauber!')");
-        tx.executeSql("INSERT INTO bewertungen VALUES(8, 29, 2, 'Nicht gut, aber billig.')");
-        tx.executeSql("INSERT INTO bewertungslikes VALUES(8,5,17)");
-        tx.executeSql("INSERT INTO bestellungen VALUES(101, 5, '2018-05-26 20:31:00', 34.80)");
-        tx.executeSql("INSERT INTO bestellungen VALUES(102, 8, '2018-05-26 20:31:01', 100)");
-        tx.executeSql("INSERT INTO bestellungen VALUES(103, 8, '2018-05-27 8:15:00', 0.89)");
-        tx.executeSql("INSERT INTO bestellungen_positionen VALUES(101, 91, 1)");
-        tx.executeSql("INSERT INTO bestellungen_positionen VALUES(101, 18, 10)");
-        tx.executeSql("INSERT INTO bestellungen_positionen VALUES(102, 91, 1)");
-        tx.executeSql("INSERT INTO bestellungen_positionen VALUES(103, 17, 1)");
+        query("DROP TABLE IF EXISTS bestellungen_positionen");
+        query("DROP TABLE IF EXISTS bestellungen");
+        query("DROP TABLE IF EXISTS bewertungslikes");
+        query("DROP TABLE IF EXISTS bewertungen");
+        query("DROP TABLE IF EXISTS products");
+        query("DROP TABLE IF EXISTS manufacturers");
+        query("DROP TABLE IF EXISTS customer");
+        query("CREATE TABLE customer (customer_id INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(500) UNIQUE, password land VARCHAR(100), referral_of INT REFERENCES customers(customer_id) ON DELETE SET NULL)");
+        query("CREATE TABLE manufacturers (company VARCHAR(50) PRIMARY KEY, country VARCHAR(100))");
+        query("CREATE TABLE products (product_id INT PRIMARY KEY, description VARCHAR(100) NOT NULL, price DECIMAL(9,2), manufacturer VARCHAR(50) REFERENCES manufacturers(company) ON UPDATE CASCADE, category VARCHAR(100))", [], null, errorFunction);
+        /*query("CREATE TABLE bewertungen (kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr), sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5), bewertungstext VARCHAR(100000), PRIMARY KEY(kundennr, produktnr))");
+        query("CREATE TABLE bewertungslikes (liker INT REFERENCES kunden(kundennr), kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr))");
+        query("CREATE TABLE bestellungen (bestellnr INT PRIMARY KEY, kundennr INT REFERENCES kunden(kundennr), zeit TIMESTAMP, preis DECIMAL(9,2))");
+        query("CREATE TABLE bestellungen_positionen (bestellnr INT REFERENCES bestellungen(bestellnr), produktnr INT REFERENCES produkte(produktnr), anzahl INT, PRIMARY KEY(bestellnr, produktnr))");
+*/
+
+        query("drop table if exists sales;")
+        query("create table sales(sales_id, customer_id int, market_id int, product_id int references products(product_id), date_id int, amount int, revenue decimal(18,2))");
+        query("insert into sales values(557, 5, 624, 17, 3, 1, 0.89)")
+
+        /*query("INSERT INTO kunden VALUES(4,'Ute', 'ute@example.com', NULL, 'Deutschland', NULL)");                              
+        query("INSERT INTO kunden VALUES(5,'Peter', 'peter@example.com', NULL, 'Deutschland', 4)");
+        query("INSERT INTO kunden VALUES(8,'Anna', 'anna@example.com', 5, 'Italien', 5)"); */
+        query("INSERT INTO manufacturers VALUES ('Calgonte', 'Italy')");
+        query("INSERT INTO manufacturers VALUES ('Monsterfood', 'USA')");
+        query("INSERT INTO manufacturers VALUES ('Woodfox', 'Austria')");
+        query("INSERT INTO products VALUES(17, 'Chocolate Bar', 0.89, 'Monsterfood', 'Sweets')");
+        query("INSERT INTO products VALUES(18, 'Müsliriegel', 1.19, 'Monsterfood', null)");
+        query("INSERT INTO products VALUES(29, 'Spülmaschinentabs', 3.99, 'Calgonte', null)");
+        query("INSERT INTO products VALUES(88, 'Katzenfutter', 4.99, NULL, null)");
+        query("INSERT INTO products VALUES(91, 'Maschinenbau-Lehrbuch', 22.90, NULL, null)");
+        query("INSERT INTO products VALUES(92, 'Regal', 100.00, NULL, null)");
+        query("INSERT INTO products VALUES(998, 'Geschenkverpackung', 0.00, NULL, null)");
+        query("INSERT INTO products VALUES(999, 'Katalog', 0.00, NULL, null)");
+        /*query("INSERT INTO bewertungen VALUES(5, 17, 4, 'Guter Schokoriegel, aber die Verpackung geht schwer auf')");
+        query("INSERT INTO bewertungen VALUES(5, 29, 1, 'Mein Geschirr wird nicht sauber!')");
+        query("INSERT INTO bewertungen VALUES(8, 29, 2, 'Nicht gut, aber billig.')");
+        query("INSERT INTO bewertungslikes VALUES(8,5,17)");
+        query("INSERT INTO bestellungen VALUES(101, 5, '2018-05-26 20:31:00', 34.80)");
+        query("INSERT INTO bestellungen VALUES(102, 8, '2018-05-26 20:31:01', 100)");
+        query("INSERT INTO bestellungen VALUES(103, 8, '2018-05-27 8:15:00', 0.89)");
+        query("INSERT INTO bestellungen_positionen VALUES(101, 91, 1)");
+        query("INSERT INTO bestellungen_positionen VALUES(101, 18, 10)");
+        query("INSERT INTO bestellungen_positionen VALUES(102, 91, 1)");
+        query("INSERT INTO bestellungen_positionen VALUES(103, 17, 1)");*/
     });
     
     

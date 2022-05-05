@@ -4,81 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 5</title>
+    <title>Data Warehousing - Exercise Sheet 5</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 5 (2021-05-07)</b>
+            <b>Exercise Sheet 5 (2022-04-27/29, 2022-05-02)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Redis</h1>
-    <p>In this exercise, develop a program in a programming language of your choice to query a Redis database. Please do not use the redis-cli tool for this exercise. <!--Alternatively, you can use the Linux tool redis-cli.--></p>
-    
-    <p>In a database of a video platform, we store the information: Who watched which video?</p>
-
-    <div style="height: 5cm; overflow: hidden; margin-left: -2.5cm">
-        <div class="erd">
-                [[
-                 { _e: "Video", pos: [150, 100],
-                  attributes: [
-                   { _a:"video_id", options:["primary"], pos: [109, 13] },
-                   { _a:"watchers", options:["multi"], pos: [260, 13] }
-                    ]
-                }
-                  ], [
-                 
-                ]]
-</div></div>
+    <h1>Exercise 1: Data Modelling</h1>
+    <p>When you solve this exercise on your local database, create a new schema for this exercise: <code>CREATE SCHEMA IF NOT EXISTS ex5;</code> If you use the OTH database, use your <code>FIRSTNAME_LASTNAME</code> user and schema.</p>
+    <p>In this exercise, we are planning a data warehouse schema for a bike-rental company.<br>
+        They will load customer data from a relational database. Each customer has a cust_id, name, email, phone, street, area, city, plan, price.<br>
+        Furthermore, bikes are imported from Excel files which are provided by the different bike manufacturers. Each bike has bike_id, bike_type, model, brand.<br>
+        The company has different bike stations which have a station_id, street, area, city<br>
+        The bike-rental events can be loaded via an API. This API provides the information which customers drove which bike when from which station to which station. It shows the timestamp of issue, the rental duration, the rental price, and the number of bikes that parked at the return station after the rental.</p>
+    <ol>
+        <li>Draw an ME/R Model for this scenario. Which dimensions are hierarchical?</li>
+        <li>For each measure, which data type, range, and aggregation type do they have?</li>
+        <li>Map your model to a relational star schema by writing <code>CREATE TABLE</code> commands to create a star schema in your database. Which ones are the dimension tables, which one is the fact table?</li>
+        <li>Insert two example rows in each of your tables.</li>
+        <li>Transform your star schema (including the data) into a snowflake schema with <code>CREATE TABLE</code> and <code>INSERT INTO ... SELECT</code> commands. Use a prefix <code>sf_</code> for the new tables (e.g., <code>sf_markets</code>). You can use the <code>IDENTITY</code> option to automatically generate unique primary-key values: <code>my_id INT INDENTITY</code></li>
+    </ol>
 </section>
 
-<p>Connect to the following redis database:</p>
-
-<ul>
-    <li>Endpoint: <code>redis-15211.c263.us-east-1-2.ec2.cloud.redislabs.com</code></li>
-    <li>Port: <code>15211</code></li>
-    <!--<li>Database: <code>0</code></li>-->
-    <li>Username: <code>r</code></li>
-    <li>Password: <code>mdC12345!!!</code></li>
-</ul>
-
-<p>Execute the following queries:</p>
-
-<ul>
-    <li>Query 1: Did user 7775 watch the video 123? Yes or no?</li>
-    <li>Query 2: How many users watched the video 123?</li>
-    <li>Query 3: Which users watched all of the three videos 123, 124, and 125?</li>
-</ul>
 
     
-<script src="../lib/jquery.js"></script>
-<script src="../lib/lodash.js"></script>
-<script src="../lib/backbone.js"></script>
-<script src="../lib/joint.min.js"></script>
-<script type="text/javascript">
-Reveal = document;
-Reveal.registerPlugin = function(pluginname, plugin) {
-    plugin.init()
-};
-Reveal.addEventListener = function(event, f) {
-    if(event == 'ready') {
-        f();
-    }
-}
-</script>
-<script type="text/javascript" src="../src/erd.js"></script>
-
 </body>
 </html>
