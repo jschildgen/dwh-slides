@@ -35,8 +35,8 @@
         <li>Open the CSV files in a text editor (not in Excel!) to inspect their format.</li>
         <li>Prepare your staging area: For each CSV file, create a table in the Exasol database with the same attributes as in the CSV file.</li>
         <li>Which forms of heterogeneity exists between the two data sources? Give examples.</li>
-        <li>Perform a schema mapping between the two schemas.</li>
-        <li>Create an integrated schema in the Exasol database (use <code>CREATE TABLE</code>).</li>
+        <li>Perform a schema matching between the two schemas (e.g., on a piece of paper).</li>
+        <li>Create an integrated schema in the Exasol database (use <code>CREATE TABLE</code>). In this exercise, you'll only create the integrated schema, we will not yet fill it with data.</li>
     </ol>
 </section>
 
@@ -47,6 +47,12 @@
         <li>For each of your two tables, how many rows were imported?</li>
         <li>How many cities are in the first dataset but not in the second, and vice versa?</li>
     </ol>
+
+    <p>Hints:</p>
+    <ul>
+        <li>On the CIP-pool PCs, importing local files does not work. Use the following <code>IMPORT</code> statements instead to import the files from a server:<br>
+        <code>IMPORT INTO ... FROM CSV AT 'https://fraage.de' FILE 'ww-german-postal-codes.csv' ...</code><br>(and <code>FILE 'zuordnung_plz_ort.csv'</code>)</li> 
+    </ul>
 </section>
 
 

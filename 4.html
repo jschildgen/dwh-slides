@@ -41,7 +41,7 @@
                     <h2>Data Warehousing</h2>
                     <h4 style="text-align:center">&nbsp;</h4>
                     <h3>Chapter 4: ETL</h3>
-										<h3><em>Extract, Transform, Load</em></h4>
+										<h3><em>Extract, Transform, Load</em></h3>
                     <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-80px;">
                     <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-80px; box-shadow:none">
@@ -665,6 +665,17 @@ FROM armason_sales;</code></pre></div>
 								<p class="small">$sim_{levenshtein}("mouse", "home") = 3$</p>
 								<pre><code class="sql">SELECT edit_distance('mouse', 'home');</code></pre>
 								
+								<div class="poll fragment" style="bottom:-320px; z-index: 100;">
+									<h1>What's the Levenshtein distance between "datawarehouse" and "database"?</h1>
+											<ul>
+													<li data-poll="correct">6</li>
+													<li>7</li>
+													<li>8</li>
+													<li>9</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+									</div>
+
 								<aside class="notes">mouse &rightarrow; house &rightarrow; homse &rightarrow; home (2 replacements and 1 deletion).</aside>
 							</section>
 
@@ -675,7 +686,7 @@ FROM armason_sales;</code></pre></div>
 
 									<h4>For String Similarity: q-grams</h4>
 								<p class="small">q-gram: Set of all substrings of length q.</p>
-								<p class="small">$qgram("hello") = \{he, el, ll, lo\}$</p>
+								<p class="small">$bigram("hello") = \{he, el, ll, lo\}$</p>
 								<p class="small">$sim_{2gram}("food", "foot") = \frac{\{fo, oo\}}{\{fo, oo, od, ot\}}=\frac{2}{4}=0.5$</p>
 
 							</section>

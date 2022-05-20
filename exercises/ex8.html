@@ -4,83 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 8</title>
+    <title>Data Warehousing - Exercise Sheet 8</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 8 (2021-06-18)</b>
+            <b>Exercise Sheet 8 (2022-05-18/21/23)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Recursive SQL Queries</h1>
-    <p>The schema and data for this exercise is based on the <a href="https://github.com/wflyer/silberschatz-6th-university-dataset" target="_blank">university database from the Database System Concepts book from Silberschatz et al.</a>. For each university course, we store which other courses are a prerequisite for it. For example, BIO-101 (Introduction to Biology) is required to participate in the course BIO-301 (Genetics).</p>
-
-    <pre><code>CREATE TABLE course (
- course_id varchar(8) PRIMARY KEY,
- title varchar(50),
- dept_name varchar(20),
- credits decimal(2,0)
-);
-
-INSERT INTO course VALUES ('BIO-101','Intro. to Biology','Biology',4),('BIO-301','Genetics','Biology',4),
-('BIO-399','Computational Biology','Biology',3),('CS-101','Intro. to Computer Science','Comp. Sci.',4),
-('CS-190','Game Design','Comp. Sci.',4),('CS-315','Robotics','Comp. Sci.',3),
-('CS-319','Image Processing','Comp. Sci.',3),('CS-347','Database System Concepts','Comp. Sci.',3),
-('EE-181','Intro. to Digital Systems','Comp. Sci.',3),('FIN-201','Investment Banking','Finance',3),
-('HIS-351','World History','History',3),('MU-199','Music Video Production','Music',3),
-('PHY-101','Physical Principles','Physics',4), ('BIO-302','Super Advanced Genetics','Biology',4),
-('BIO-999','Computational  Biology 2','Biology',4), ('EE-182','More Digital Systems','Comp. Sci.',4),
-('EE-183','Even More Digital Systems','Comp. Sci.',4),('CS-400','Soccer Robot Project','Comp. Sci.',3);
-
-CREATE TABLE prereq (
- course_id varchar(8) REFERENCES course(course_id) ON DELETE CASCADE,
- prereq_id varchar(8) REFERENCES course(course_id),
- PRIMARY KEY (course_id,prereq_id)
-);
-
-INSERT INTO prereq VALUES ('BIO-301','BIO-101'),('BIO-399','BIO-101'),('CS-190','CS-101'),('CS-315','CS-101'),
-('CS-319','CS-101'),('CS-347','CS-101'),('EE-181','PHY-101'),('BIO-302','BIO-301'),('BIO-999','BIO-399'),
-('BIO-999','CS-319'),('EE-182','EE-181'),('EE-183','EE-182'),('CS-400','CS-190'),('CS-400','CS-315');</code></pre>
-
-
-      <ol>
-        <li>After creating the tables and inserting the data, please list all courses (course_id and title) that have BIO-101 as a direct prerequisite.</li>
-        <li>List all courses that do not have any prerequisites.</li>
-        <li>For each course, show its course_id and the number of courses that directly require it. Also show courses with no prerequisites. E.g., 2 courses have BIO-101 as a direct prerequisite, 0 courses have EE-183 as a prerequisite.</li>
-        <li>Compute the transitive closure of the prereq table. Example result row: ('EE-183', 'PHY-101') (22 rows in total)</li>
-        <li>For each course, show its course_id and the number of (direct or indirect) prerequisites. Here, it's ok to only show courses that actually have prerequisites. E.g., BIO-302 has 2 requisites (BIO-301 and indirectly also BIO-101).</li>
-        <li>Generate a string (with SQL!) that shows all paths from PHY-101 to EE-183. The output should be this one row: PHY-101 -> EE-181 -> EE-182 -> EE-183</li>
-      </ol>
-    </section> 
+    <h1>Exercise 1: Data Integration</h1>
+    <p>This exercise is the continuation of the previous exercise sheet. Make sure that you have a staging area with two cities tables (from data two different sources) and an empty target cities table.</p>
     
-<script src="../lib/jquery.js"></script>
-<script src="../lib/lodash.js"></script>
-<script src="../lib/backbone.js"></script>
-<script src="../lib/joint.min.js"></script>
-<script type="text/javascript">
-Reveal = document;
-Reveal.registerPlugin = function(pluginname, plugin) {
-    plugin.init()
-};
-Reveal.addEventListener = function(event, f) {
-    if(event == 'ready') {
-        f();
-    }
-}
-</script>
-<script type="text/javascript" src="../src/erd.js"></script>
+    <ol>
+        <li>Add a column <code>error_info</code> of type <code>VARCHAR(2000)</code> to both source tables.</li>
+        <li>For each of the two individual source tables (not cross-table!), find out whether there are rows with the same zip code and same city name. For the matching rows, set the error code to an appropriate error message.</li>
+        <li>For each city of the first table, find a matching city of the second source table using (a) equal join, (b) similarity join with an Levenshtein less than an appropriate threshold, (c) similarity join using Soundex. For each approach, write down the number of cities that find a match.</li>
+        <li>Which cities find a match with Levenshtein that do not find a match with Soundex and vice versa? Are there false positives (match found but it shouldn't be a match)? Are there false negatives (it should be a match but no match found)?</li>
+        <li>Choose an appropriate matching method (equal join, Levenshtein, or Soundex) to integrate the data from the source tables into the target table.</li>
+        <li>Also integrate the rows that only appear in one of the source tables in the target table.</li>
+        <li>In the target table, find out the 20 most common first words that city names have which consist of multiple words. It should show values like Bad, Alt, Neu, ... (Hint: If you have no idea how to extract the first word of a string, you find a similar expression on exercise sheet 3).</li>
+    </ol>
+</section>
 
+
+    
 </body>
 </html>

@@ -4,86 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MDC - Exercise Sheet 9</title>
+    <title>Data Warehousing - Exercise Sheet 9</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Modern Database Concepts - SS 2021</b><br>
+            <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 9 (2021-06-25)</b>
+            <b>Exercise Sheet 9 (2022-05-25/28/30)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Spatial Data / PostGIS</h1>
-    <p>In this exercise, you import a dataset that consists of more than 7,000 airports. You can download the dataset as a CSV file here: <a href="https://openflights.org/data.html#airport" target="_blank">https://openflights.org/data.html#airport</a>. The file that we need is called airports.dat</p>
-    <p>Before you begin, install the PostGIS extension. If you use the &quot;hera&quot; database from OTH Regensburg, PostGIS is already installed and enabled. You can try out whether it works by creating the following table:</p>
+    <h1>Exercise 1: q-Grams</h1>
+    <p>In this week's first exercise, you do not work with the database but develop a function / a program in a programming language of your choice: Python, Java, Lua, or R.</p>
+    <ol>
+        <li>Develop a function <code>sim_bigram(a, b)</code> that takes two strings as input and computes the Jaccard similarity between the sets all bigrams (q-gram with q=2) of the characters of the two strings (should return a value between 0 and 1).
+        <br>Example: sim_bigram('food', 'foot') = |{fo, oo}| / |{fo, oo, od, ot}| = 2/4 = 0.5</li>
+        <li>Extend your function by a parameter q: <code>sim_qgram(a, b, q)</code>.</li>
+    </ol>
+</section>
 
-    <pre><code>CREATE TABLE airports (
- airport_id int PRIMARY KEY,
- airport varchar(200),
- latitude DECIMAL(9,6),
- longitude DECIMAL(9,6),
- geo GEOMETRY(POINT, 4326)
-);</code></pre>
+<section>
+    <h1>Exercise 2: UDF Script</h1>
+    <ol>
+        <li>Use one of the following templates (depending on which programming language you chose) to create a UDF (user-defined function) script of your q-grams function in Exasol.</li>
+        <li>Now you can then call your UDF script like this: <code>SELECT sim_qgram('food', 'foot', 2);</code></li>
+        <li>Use your two cities tables from the previous exercise sheets to find cities that find a match in the other city table with a high Jaccard similarity value. Choose an adequate threshold.</li>
+    </ol>
+    <pre><code>CREATE OR REPLACE PYTHON3 SCALAR SCRIPT sim_qgram
+(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
+def run(ctx):
+    # TODO: implement it here
+    # you can access the parameters via ctx.a, ctx.b and ctx.q
+    return None                # TODO: return similarity value
+/;</code></pre>
 
-      <ol>
-        <li>Create the airports table and use DBeaver's import feature (rightclick on the table in the database browser, import) to import the airports from the file airports.dat which you can download from the URL above. The column geo should be NULL for all rows. Check whether the airports were imported successfully.</li>
-        <li>Use an <code>UPDATE</code> command to store an ST_POINT into the geo column with the airports' longitude and latitude coordinates. You can use DBeaver's Map Panel to inspect whether the geometry data is correct.</li>
-        <li>Compute the distance between airport 340 (Frankfurt am Main Airport) airport 507 (London Heathrow Airport) in kilometers.</li>
-        <li>Which SRID provides a more accurate distance? 3857 (WGS 84 / Pseudo-Mercator) or 31466 (Gauß-Krüger Zone 2)?</li>
-        <li>Find all airports within a radius of 100km around airport 340 (Frankfurt am Main Airport). Do not use ST_DISTANCE here!</li>
-      </ol>
-
-      <h4>Hints:</h4>
-      <ol>
-          <li>Choose the correct import settings, e.g. header position: none.</li>
-          <li>In the column-mapping step, select Skip for the whole table, then choose the four matching target columns.</li>
-          <li>For the 100km-radius search, use ST_BUFFER.</li>
-      </ol>
-    </section>
-    
-    <section style="padding-top: 2.5cm; page-break-inside: avoid;">
-        <h1>Exercise 2: GeoJSON</h1>
-        <p>In this exercise, it's your job to load all countries of the world (Polygons and MultiPolygons) into the PostgreSQL database. You can download the dataset from <a href="https://geojson-maps.ash.ms/" target="_blank">https://geojson-maps.ash.ms/</a> (choose low resolution and select all regions). This exercise is a bit more complex because the data that we need to import here uses the GeoJSON format.</p>
-
-        <ol>
-            <li>Start with creating a table <code>countries_staging</code> with just one <code>JSONB</code> column in which you import the whole file.</li>
-            <li>Import the whole custom.geo.json file as one single row in your countries_staging table. You can, for example, use the command line tool <code>psql</code> for that: <code>\copy countries_staging from '/path/to/custom.geo.json'</code></li>
-            <li>Write a SQL query using PostgreSQL's JSON operators to list all country names.</li>
-            <li>Create a countries table: <code>CREATE TABLE countries(country VARCHAR(200) PRIMARY KEY, geo GEOMETRY);</code></li>
-            <li>Write an <code>INSERT INTO countries SELECT ...</code> command to fill the countries table with the data from the countries_staging table. Use DBeaver's map feature to check whether the countries' geometries are correct.</li>
-            <li>List the top-10 countries with the largest area.</li>
-            <li>List all airports in Italy.</li>
-            <li>Create an index which is useful for the previous query.</li>
-        </ol>
-    </section>
-    
-<script src="../lib/jquery.js"></script>
-<script src="../lib/lodash.js"></script>
-<script src="../lib/backbone.js"></script>
-<script src="../lib/joint.min.js"></script>
-<script type="text/javascript">
-Reveal = document;
-Reveal.registerPlugin = function(pluginname, plugin) {
-    plugin.init()
-};
-Reveal.addEventListener = function(event, f) {
-    if(event == 'ready') {
-        f();
+<pre><code>CREATE OR REPLACE JAVA SCALAR SCRIPT sim_qgram
+(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
+class SIM_QGRAM {
+    static Double run(ExaMetadata exa, ExaIterator ctx) throws Exception {
+        // todo: implement it here
+        // you can access the parameters via ctx.getString("a"), ctx.getInteger("q")
+        return null;    // todo: return similarity value
     }
 }
-</script>
-<script type="text/javascript" src="../src/erd.js"></script>
+/;</code></pre>
 
+<pre><code>CREATE OR REPLACE LUA SCALAR SCRIPT sim_qgram
+(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
+function run(ctx)
+    -- todo: implement it here
+    -- you can access the parameters via ctx.a, ctx.b, ctx.q
+    return NULL             -- todo: return similarity value
+end
+/;</code></pre>
+
+<pre><code>CREATE OR REPLACE R SCALAR SCRIPT sim_qgram
+(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
+run <- function(ctx) {
+    # todo: implement it here
+    # you can access the parameters via ctx.a, ctx.b, ctx.q
+    NA                      # todo: return similarity value
+}
+/;</code></pre>
+</section>
+
+
+    
 </body>
 </html>

@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DWH - Chapter 5 - Querying the Data Warehouse</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+			</script>
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h2>Data Warehousing</h2>
+                    <h4 style="text-align:center">&nbsp;</h4>
+                    <h3 style="font-size: 140%">Chapter 4: Querying the Data Warehouse</h3>
+										<h3>&nbsp;</h3>
+                    <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-80px;">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-80px; box-shadow:none">
+                </section>
+                
+								<section>
+									<h3>Multidimensional Data Cube</h3>
+									<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/cube.png" style="width: 9cm;" class="noborder"></div>
+									<ul class="small">
+										<li>Dimensions: axes of the (hyper-)cube</li>
+										<li>Facts: points in cube</li>
+									</ul>
+									<p>&nbsp;</p>
+									<div class="fragment">
+										<h4>Example Queries:</h4>
+										<ul class="small">
+											<li>Total revenue in 2021</li>
+											<li>Revenue per month in 2021 and 2022</li>
+											<li>Number of sold chocolate bars per day</li>
+											<li>For each clerk, the number of sales</li>
+											<li>For each month, the top-10 most sold products</li>
+											<li>...</li>
+										</ul>
+									</div>
+								</section>
+
+								<section> 
+									<h3>Performance Example</h3>
+									<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/cube.png" style="width: 4cm;" class="noborder"></div>
+									<p class="small">SALES(product_id, clerk_id, timestamp, amount, revenue)
+										<br><em class="fragment">tuple_size = 8 Bytes
+										+ 8 Bytes
+										+ 8 Bytes
+										&nbsp; + 8 Bytes
+										+ 8 Bytes = 40 Bytes</em>
+									</p>
+									<p class="fragment small">10 clerks per market &times; 1000 markets &times; 100 sales/day &times; 365 days<br>
+									= 365,000,000 sales / year &Rightarrow; 14.6 GB / year (146 GB in 10 years)</p>
+									<pre><code class="plaintext">For each month in 2021, show me the total number of products 
+in the categories &quot;mountain bikes&quot; and &quot;electric bikes&quot; that 
+were sold by clerks working in markets in Bavaria and Berlin.</code></pre>
+									<p class="fragment small"><em>Bad approach</em>: read full table from disk (t = 146 GB / 80 MB/s = 30 minutes)</p>
+									<p class="fragment small"><em>Better</em>: Only read $\frac{12}{120}$ (months) &times; $\frac{2}{10}$ (categories) &times; $\frac{2}{16} (clerks)$
+									(t = 4.5s)<br>&Rightarrow;Still too slow!</p>
+									<p class="fragment small">&Rightarrow;Use RAID, cluster (distributed storage, distributed computation), compression, column-oriented storage, and in-memory databases!</p>
+									<aside class="notes">RAID1 can double the read speed from disk, a cluster enables even more parallelism, with column-oriented storage, unneeded columns (like here: revenue) do not need to be read.</aside>
+								</section>
+
+							
+
+
+								<section>
+									<h3>Data-Cube Operations</h3>
+									<div style="position: absolute; top: 80px; right:-20px;"><img src="img/3/slice.png" style="width: 7cm;" class="noborder"></div>
+									<div style="position: absolute; top: 9cm; right:-20px;"><img src="img/3/dice.png" style="width: 6cm;" class="noborder"></div>
+									<h4>Slice</h4>
+						<pre style="width: 18cm; margin-left: 0cm;"><code class="sql">SELECT sum(price) FROM sales
+WHERE product_no = 7208;</code></pre>
+
+						<h4>Dice</h4>
+						<pre style="width: 18cm; margin-left: 0cm;"><code class="sql">SELECT sum(price) FROM sales 
+WHERE product_no = 7208 AND
+sales_date BETWEEN '2014-01-01' AND '2014-01-31'
+AND clerk = 219;</code></pre>
+	
+									<aside class="notes">Slicing means fixing one of the dimensions to a constant value. This reduces the number of dimensions by 1. Dicing provides interval restrictions on one or more dimensions. It does not reduce the number of dimensions.</aside>
+								</section>
+
+								<section>
+									<h3>Data-Cube Operations</h3>
+									<div class="columns" style="margin-top: -3mm">
+										<div><img src="img/5/rollup1.png" class="noborder"></div>
+										<div style="width: 10cm">
+											<p class="small">&nbsp;</p>
+											<p class="small" style="text-align: center; font-weight: bold;">&Rightarrow; Drill Down &Rightarrow;</p>
+											<p>&nbsp;</p>
+											<p class="small" style="text-align: center; font-weight: bold;">&Leftarrow; Rollup &Leftarrow;</p>
+										</div>
+										<div><img src="img/5/rollup2.png" class="noborder"></div>
+									</div>
+									<h4>Drill Down</h4>
+									<p class="small" style="margin-top: -5mm;">Navigate in across the hierarchy to a more fine granular level.</p>
+									<pre style="margin-top: -3mm;"><code class="sql">... GROUP BY year(sales_date);</code></pre>
+
+									<h4>Drill Down</h4>
+									<p class="small" style="margin-top: -5mm;">Navigate out across the hierarchy to a more coarse granular level.</p>
+									<pre style="margin-top: -3mm;"><code class="sql">... GROUP BY year(sales_date), to_char(sales_date, 'Q');</code></pre>
+								</section>
+
+								<section>
+									<h3>SQL OLAP Extensions</h3>
+									<p class="small">In SQL:1999 & SQL:2003, <code>GROUPING SETS</code>, <code>ROLLUP</code> and <code>CUBE</code> were introduced.</p>
+									<h4><code>GROUPING SETS</code></h4>
+									<p class="small" style="margin-top: -5mm;">Multiple grouping criteria within one pass.</p>
+									<pre><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY GROUPING SETS( (sales_date, market_id), (sales_date) )</code></pre>
+
+									<span data-sql-query="SELECT '2014-03-16' as sales_date, 2065 as market_id, 227.41 as revenue
+union all SELECT '2014-03-16', 2315, 56.57
+union all select '2014-03-16', null, 676.40+227.41+56.57
+union all select '2014-03-17', 2065, 201.63
+union all select '...', '...', '...'"></span>
+<aside class="notes">The query computes the revenues per day and market, and furthermore per day over all markets. In the latter case, the <code>market_id</code> column will be <code>NULL</code>.</aside>
+								</section>
+
+								<section>
+									<h3><code>GROUPING SETS</code></h3>
+									<pre><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY GROUPING SETS( (sales_date, market_id), (sales_date) )</code></pre>
+									<p class="small">This query is equivalent to:</p>
+									<pre><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY sales_date, market_id
+UNION ALL
+SELECT sales_date, NULL AS market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY sales_date</code></pre>
+								</section>
+
+								<section>
+									<h3>Grand-Total Rows</h3>
+									<div style="position: absolute; top: 50px; right:10px; font-size:140px"><span class="green"><code>()</code></span></div>
+									<pre style="width:19cm; margin-left:1cm"><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY GROUPING SETS( (sales_date, market_id), 
+                        (sales_date), 
+                        () )</code></pre>
+
+												<span data-sql-query="SELECT '2014-03-16' as sales_date, 2065 as market_id, 227.41 as revenue
+union all SELECT '2014-03-16', 2315, 56.57
+union all select '2014-03-16', null, 676.40+227.41+56.57
+union all select '2014-03-17', 2065, 201.63
+union all select '...', '...', '...'
+union all select null, null, 5728876.15"></span>
+
+<aside class="notes">The grand total is like an SQL aggregation query without a <code>GROUP BY</code> clause (an overall total). The grand total has <code>NULL</code> values in all grouping columns. Our query shows not only the revenues per day and market, but also per day over all markets, and (that's the grand total:) over all days and all markets.</aside>
+								</section>
+
+								<section>
+									<h3><code>ROLLUP</code></h3>
+									<p class="small">
+										<code class="sql">ROLLUP (a, b, c)</code>
+										<br>
+										&wedgeq;
+										<br>
+										<code class="sql">GROUPING SETS ( (a, b, c), (a, b), (a), () )</code>
+									</p>
+
+									<div class="fragment">
+									<p class="small">The query from the previous slide is equivalent to:</p>
+									<pre><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY ROLLUP( sales_date, market_id );</code></pre>
+</div>
+								</section>
+
+								<section>
+									<h3><code>ROLLUP</code></h3>
+										<p class="small"><code>ROLLUP</code> is often used for drill-down and roll-up operations (intra-dimensional):</p>
+										<pre><code class="sql">SELECT m.area, m.city, m.market_id, SUM(s.price) AS revenue
+FROM sales s JOIN markets m ON s.market_id = m.market_id
+GROUP BY ROLLUP( m.area, m.city, m.market_id )</code></pre>
+
+<span data-sql-query="SELECT 'Bavaria' as area, 'Regensburg' as city, 6752 as market_id, 1000000 as revenue
+union all select 'Bavaria', 'Regensburg', 6753, 800000
+union all select 'Bavaria', 'Regensburg', null, 1800000
+union all select 'Bavaria', 'Munich', 6777, 700000
+union all select 'Bavaria', 'Munich', null, 700000
+union all select 'Bavaria', null, null, 2500000
+union all select '...', '...', '...', '...'
+union all select null, null, null, 5728876.15"></span>
+
+<div class="poll fragment" style="bottom:10px; z-index: 100;">
+	<h1>How many grouping sets are a ROLLUP(a1, a2, ..., an) with n columns?</h1>
+			<ul>
+					<li>n-1</li>
+					<li>n</li>
+					<li data-poll="correct">n+1</li>
+					<li>2^n</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+								</section>
+
+								<section>
+									<h3><code>CUBE</code></h3>
+									<p class="small">All $2^n$ combinations.</p>
+									<p class="small">
+										<code class="sql">CUBE (a, b, c)</code>
+										<br>
+										&wedgeq;
+										<br>
+										<code class="sql">GROUPING SETS ( (a, b, c), (a, b), (a, c), (b, c), 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a), (b), (c), () )</code>
+									</p>
+
+									<div class="fragment">
+									<pre style="margin-bottom: 1mm;"><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue
+FROM sales
+GROUP BY CUBE( sales_date, market_id );</code></pre>
+
+<span data-sql-query="SELECT '2014-03-16' as sales_date, 2065 as market_id, 227.41 as revenue
+union all select '2014-03-16', null, 676.40+227.41+56.57
+union all SELECT null, 2065, 745352.67
+union all select '...', '...', '...'
+union all select null, null, 5728876.15"></span>
+</div>
+								</section>
+
+								<section>
+									<h3><code>GROUPING</code> Function</h3>
+									<ul class="small">
+										<li><code>GROUPING(x) = 0</code>, if it was grouped by x</li>
+										<li><code>GROUPING(x) = 1</code>, if it was aggregated over x</li>
+									</ul>
+									<pre style="width:100%"><code class="sql">SELECT sales_date, market_id, SUM(price) AS revenue, 
+       GROUPING(sales_date), GROUPING(market_id)
+FROM sales
+GROUP BY CUBE( sales_date, market_id );</code></pre>
+
+<span data-sql-query="SELECT '2014-03-16' as sales_date, 2065 as market_id, 227.41 as revenue, 0 as 'GROUPING(sales_date)', 0 as 'GROUPING(market_id)'
+union all select '2014-03-16', null, 676.40+227.41+56.57, 0, 1
+union all SELECT null, 2065, 745352.67, 1, 0
+union all select '...', '...', '...' ,'...', '...'
+union all select null, null, 5728876.15, 1, 1"></span>
+
+<div class="poll fragment" style="bottom:300px; z-index: 100;">
+	<h1>market_id IS NULL &Rightarrow; GROUPING(market_id)=1</h1>
+			<ul>
+					<li>right</li>
+					<li data-poll="correct">wrong</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+
+<aside class="notes">The <code>GROUPING</code> function can be used to detect whether a row was generated during the execution of a grouping set. A <code>NULL</code> in a grouping column can also mean that there was a <code>NULL</code> in the original table.</aside>
+								</section>
+								
+
+
+			</div>
+		</div>
+
+		<script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+				<script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>
