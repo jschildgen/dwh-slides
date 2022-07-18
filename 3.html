@@ -818,12 +818,12 @@ WHERE s.product_id=p.product_id
 		<h3>Types of Fact Tables</h3>
 		<h4>Transactional Fact Table</h4>
 		<p class="small">Each record represents one specific business event (sale, shipping, complaint, ...).</p>
-		<span data-sql-pk="sales_id" style="font-size: 95%;" data-sql-query="SELECT sales_id, customer_id, market_id, product_id, date_id, amount, revenue as price FROM sales WHERE sales_id=557"></span>
+		<span data-sql-pk="sales_id" style="font-size: 95%;" data-sql-query="SELECT 557 as sales_id, 5 as customer_id, 624 as market_id, 17 as product_id, 3 as date_id, 1 as amount, 0.89 as price"></span>
 
 		<div class="fragment" style="margin-top: 15mm;">
 		<p class="small"><b>Variants:</b> One fact table per event type* vs. one for all event types.</p>
-		<span data-sql-pk="tx_id" style="font-size: 95%;" data-sql-query="SELECT 1779 as tx_id, 'sale' as tx_type, customer_id, market_id, product_id, date_id, amount, revenue as price FROM sales WHERE sales_id=557
-		union SELECT 2118 as tx_id, 'return' as tx_type, customer_id, market_id, product_id, 9 as date_id, amount, revenue as price FROM sales WHERE sales_id=557"></span>
+		<span data-sql-pk="tx_id" style="font-size: 95%;" data-sql-query="SELECT 1779 as tx_id, 'sale' as tx_type, 5 as customer_id, 624 as market_id, 17 as product_id, 3 as date_id, 1 as amount, 0.89 as price
+		union SELECT 2118 as tx_id, 'return' as tx_type, 5, 624, 17, 9, 1, 0.89"></span>
 		<p class="small">* they use the same dimension tables.</p>
 		<aside class="notes">The measures in these kind of fact tables have the type FLOW.</aside>
 	</div>
@@ -833,7 +833,7 @@ WHERE s.product_id=p.product_id
 		<h3>Types of Fact Tables</h3>
 		<h4>Periodic Snapshot Fact Table</h4>
 		<p class="small">Captures states at a specific point in time.</p>
-		<span style="font-size: 95%;" data-sql-query="SELECT market_id, product_id, '2022-01' as d_month, 5230 as in_stock FROM sales WHERE sales_id=557"></span>
+		<span style="font-size: 95%;" data-sql-query="SELECT 624 as market_id, 17 asproduct_id, '2022-01' as d_month, 5230 as in_stock"></span>
 
 		<h4 style="margin-top: 5mm;">Accumulated Snapshot Fact Table</h4>
 		<p class="small">Record in fact table is updated during a specific process.</p>
@@ -923,6 +923,8 @@ SELECT * FROM CORE.CUSTOMERS WHERE TENANT_ID = 32;</code></pre>
         <script src="lib/backbone.js"></script>
         <script src="lib/joint.min.js"></script>
 				<script src="lib/deflate.js"></script>
+				<script src="lib/chart.min.js"></script>
+				<script src="plugins/revealjs-chart.js"></script>
 
 		<script src="src/init_reveal.js"></script>
 

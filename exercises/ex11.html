@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Data Warehousing - Exercise Sheet 11</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Data Warehousing - SS 2022</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Exercise Sheet 11 (2022-06-24/27/29)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Window Functions</h1>
+    <p>Write the queries for this exercise on the vaccinations table from the previous exercise sheet:<br>
+        <code>vaccinations(v_date, country, continent, cases, vaccinations, population)</code></p>
+    <ol>
+        <li>Show all vaccinations in Germany in January 2022. Calculate a rank for each row. The day with the highest number of vaccinations in Germany should get the rank 1.</li>
+        <li>Show all vaccinations in Europe in January 2022. Again, calculate a rank. Now, rank 1 means that this was the day with the highest number of vaccinations in that country.</li>
+        <li>Show all vaccinations in Germany. Display an additional column total_vaccinations that shows the total number of vaccinations until that day.</li>
+        <li>For each country in Europe, show the total number of vaccinations and the ratio of that value to the overall number of vaccinations in Europe (e.g. Germany 17%, UK 14%, France 13%, ...). Write the query once without using the function RATIO_TO_REPORT and once with it.</li>
+        <li>Show all vaccinations in Germany. Display an additional column "7_days_incidence". This is the number of new cases within 7 days per 100,000 inhabitants.</li>
+        <li>For each country in Europe, calculate the 7-days incidence on the 1st May 2022.</li>
+    </ol>
+</section>
+
+    
+</body>
+</html>

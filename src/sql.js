@@ -100,9 +100,17 @@ function create_db() {
         query("CREATE TABLE bestellungen_positionen (bestellnr INT REFERENCES bestellungen(bestellnr), produktnr INT REFERENCES produkte(produktnr), anzahl INT, PRIMARY KEY(bestellnr, produktnr))");
 */
 
+        
+
         query("drop table if exists sales;")
-        query("create table sales(sales_id, customer_id int, market_id int, product_id int references products(product_id), date_id int, amount int, revenue decimal(18,2))");
-        query("insert into sales values(557, 5, 624, 17, 3, 1, 0.89)")
+        /*query("create table sales(order_id, customer_id int, market_id int, product_id int references products(product_id), date_id int, amount int, revenue decimal(18,2))");
+        query("insert into sales values(557, 5, 624, 17, 3, 1, 0.89)");*/
+        query("CREATE TABLE sales(sales_id INT, sales_date date, sales_timestamp timestamp, price decimal(18,2), market_id int, employee_id int)");
+        query("INSERT INTO sales VALUES(105558227, '2014-07-27', '2014-07-27-14.59.46.207000', 56.51, 135, 5)");
+        query("INSERT INTO sales VALUES(105558227, '2014-11-12', '2014-11-12-11.48.23.628000', 47.07, 135, 3)");
+        query("INSERT INTO sales VALUES(193027727, '2014-07-27', '2014-07-27-14.08.44.624000', 80.8, 50, 1)");
+        query("INSERT INTO sales VALUES(105558770, '2014-07-27', '2014-07-27-19.10.49.465000', 229.31, 135, 5)");
+        
 
         /*query("INSERT INTO kunden VALUES(4,'Ute', 'ute@example.com', NULL, 'Deutschland', NULL)");                              
         query("INSERT INTO kunden VALUES(5,'Peter', 'peter@example.com', NULL, 'Deutschland', 4)");
@@ -129,6 +137,8 @@ function create_db() {
         query("INSERT INTO bestellungen_positionen VALUES(101, 18, 10)");
         query("INSERT INTO bestellungen_positionen VALUES(102, 91, 1)");
         query("INSERT INTO bestellungen_positionen VALUES(103, 17, 1)");*/
+
+
     });
     
     

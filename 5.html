@@ -40,7 +40,7 @@
                     <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                     <h2>Data Warehousing</h2>
                     <h4 style="text-align:center">&nbsp;</h4>
-                    <h3 style="font-size: 140%">Chapter 4: Querying the Data Warehouse</h3>
+                    <h3 style="font-size: 140%">Chapter 5: Querying the Data Warehouse</h3>
 										<h3>&nbsp;</h3>
                     <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-80px;">
@@ -271,19 +271,533 @@ union all select '...', '...', '...' ,'...', '...'
 union all select null, null, 5728876.15, 1, 1"></span>
 
 <div class="poll fragment" style="bottom:300px; z-index: 100;">
-	<h1>market_id IS NULL &Rightarrow; GROUPING(market_id)=1</h1>
+	<h1>What has the same effect as WHERE GROUPING(market_id)=1?</h1>
 			<ul>
-					<li>right</li>
-					<li data-poll="correct">wrong</li>
+					<li>WHERE market_id IS NULL</li>
+					<li>HAVING market_id IS NULL</li>
+					<li data-poll="correct">none of the above</li>
 			</ul>
 	<h2>https://fraage.de</h2>
 	</div>
 
 <aside class="notes">The <code>GROUPING</code> function can be used to detect whether a row was generated during the execution of a grouping set. A <code>NULL</code> in a grouping column can also mean that there was a <code>NULL</code> in the original table.</aside>
 								</section>
+
+								<section>
+									<h3>Window Functions: <code>OVER</code></h3>
+									<p class="small">Window functions (or: analytical functions) compute one value for each row.</p>
+									<ul class="small">
+										<li><code>... FROM t GROUP BY x</code> &nbsp;&Rightarrow; returns |t.x| rows (1 row per group)</li>
+										<li><code>... OVER (...) FROM t</code> &nbsp;&Rightarrow; returns |t| rows</li>
+									</ul>
+
+									<p class="small"><b>Syntax:</b><br>
+									<code>... OVER (PARTITION BY ... ORDER BY ... ROWS|RANGE ...)</code>
+								<br><span style="margin-left: 8cm;">[all three clauses are optional]</span></p>
+
+								<pre class="fragment"><code class="sql">SELECT sales_id, sales_date, price, SUM(price) OVER() as total
+FROM sales;</code></pre>
+
+								<span data-sql-query="select sales_id, sales_date, price, 5728876.15 as total from sales"></span>
 								
+								
+								<aside class="notes">The window function in this query shows for every row the same value: the total sum of all sales prices.</aside>
+
+							</section>
+
+							<section>
+								<h3>Window Functions: <code>PARTITION BY</code></h3>
+								<p class="small"><code>OVER ()</code>: Window = the whole table<br>
+								<code>OVER (PARTITION BY x)</code>: Window = rows that have the same value in col. x</p>
+
+								<pre class="fragment"><code class="sql">SELECT sales_id, sales_date, price,
+SUM(price) OVER(PARTITION BY sales_date) as day_total
+FROM sales;</code></pre>
+								<span class="fragment" data-sql-query="select sales_id, sales_date, price, (select sum(price) from sales s2 where s2.sales_date = s1.sales_date) as day_total from sales s1"></span>
+
+								<aside class="notes"><code>PARTITION BY</code> is similar to <code>GROUP BY</code>, but it does not reduce the number of rows in the query result. For each row, the aggregation function (here: <code>SUM</code>) is called on the whole window (here: all sales that were on the same day).</aside>
+							</section>
+
+							<section>
+								<h3>Window Functions: <code>ORDER BY</code></h3>
+								<p class="small"><code>OVER (ORDER BY x)</code>: Window = rows that have x &le; current row's x value</p>
+								<pre class="fragment"><code class="sql">SELECT sales_id, sales_timestamp, price,
+SUM(price) OVER(ORDER BY sales_timestamp) as cumulative_sum
+FROM sales;</code></pre>
+							<span class="fragment" data-sql-query="select sales_id, sales_timestamp, price, (select sum(price) from sales s2 where s2.sales_timestamp <= s1.sales_timestamp) as cumulative_sum from sales s1 order by sales_timestamp"></span>
+							
+							<aside class="notes">The window on which the window function (here: <code>SUM</code>) is executed consists of all rows from the first one up to the current one when sorting by the given <code>ORDER BY</code> criterion. In the shown example, we compute a cumulative sum of the prices of all sales up to the current sales. As the prices are never negative, this value is monotonously increasing.</aside>
+							</section>
+
+							<section>
+								<h3>Window Functions: Frame</h3>
+								<p class="small">Only in combination with <code>ORDER BY</code>.</p>
+								<p class="small"><code>OVER (ORDER BY x<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ROWS|RANGE BETWEEN n PRECEDING AND m FOLLOWING)</code></p>
+								<p class="small" style="width: 110%">Default frame: <code>RANGE BETWEEN UNBOUND PRECEDING AND CURRENT ROW</code></p>
+								<pre class="fragment"><code class="sql">SELECT sales_id, sales_timestamp, price,
+AVG(price) OVER(ORDER BY sales_timestamp
+                ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) 
+           AS price_flatten
+FROM sales;</code></pre>
+																<span class="fragment" data-sql-query="select sales_id, sales_timestamp, price, (select avg(price) from sales s2 where s2.sales_timestamp BETWEEN coalesce((select max(sales_timestamp) from sales s3 where s3.sales_timestamp < s1.sales_timestamp), '1900-01-01') AND coalesce((select min(sales_timestamp) from sales s3 where s3.sales_timestamp > s1.sales_timestamp),'9999-12-31')) as price_flatten from sales s1 order by sales_timestamp"></span>
+										<aside class="notes">In this query, the window consists of 1 row before the current row, the current row, and 1 row after it.</aside>						
+							</section>
 
 
+							<section>
+								<!--
+									with cte as (
+SELECT sales_id, to_char(sales_timestamp, 'HH:mm:SS.FF3') as sales_timestamp, price,
+AVG(price) OVER(ORDER BY sales_timestamp
+                ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) 
+           AS price_flatten
+FROM sales
+where SALES_TIMESTAMP > '2014-07-27 0:00' 
+AND SALES_TIMESTAMP < '2014-07-28 0:00'
+order by SALES_TIMESTAMP)
+select group_concat('"'||SALES_TIMESTAMP||'"' separator ', '),
+group_concat(price separator ', '),
+group_concat(price_flatten separator ', ')
+from cte;
+								-->
+								<canvas data-chart="line" class="stretch" >
+									<!--
+									{
+									 "data": {
+										"labels": ["07:07:26.625", "09:07:00.550", "10:07:09.971", "10:07:14.737", "11:07:17.503", "12:07:12.328", "12:07:12.353", "12:07:15.925", "12:07:31.380", "12:07:46.441", "12:07:58.777", "13:07:26.941", "13:07:42.061", "13:07:46.972", "14:07:03.351", "14:07:12.760", "14:07:44.624", "14:07:46.207", "14:07:48.326", "14:07:48.649", "14:07:50.293", "14:07:57.205", "15:07:21.906", "16:07:10.662", "16:07:41.153", "16:07:45.961", "16:07:53.222", "17:07:20.977", "17:07:23.948", "17:07:41.255", "19:07:49.465", "21:07:59.942"],
+										"datasets":[
+										 {
+											"data":[102.06, 111.07, 15.24, 21.89, 229.31, 236.97, 25.47, 31.95, 34.38, 36.4, 41.37, 47.12, 47.57, 49.15, 49.96, 52.03, 53.42, 55.42, 56.51, 59.49, 61.36, 63.44, 65.04, 7.96, 71.37, 72.56, 72.9, 79.92, 80.61, 80.8, 82.76, 90.36],
+											"label":"price","backgroundColor":"rgba(20,220,220,1.0)"
+										 },
+										 {
+											"data":[101.1, 109.103333333333, 117.383333333333, 122.275, 122.496666666667, 136.043333333333, 35.1633333333333, 39.9166666666667, 41, 48.3133333333333, 50.9866666666667, 52.0266666666667, 52.2466666666667, 52.5433333333333, 53.6633333333333, 53.7733333333333, 55.31, 55.8466666666667, 56.2766666666667, 56.33, 56.6166666666667, 57.3266666666667, 59.5066666666667, 61.4266666666667, 62.34, 64.2866666666667, 64.35, 66.5133333333333, 69.15, 80.6433333333333, 84.96, 87.48],
+											"label":"price flatten","backgroundColor":"rgba(220,120,120,1.0)"
+										 }
+										]
+									 }
+									}
+									-->
+									</canvas>
+							</section>
+
+
+							<section>
+								<h3><code>ROWS</code> vs. <code>RANGE</code></h3>
+								<p class="small" style="margin-bottom: 1mm;"><code>ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING:</code></p>
+								<div class="columns" style="font-size: 85%">
+									<div><table class="small">
+										<tr><td class="yellow"><b>1</b></td></tr>
+										<tr><td class="yellow">2</td></tr>
+										<tr><td class="yellow">4</td></tr>
+										<tr><td>7</td></tr>
+										<tr><td>8</td></tr>
+									</table>
+									</div>
+									<div><table class="small">
+										<tr><td class="yellow">1</td></tr>
+										<tr><td class="yellow"><b>2</b></td></tr>
+										<tr><td class="yellow">4</td></tr>
+										<tr><td class="yellow">7</td></tr>
+										<tr><td>8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td class="yellow">1</td></tr>
+										<tr><td class="yellow">2</td></tr>
+										<tr><td class="yellow"><b>4</b></td></tr>
+										<tr><td class="yellow">7</td></tr>
+										<tr><td class="yellow">8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td>1</td></tr>
+										<tr><td class="yellow">2</td></tr>
+										<tr><td class="yellow">4</td></tr>
+										<tr><td class="yellow"><b>7</b></td></tr>
+										<tr class="yellow"><td>8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td>1</td></tr>
+										<tr><td>2</td></tr>
+										<tr><td class="yellow">4</td></tr>
+										<tr><td class="yellow">7</td></tr>
+										<tr><td class="yellow"><b>8</b></td></tr>
+									</table></div>
+								</div>
+
+								<p class="small" style="margin-bottom: 1mm;"><code>RANGE BETWEEN 2 PRECEDING AND 2 FOLLOWING:</code></p>
+								<div class="columns" style="font-size: 85%">
+									<div><table class="small">
+										<tr><td class="red"><b>1</b></td></tr>
+										<tr><td class="red">2</td></tr>
+										<tr><td>4</td></tr>
+										<tr><td>7</td></tr>
+										<tr><td>8</td></tr>
+									</table>
+									</div>
+									<div><table class="small">
+										<tr><td class="red">1</td></tr>
+										<tr><td class="red"><b>2</b></td></tr>
+										<tr><td class="red">4</td></tr>
+										<tr><td>7</td></tr>
+										<tr><td>8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td>1</td></tr>
+										<tr><td class="red">2</td></tr>
+										<tr><td class="red"><b>4</b></td></tr>
+										<tr><td>7</td></tr>
+										<tr><td>8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td>1</td></tr>
+										<tr><td>2</td></tr>
+										<tr><td>4</td></tr>
+										<tr><td class="red"><b>7</b></td></tr>
+										<tr class="red"><td>8</td></tr>
+									</table></div>
+									<div><table class="small">
+										<tr><td>1</td></tr>
+										<tr><td>2</td></tr>
+										<tr><td>4</td></tr>
+										<tr><td class="red">7</td></tr>
+										<tr><td class="red"><b>8</b></td></tr>
+									</table></div>
+								</div>
+
+								<div class="poll fragment" style="bottom:-70px; z-index: 100;">
+									<h1>How would these visualizations look like for OVER(ORDER BY val) without a frame clause (no ROWS and no RANGE)?</h1>
+											<ul>
+													<li>Window would be empty</li>
+													<li>Window only contains the current row</li>
+													<li data-poll="correct">From left to right, window contains first row, first 2 rows, first 3 rows...</li>
+													<li>Window contains all rows</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+									</div>
+
+								<aside class="notes">For <code>ROWS</code>, the number of rows is always the same (except for the border cases). For <code>RANGE</code>, all rows are in the window that have a value in the <code>ORDER BY</code> column in the given range.</aside>
+							</section>
+
+							<section>
+								<h3><code>RANGE BETWEEN</code> time intervals</h3>
+								<pre><code class="sql">SELECT sales_id, sales_timestamp, price, 
+AVG(price) OVER (ORDER BY sales_timestamp 
+                 RANGE BETWEEN INTERVAL '1' HOUR PRECEDING 
+                 AND INTERVAL '1' HOUR FOLLOWING) AS price_avg
+FROM sales
+ORDER BY sales_timestamp;</code></pre>
+
+								<table class="small">
+									<tr>
+										<th>sales_id</th><th>sales_timestamp</th><th>price</th><th>price_avg</th>
+									</tr>
+									<tr class="odd"><td>61.445.905</td><td>2014-07-27-07.34.26.625000</td><td>72,9</td><td>72,9</td></tr>
+<tr><td>362.160.593</td><td>2014-07-27-09.49.00.550000</td><td class="yellow">102,06</td><td><b>69,15</b></td></tr>
+<tr class="odd"><td>290.031.287</td><td>2014-07-27-10.37.14.737000</td><td class="yellow">79,92</td><td>69,15</td></tr>
+<tr><td>158.184.777</td><td>2014-07-27-10.38.09.971000</td><td class="yellow">25,47</td><td>69,15</td></tr>
+<tr class="odd"><td>65.392.276</td><td>2014-07-27-11.46.17.503000</td><td>47,57</td><td>55,21</td></tr>
+<tr><td>242.348.351</td><td>2014-07-27-12.03.12.328000</td><td>49,96</td><td>57,2628571429</td></tr>
+<tr class="odd"><td>105.557.503</td><td>2014-07-27-12.13.46.441000</td><td>7,96</td><td>54,09875</td></tr>
+
+								</table>
+								<aside class="notes">The price_avg value is the average of all prices of sales that happened between 1 hours before and 1 hour after the current sale.</aside>
+							</section>
+
+							<section>
+								<h3><code>GROUPS</code> Framing</h3>
+								<p class="small">Specify the frame by the number of distinct values in the <code>ORDER BY</code> keys.</p>
+								<pre><code class="sql">SELECT sales_id, sales_date, price, 
+SUM(price) OVER (ORDER BY sales_date 
+                 GROUPS BETWEEN 1 PRECEDING AND 1 FOLLOWING) 
+           AS three_day_revenue
+FROM sales
+ORDER BY sales_timestamp;</code></pre>
+
+<table class="small">
+	<tr>
+		<th>sales_id</th><th>sales_timestamp</th><th>price</th><th>three_day_revenue</th>
+	</tr>
+	<tr>	
+		<td>290198225</td><td>2014-03-15</td><td class="yellow">50.00</td><td>255.00</td>
+	</tr>
+	<tr>
+		<td>61495860</td><td>2014-03-15</td><td class="yellow">60.00</td><td>255.00</td>
+	</tr>
+	<tr>
+		<td>346586302</td><td>2014-03-17</td><td class="yellow">70.00</td><td><b>295.00</b></td>
+	</tr>
+		<tr>
+		<td>341990363</td><td>2014-03-17</td><td class="yellow">75.00</td><td>295.00</td>
+	</tr>
+	<tr>
+		<td>546566178</td><td>2014-03-18</td><td class="yellow">40.00</td><td>185.00</td>
+	</tr>
+
+	<aside class="notes">295.00 is the sum of all sales prices of the 15.3. (because there are no sales on 16.3.), 17.3. and 18.3. Mind that <code>GROUPS</code> takes a number of values (similar to <code>ROWS</code>) and not an interval (e.g. in days; as in <code>RANGE</code>).</aside>
+
+</table>
+
+							</section>
+
+							<section>
+								<h3>Window Functions + <code>GROUP BY</code></h3>
+								<p class="small">Window functions are executed after <code>GROUP BY</code> and <code>HAVING</code>.</p>
+								<pre><code class="sql">SELECT sales_date, SUM(price) as revenue,
+SUM(SUM(price)) OVER(ORDER BY sales_date) AS cumulative_revenue
+FROM sales
+GROUP BY sales_date
+ORDER BY sales_date;</code></pre>
+
+<table class="small">
+	<tr>
+		<th>sales_date</th>
+		<th>revenue</th>
+		<th>cumulative_revenue</th>
+	</tr>
+	<tr class="odd"><td>2014-03-16</td><td>2.712,74</td><td>2.712,74</td></tr>
+	<tr><td>2014-03-17</td><td>16.771,88</td><td>19.484,62</td></tr>
+<tr class="odd"><td>2014-03-18</td><td>14.818,57</td><td>34.303,19</td></tr>
+<tr><td>2014-03-19</td><td>16.548,17</td><td>50.851,36</td></tr>
+<tr class="odd"><td>2014-03-20</td><td>19.958,56</td><td>70.809,92</td></tr>
+</table>
+<aside class="notes">Firstly, <code>GROUP BY</code> is executed. Then, the sum of all prices of the same sales_date (<code>SUM(price)</code>) can be computed. In <code>SUM(SUM(price)) OVER (...)</code>, the first <code>SUM</code> is a window function, and the second <code>SUM</code> is the aggregation function.</aside>
+							</section>
+
+							<section>
+								<h3>Ranking Functions</h3>
+								<p class="small">Besides aggregation functions (<code>SUM</code>, <code>AVG</code>, <code>MIN</code>, ...), ranking functions can be used together with the <code>OVER</code> clause:</p>
+								<ul class="small">
+									<li><code>RANK()</code> - Same value in <code>ORDER BY</code> &Rightarrow; same rank</li>
+									<li><code>DENSE_RANK()</code> - Same value in <code>ORDER BY</code> &Rightarrow; same rank, no gaps</li>
+									<li><code>ROW_NUMBER()</code> - Same value in <code>ORDER BY</code> &Rightarrow; different row number</li>
+								</ul>
+
+								<!--create table CUSTOMERS (
+	id INT,
+	name VARCHAR(50),
+	bonus_points INT
+);
+insert into CUSTOMERS (id, name, bonus_points) values (1, 'Maddy', 1067);
+insert into CUSTOMERS (id, name, bonus_points) values (2, 'Ernestine', 2041);
+insert into CUSTOMERS (id, name, bonus_points) values (3, 'Magda', 2587);
+insert into CUSTOMERS (id, name, bonus_points) values (4, 'Cornelius', 4288);
+insert into CUSTOMERS (id, name, bonus_points) values (5, 'Hatti', 4288);
+insert into CUSTOMERS (id, name, bonus_points) values (6, 'Lilias', 4652);
+insert into CUSTOMERS (id, name, bonus_points) values (7, 'Brandais', 2817);
+insert into CUSTOMERS (id, name, bonus_points) values (8, 'Stormi', 1100);
+insert into CUSTOMERS (id, name, bonus_points) values (9, 'Padget', 690);
+insert into CUSTOMERS (id, name, bonus_points) values (10, 'Gray', 4288);
+-->
+
+<div id="rank_table" style="margin-top: 9mm;">
+<table class="small">
+	<tr><th>ID</th><th>NAME</th><th>BONUS_POINTS</th><th>RANK</th><th>DENSE_RANK</th><th>ROW_NUMBER</th></tr><tr class="odd"><td>6</td><td>Lilias</td><td>4.652</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>4</td><td>Cornelius</td><td>4.288</td><td>2</td><td>2</td><td>2</td></tr>
+<tr class="odd"><td>5</td><td>Hatti</td><td>4.288</td><td>2</td><td>2</td><td>3</td></tr>
+<tr><td>10</td><td>Gray</td><td>4.288</td><td>2</td><td>2</td><td>4</td></tr>
+<tr class="odd"><td>7</td><td>Brandais</td><td>2.817</td><td>5</td><td>3</td><td>5</td></tr>
+<tr><td>3</td><td>Magda</td><td>2.587</td><td>6</td><td>4</td><td>6</td></tr>
+</table>
+</div>
+
+<div class="poll fragment" style="bottom:8.8cm; z-index: 100; width: 16cm;">
+	<h1>Why does Cornelius have the ROW_NUMBER 2, and not 3?</h1>
+			<ul>
+					<li>He has less bonus points than Hatti and Gray</li>
+					<li>He has the smaller ID</li>
+					<li>He was inserted before Hatti and Gray</li>
+					<li data-poll="correct">I don't know</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+							</section>
+							<section>
+								<h3>Ranking Functions</h3>
+								<pre><code class="sql">SELECT id, name, bonus_points,
+RANK() OVER (ORDER BY BONUS_POINTS DESC) AS RANK,
+DENSE_RANK() OVER (ORDER BY BONUS_POINTS DESC) AS DENSE_RANK,
+ROW_NUMBER() OVER (ORDER BY BONUS_POINTS DESC) AS ROW_NUMBER
+FROM customers
+ORDER BY bonus_points DESC;</code></pre>
+								<div data-clone="rank_table"></div>
+
+							</section>
+
+							<section>
+								<h3>Statistical Aggregation Functions</h3>
+
+								<p class="small">In SQL:2003, new aggregation functions were introduced:</p>
+
+								<ul class="small" style="width: 108%">
+									<li><code>VAR_POP(x)</code>: $\sigma^2 = \frac{1}{n} \sum(x_i - \bar x)^2$</li>
+									<li><code>STDDEV_POP(x)</code>: $\sigma = \sqrt{ \frac{1}{n} \sum(x_i - \bar x)^2 }$</li>
+									<li><code>COVAR_POP(x,y)</code> = $\frac{1}{n} \sum ((x_i - \bar x)\cdot (y_i - \bar y))$</li>
+									<li><code>CORR(x,y)=COVAR_POP(x,y)/(STDDEV_POP(x)*STDDEV_POP(y))</code></li>
+								</ul>
+								<p class="small">For the whole population (<code>_POP</code>) or with Bessel's correction (<code>_SAMP</code>).</p>
+								<ul class="small" style="width: 108%">
+									<li><code>VAR_SAMP(x)</code>: $\sigma^2 = \frac{1}{n-1} \sum(x_i - \bar x)^2$</li>
+									<li><code>STDDEV_SAMP(x)</code> and <code>COVAR_SAMP</code> analogous.</li>
+								</ul>
+								<aside class="notes">The functions here are to compute the variance, standard deviation, covariance, correlation.</aside>
+							</section>
+
+							<section>
+								<h3>Variance, Standard Deviation</h3>
+								<pre><code class="sql">SELECT MIN(base_sales_price), MAX(base_sales_price), 
+AVG(base_sales_price), MEDIAN(base_sales_price),   
+VAR_POP(base_sales_price), STDDEV_POP(base_sales_price) 
+FROM article;</code></pre>
+
+								<table class="small">
+									<tr><th>min</th><th>max</th><th>avg</th><th>median</th><th>var_pop</th><th>stddev_pop</th></tr>
+									<tr><td>0.00</td><td>89.69</td><td>3.00852</td><td>1.83</td><td>18.86726</td><td>4.34364</td></tr>
+								</table>
+
+								<aside class="notes">The cheapest article costs 0 EUR, the most expensive one 89.69 EUR. The mean price of all articles is 3.00852 EUR. Half of the articles are cheaper than 1.83 EUR (the median), half of the articles are more expensive than that. The variance and standard deviation of the prices show whether they are close to the mean or within a wider range.</aside>
+							</section>
+
+							<section>
+								<h3>Covariance, Correlation</h3>
+								<pre><code class="sql">WITH num_articles(sales_id, amount) AS
+(SELECT s.sales_id, count(*)
+ FROM sales s JOIN sales_positions p ON s.sales_id = p.sales_id
+ GROUP BY s.sales_id)
+SELECT COVAR_POP(n.amount, s.price), 
+       CORR(n.amount, s.price),
+       COVAR_POP(n.amount, s.returned_change),
+       CORR(n.amount, s.returned_change)
+FROM sales s JOIN num_articles n ON s.sales_id=n.sales_id;</code></pre>
+
+<table class="small">
+	<tr><th>covar_pop(amount, price)</th><th>corr(amount, price)</th><th>covar(amount, returned_change)</th><th>corr(amount, returned_change)</th></tr>
+	<tr><td>117.32444</td><td>0.69903</td><td>0.0099</td><td>0.00084</td></tr>
+</table>
+<aside class="notes">A positive covariance and correlation between x and y means: The higher x, the higher y. A negative value means that one value is bigger when the other is smaller. The result of the query on this slides shows that there is a high positive correlation between the number of articles bought within one sale and the total price of the sale. The correlation between the number of articles somebody bought and the amount of change (money returned) is very close to zero. This means, these values are independent of each other.</aside>
+							</section>
+
+							<section>
+								<h3>Skyline Queries</h3>
+								<div style="position: absolute; top: 50px; right:50px; font-size:130px"><i class="fas fa-city green"></i></div>
+								<!--
+									create table computers(description varchar(50), ram int, ssd int, price int);
+insert into computers values
+('Naptop XS',4,256,199),('Doll K7',2,128,199),
+('La Novo T600',64,4096,5500),('Expensive Extreme',64,4096,6666);
+								-->
+								<p class="small">Finding the "best" rows within multi-dimensional data.</p>
+								<p class="small">Example: Finding the cheapest computer:</p>
+								<pre><code class="sql">SELECT * FROM computers PREFERRING LOW price;</code></pre>
+								<table class="small">
+									<tr><th>description</th><th>RAM</th><th>SSD</th><th>price</th></tr>
+									<tr><td>Naptop XS</td><td>4</td><td>256</td><td>199</td></tr>
+									<tr><td>Doll K7</td><td>2</td><td>512</td><td>199</td></tr>
+								</table>
+
+								<div class="poll fragment fade-in-then-out" style="bottom:10px; z-index: 100;">
+									<h1>This query is equivalent to...</h1>
+											<ul>
+													<li>SELECT * FROM computers ORDER BY price LIMIT 1;</li>
+													<li>SELECT * FROM computers ORDER BY price LIMIT 2;</li>
+													<li>SELECT * FROM computers c1 WHERE NOT EXISTS(SELECT * FROM computer c2 WHERE c2.price&lt;c1.price)</li>
+													<li>SELECT * FROM computers WHERE price = (SELECT min(price) FROM computers)</li>
+													<li data-poll="correct">The yellow and blue answers are correct.</li>
+											</ul>
+									<h2>https://fraage.de</h2>
+									</div>
+
+
+								<div class="fragment">
+								<p class="small">Other example: Finding a computer, preferring a lot of RAM and a low price.</p>
+								<pre><code class="sql">SELECT * FROM computers PREFERRING HIGH ram PLUS LOW price;</code></pre>
+								<table class="small">
+									<tr><th>description</th><th>RAM</th><th>SSD</th><th>price</th></tr>
+									<tr><td>Naptop XS</td><td>4</td><td>256</td><td>199</td></tr>
+									<tr><td>La Novo T600</td><td>64</td><td>4096</td><td>5500</td></tr>
+								</table>
+								</div>
+							</section>
+
+							<section>
+								<canvas data-chart="line" class="stretch" >
+									<!--
+									{
+									 "data": {
+										"labels": [199,250,599,999,1999,2499,5500,6666],
+										"datasets":[
+										 {
+											"data":[4,null,null,8,null,16,64,null],
+											"backgroundColor":"rgba(20,220,220,1.0)",
+											"showLine": true,
+											"spanGaps": true
+										 },
+										 {
+											"data":[2,4,4,2,8,16,64,64],
+											"backgroundColor":"rgba(20,220,220,1.0)",
+											"showLine": false
+										 }
+										]
+									 },
+									 "options": { 
+										 			"scales": { "x": { "type": "linear", "title": {"text": "price", "display":true} }, "y": { "min":0, "title": {"text": "RAM", "display":true} } },
+													 "plugins": {
+														 "legend": { "display": false}
+													 }
+												}
+									}
+									-->
+									</canvas>
+							</section>
+
+							<section>
+								<h3>Skyline Queries</h3>
+								<p class="small">Finds rows which are not dominated by other rows.</p>
+								<pre><code class="sql">SELECT * FROM computers PREFERRING HIGH ram PLUS LOW price;</code></pre>
+								<table class="small">
+									<tr><th>description</th><th>RAM</th><th>SSD</th><th>price</th></tr>
+									<tr><td>Naptop XS</td><td>4</td><td>256</td><td>199</td></tr>
+									<tr><td>La Novo T600</td><td>64</td><td>4096</td><td>5500</td></tr>
+								</table>
+								<p class="small">Does not find the Doll K7 (2 GB RAM, 199 EUR),<br>because it is dominated by Naptop XS (more RAM, same price).</p>
+								<div class="fragment">
+								<p class="small">Equivalent SQL query in other RDMBSs:</p>
+								<pre><code class="sql">SELECT * FROM computers c1 WHERE NOT EXISTS (
+    SELECT * FROM computers c2 
+    WHERE (c2.ram > c1.ram AND c2.price <= c1.price)
+       OR (c2.ram >= c1.ram AND c2.price < c1.price));</code></pre>
+			</div>
+							</section>
+
+							<section>
+								<h3>Skyline Queries</h3>
+								<h4><code>PARTITION BY</code></h4>
+								<p class="small" style="margin-top: -5mm">Skyline is computed for each partition.</p>
+								<pre><code class="sql">SELECT * FROM computers
+PREFERRING LOW price PARTITION BY manufacturer;</code></pre>
+
+<div class="fragment">
+								<h4><code>PRIOR TO</code></h4>
+								<p class="small" style="margin-top: -5mm">Second term will only be considered if the value for the first term is the same.</p>
+								<pre><code class="sql">SELECT * FROM computers
+PREFERRING LOW price PRIOR TO HIGH ram;</code></pre>
+								<table class="small">
+									<tr><th>description</th><th>RAM</th><th>SSD</th><th>price</th></tr>
+									<tr><td>Naptop XS</td><td>4</td><td>256</td><td>199</td></tr>
+								</table>
+</div>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-110px; z-index: 100;">
+	<h1>Which two of the following PREFERRING clauses are equivalent? (click on any of the two)</h1>
+			<ul>
+					<li>PREFERRING HIGH x PRIOR TO HIGH y</li>
+					<li>PREFERRING HIGH y PRIOR TO HIGH x</li>
+					<li data-poll="correct">PREFERRING HIGH x PLUS HIGH y</li>
+					<li data-poll="correct">PREFERRING HIGH y PLUS HIGH x</li>
+			</ul>
+	<h2>https://fraage.de</h2>
+	</div>
+								<aside class="notes">The first query finds the cheapest computers for each manufacturer. A row only dominates another if it has the same value in the <code>PARTITION BY</code> column. Different from <code>PLUS</code>, the order of <code>PRIOR TO</code> is important. In the example, the La Novo T600 is not found, because it is more expensive than the Naptop XS. The Doll K7 is also not found. It has the same price, but it has less RAM.</aside>
+							</section>
 			</div>
 		</div>
 
@@ -294,6 +808,9 @@ union all select null, null, 5728876.15, 1, 1"></span>
 		<script src="reveal.js/plugin/math/math.js"></script>
 		<script src="reveal.js/plugin/notes/notes.js"></script>
 		<script src="reveal.js/plugin/search/search.js"></script>
+		<script src="lib/chart.min.js"></script>
+		<script src="plugins/revealjs-chart.js"></script>
+		
         <script src="lib/jquery.js"></script>
         <script src="lib/lodash.js"></script>
         <script src="lib/backbone.js"></script>

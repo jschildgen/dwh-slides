@@ -15,28 +15,30 @@
             <b>Data Warehousing - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 9 (2022-05-25/28/30)</b>
+            <b>Exercise Sheet 9 (2022-06-01/03/06)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
-<section style="padding-top: 2.5cm">
+<section style="padding-top: 2cm">
     <h1>Exercise 1: q-Grams</h1>
     <p>In this week's first exercise, you do not work with the database but develop a function / a program in a programming language of your choice: Python, Java, Lua, or R.</p>
-    <ol>
+    <ol style="margin-top:-3mm">
         <li>Develop a function <code>sim_bigram(a, b)</code> that takes two strings as input and computes the Jaccard similarity between the sets all bigrams (q-gram with q=2) of the characters of the two strings (should return a value between 0 and 1).
         <br>Example: sim_bigram('food', 'foot') = |{fo, oo}| / |{fo, oo, od, ot}| = 2/4 = 0.5</li>
         <li>Extend your function by a parameter q: <code>sim_qgram(a, b, q)</code>.</li>
     </ol>
 </section>
 
-<section>
+<section style="margin-top:-3mm">
     <h1>Exercise 2: UDF Script</h1>
-    <ol>
+    <ol style="margin-top:1mm">
         <li>Use one of the following templates (depending on which programming language you chose) to create a UDF (user-defined function) script of your q-grams function in Exasol.</li>
         <li>Now you can then call your UDF script like this: <code>SELECT sim_qgram('food', 'foot', 2);</code></li>
-        <li>Use your two cities tables from the previous exercise sheets to find cities that find a match in the other city table with a high Jaccard similarity value. Choose an adequate threshold.</li>
+        <!--<li>Truncate your cities table in your integrated schema from the previous exercise sheet, load all rows from the first source table in that table, and then use a <code>MERGE</code> command to fusion cities data from the second source table (those with a high Jaccard similarity value) and add those which do not find a match. Choose an adequate threshold.</li>-->
+        <li>Truncate your cities table in your integrated schema from the previous exercise sheet, load all rows from the first source table in that table, and then use a <code>MERGE</code> command to fusion cities data from the second source table and add those which do not find a match. For a match, the zip code and city name should be the same.</li>
+        <li>For all cities, find those ones which have the same zipcode and a similar (not equal) city name with respect to the Jaccard similarity. Use your UDF and choose an adequate threshold.</li>
     </ol>
     <pre><code>CREATE OR REPLACE PYTHON3 SCALAR SCRIPT sim_qgram
 (a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
@@ -75,7 +77,6 @@ run <- function(ctx) {
 }
 /;</code></pre>
 </section>
-
 
     
 </body>

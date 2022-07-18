@@ -17,7 +17,7 @@ Reveal.initialize({
  sampler : {
    removeIndentation: true
  },
- plugins: [ RevealMarkdown, RevealHighlight, RevealZoom, RevealMath, RevealNotes, RevealSearch ],
+ plugins: [ RevealMarkdown, RevealHighlight, RevealZoom, RevealMath, RevealNotes, RevealSearch, RevealChart ],
  dependencies: [
     { src: 'src/sql.js', async: true },
     { src: 'src/clone.js', async: true },
