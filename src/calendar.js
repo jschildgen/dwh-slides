@@ -5,6 +5,15 @@
  */
  
 var CalendarPlugin = (function(){
+
+	var color_codes = {
+		"green" : "rgba(66, 169, 170, 0.99)",
+		"yellow" : "#ffcb63",
+		"orange" : "#ffaa63",
+		"gray" : "#797d9a",
+		"red" : "#ff6363",
+		"blue" : "#5473b9"
+	}
     
 	return {
 		init: function() {        
@@ -60,9 +69,16 @@ var CalendarPlugin = (function(){
 									}
 
 									var classinfo = "";
+									var first_color = null;
 									for(color in colors) {
 										if(colors[color].indexOf(""+newDate.getDate()) > -1) {
-											classinfo = ' class="sl-block-content '+color+'"';
+											if(classinfo == "") {
+												classinfo = ' class="sl-block-content '+color+'"';
+												first_color = color;
+											} else {
+												classinfo += ' style="background-image: -webkit-linear-gradient(126deg, '+color_codes[color]+' 50%, '+color_codes[first_color]+' 50%);"';
+											}
+											
 										}
 									}
 									html += '<td'+classinfo+'>';
