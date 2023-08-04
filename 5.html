@@ -126,7 +126,7 @@ AND clerk = 219;</code></pre>
 									<p class="small" style="margin-top: -5mm;">Navigate in across the hierarchy to a more fine granular level.</p>
 									<pre style="margin-top: -3mm;"><code class="sql">... GROUP BY year(sales_date);</code></pre>
 
-									<h4>Drill Down</h4>
+									<h4>Rollup</h4>
 									<p class="small" style="margin-top: -5mm;">Navigate out across the hierarchy to a more coarse granular level.</p>
 									<pre style="margin-top: -3mm;"><code class="sql">... GROUP BY year(sales_date), to_char(sales_date, 'Q');</code></pre>
 								</section>
@@ -270,7 +270,7 @@ union all SELECT null, 2065, 745352.67, 1, 0
 union all select '...', '...', '...' ,'...', '...'
 union all select null, null, 5728876.15, 1, 1"></span>
 
-<div class="poll fragment" style="bottom:300px; z-index: 100;">
+<div class="poll fragment" style="bottom:290px; z-index: 100;">
 	<h1>What has the same effect as WHERE GROUPING(market_id)=1?</h1>
 			<ul>
 					<li>WHERE market_id IS NULL</li>

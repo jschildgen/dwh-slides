@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 7</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,49 +12,22 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 7 (2022-05-11/13/16)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Schema Integration</h1>
-    <p>For this exercise sheet, download the following two CSV files that contain german cities data:</p>
-    <ul>
-        <li>ww-german-postal-codes.csv from <a href="https://www.wiwald.com/ds/kostenlose-liste-deutscher-postleitzahlen-und-zugehoeriger-orte/id/ww-german-postal-codes" target="_blank">https://www.wiwald.com/ds/kostenlose-liste-deutscher-postleitzahlen-und-zugehoeriger-orte/id/ww-german-postal-codes</a></li>
-        <li>zuordnung_plz_ort.csv from <a href="https://www.suche-postleitzahl.org/downloads#google_vignette" target="_blank">https://www.suche-postleitzahl.org/downloads#google_vignette</a></li>
-    </ul>
-
-    <p>When you solve this exercise on your local database, create a new schema for this exercise: <code>CREATE SCHEMA IF NOT EXISTS ex7;</code> If you use the OTH database, use your <code>FIRSTNAME_LASTNAME</code> user and schema.</p>
-    
-    <ol>
-        <li>Open the CSV files in a text editor (not in Excel!) to inspect their format.</li>
-        <li>Prepare your staging area: For each CSV file, create a table in the Exasol database with the same attributes as in the CSV file.</li>
-        <li>Which forms of heterogeneity exists between the two data sources? Give examples.</li>
-        <li>Perform a schema matching between the two schemas (e.g., on a piece of paper).</li>
-        <li>Create an integrated schema in the Exasol database (use <code>CREATE TABLE</code>). In this exercise, you'll only create the integrated schema, we will not yet fill it with data.</li>
-    </ol>
+    <h1>Exercise 1: MERGE</h1>
+    <p>In the next workbook (Challenge 4), there will only be a short question about this exercise sheet.</p>
+    <p>On the previous exercise sheet, you integrated data from your staging area into your target data-warehouse schema. Now, extend this workflow by writing a MERGE command. MERGE is a combination of INSERT, UPDATE, and DELETE. Use it to insert rows from source tables from your staging area into target tables that are not there yet, and update those rows which already exist in the target table. You can also use multiple MERGE commands to integrate data from different source tables into the same target table.</p>
 </section>
 
-<section>
-    <h1>Exercise 2: IMPORT</h1>
-    <ol>
-        <li>Write two <code>IMPORT</code> commands to import the CSV files in your staging area.</li>
-        <li>For each of your two tables, how many rows were imported?</li>
-        <li>How many cities are in the first dataset but not in the second, and vice versa?</li>
-    </ol>
-
-    <p>Hints:</p>
-    <ul>
-        <li>On the CIP-pool PCs, importing local files does not work. Use the following <code>IMPORT</code> statements instead to import the files from a server:<br>
-        <code>IMPORT INTO ... FROM CSV AT 'https://fraage.de' FILE 'ww-german-postal-codes.csv' ...</code><br>(and <code>FILE 'zuordnung_plz_ort.csv'</code>)</li> 
-    </ul>
-</section>
-
+<script src="./js/exercises.js"></script>
 
     
 </body>

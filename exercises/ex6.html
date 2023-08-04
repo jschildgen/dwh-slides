@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 6</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,44 +12,38 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 6 (2022-05-04/06/09)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Slowly changing dimensions</h1>
-    <p>In this exercise, you will extend your star schema from the previous exercise sheet.</p>
+    <h1>Exercise 1: Data Integration</h1>
+    <p>This exercise is the continuation of the previous exercise sheet. Make sure that you have a staging area with tables that contain data from different sources (Sheet 5, Exercises 1.3 and 2) and empty tables in your integrated schema (Sheet 5, Exercise 1.6).</p>
     
+    <p>The following exercises serve only as a rough guide. Depending on your scenario, your source tables, target tables, and your data, it can be that several tasks do not make sense. Finally, it's now your job to tell yourself what to do to integrate your data in your data warehouse. Document what you do and why.</p>
+    
+    <p>In the next workbook (Challenge 4), there will only be a short question about this exercise sheet. You need to write a few words about how you performed your data integration and data cleaning.</p>
+
     <ol>
-        <li>Implement the slowly-changing-dimensions approach type 2 by adding <code>valid_from</code> and <code>valid_until</code> columns to your dimension tables. Use <code>DEFAULT</code> specifications so that <code>valid_from</code> is the current timestamp and <code>VALID_UNTIL</code> is <code>'9999-12-31 23:59:59.999</code> by default.</li>
-        <li>For the existing data, set all <code>valid_from</code> values to <code>'1900-01-01 0:00:00'</code>.</li>
-        <li>Insert a customer Jane that registered on 1st April 2022 with the "FREE" plan. She changed her plan to the "FLAT" plan on 15th April.</li>
-        <li>Insert three rentals of customer Jane, one from the 5th April, one from the 20th April, and one from the 1st May.</li>
-        <li>Write a <code>SELECT</code> query to generate a report that shows for each month and plan, the average duration of rides. Make sure to correctly include the timestamps of validity of the dimension tables!
-          <table><tr><th>MON</th><th>PLAN</th><th>AVG_DURATION</th></tr>
-            <tr><td>2022-01</td><td>FREE</td><td>12.82</td></tr>
-            <tr><td>2022-01</td><td>FLAT</td><td>28.43</td></tr>
-            <tr><td>2022-02</td><td>FREE</td><td>15.11</td></tr>
-            <tr><td>2022-02</td><td>FLAT</td><td>29.70</td></tr>
-          </table><br>
-        </li>
-        <li>Create a view <code>AVG_DURATIONS_PER_MONTH_AND_PLAN</code> for the report from the previous task.</li>
-        <li>Create a view <code>RENTAL_DENORMALIZED</code> that includes all data from the fact and dimension tables in a denormalized form.</li>
-        <li>Rewrite your query from task 5 on the denormalized view.</li>
+        <li>In which of your source tables do you have errors or duplicates in your data? For those, add a column <code>error_info</code> of type <code>VARCHAR(2000)</code>.</li>
+        <li>For each of your individual source tables (not cross-table!), find out whether there are duplicate rows (rows describing the same real-world entity). For the matching rows, set the error code to an appropriate error message.</li>
+        <li>Which other errors are there? Set appropriate error messages to the erroneous rows.</li>
+        <li>Now perform entity-matching across multiple source tables. For each row in one source table, find matching rows in the other table, using (a) equal join, (b) similarity join with a Levenshtein less than an appropriate threshold, (c) similarity join using Soundex. For each approach, write down the number of rows that find a match.</li>
+        <li>Which entities find a match with Levenshtein that do not find a match with Soundex and vice versa? Are there false positives (match found but it shouldn't be a match)? Are there false negatives (it should be a match but no match was found)?</li>
+        <li>Choose an appropriate matching method (equal join, Levenshtein, or Soundex) to integrate the data from the source tables into the target table.</li>
+        <li>Also integrate the rows that only appear in one of the source tables in the target table.</li>
+        <li>Integrate all other data also in your DWH schema. Skip the erroneous rows (or fix the errors somehow). Perform entity matching, data integration, deduplication, data scrubbing, data cleaning, and normalization.</li>
     </ol>
 
-    <p>Hints:</p>
-    <ul>
-        <li>If you have defined foreign-key columns in your rental table, you need to drop them for this exercise. Take a look in the system table <code>SYS.EXA_USER_CONSTRAINT_COLUMNS</code> and drop the foreign-key constraint with <code>ALTER TABLE rental DROP CONSTRAINT [constraint_name];</code></li>
-        <li>Dropping the primary key is much easier: <code>ALTER TABLE ... DROP PRIMARY KEY;</code></li>
-    </ul>
+<p>Remark: Most tasks on this exercise sheet are made for String values in your data. These values are typically in your dimension tables. Examples: city names, person names, song titles, product names, categories, ... For numeric data you can only check for errors (are the values in a meaningful range, outlier detection, ...). For dates and timestamps (and strings/numbers where suitable), convert them into a homogeneous form.</p>
 </section>
 
+<script src="./js/exercises.js"></script>
 
     
 </body>

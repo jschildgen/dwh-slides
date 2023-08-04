@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 9</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,71 +12,52 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 9 (2022-06-01/03/06)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%%<!-- (%%%EX_DATES%%%)--></b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
-<section style="padding-top: 2cm">
-    <h1>Exercise 1: q-Grams</h1>
-    <p>In this week's first exercise, you do not work with the database but develop a function / a program in a programming language of your choice: Python, Java, Lua, or R.</p>
-    <ol style="margin-top:-3mm">
-        <li>Develop a function <code>sim_bigram(a, b)</code> that takes two strings as input and computes the Jaccard similarity between the sets all bigrams (q-gram with q=2) of the characters of the two strings (should return a value between 0 and 1).
-        <br>Example: sim_bigram('food', 'foot') = |{fo, oo}| / |{fo, oo, od, ot}| = 2/4 = 0.5</li>
-        <li>Extend your function by a parameter q: <code>sim_qgram(a, b, q)</code>.</li>
+
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Connecting to Pyramid Analytics</h1>
+    <ol>
+        <li>Connect to the OTH Exasol database with your FIRSTNAME_LASTNAME user and you find your username and password for Pyramid here:<br><code>select * from common.pyramid_password;</code></li>
+        <li>If you worked on your local Exasol database so far, use <code>CREATE TABLE</code> commands to create your target data warehouse schema in your OTH Exasol database and export your data to there by executing the following commands on your local Exasol DB. Make sure that VPN to the OTH is on and that your Exasol VM has internet access. You can configure NAT in the VM settings under Network, and add a port forwarding from host port 8563 to guest port 8563. Then connect your DBeaver to localhost.<br>
+        <pre>create or replace connection jdbc_con to 'jdbc:exa:194.95.108.54' 
+user 'FIRSTNAME_LASTNAME' identified by 'Your OTH Exasol DB Password';
+
+EXPORT myschema.mytable INTO JDBC AT jdbc_con TABLE FIRSTNAME_LASTNAME.mytable;</pre></li>
+        <li>Open the OTH Pyramid instance in your web browser: <code>http://10.127.0.26:8181</code> and log in with your Pyramid username and password.</li>
+        <li>Create a connection from Pyramid to Exasol: Model (yellow DB symbol on the very left) / Direct Model / Exasol / 194.95.108.54, your FIRSTNAME_LASTNAME user, password, schema. Then choose your DWH tables (not the staging area). You can now stop here and continue with the next exercise, in which you create your model. There, your new Exasol connection can be choosen in the Model Lite wizard.</li>
     </ol>
 </section>
 
-<section style="margin-top:-3mm">
-    <h1>Exercise 2: UDF Script</h1>
-    <ol style="margin-top:1mm">
-        <li>Use one of the following templates (depending on which programming language you chose) to create a UDF (user-defined function) script of your q-grams function in Exasol.</li>
-        <li>Now you can then call your UDF script like this: <code>SELECT sim_qgram('food', 'foot', 2);</code></li>
-        <!--<li>Truncate your cities table in your integrated schema from the previous exercise sheet, load all rows from the first source table in that table, and then use a <code>MERGE</code> command to fusion cities data from the second source table (those with a high Jaccard similarity value) and add those which do not find a match. Choose an adequate threshold.</li>-->
-        <li>Truncate your cities table in your integrated schema from the previous exercise sheet, load all rows from the first source table in that table, and then use a <code>MERGE</code> command to fusion cities data from the second source table and add those which do not find a match. For a match, the zip code and city name should be the same.</li>
-        <li>For all cities, find those ones which have the same zipcode and a similar (not equal) city name with respect to the Jaccard similarity. Use your UDF and choose an adequate threshold.</li>
-    </ol>
-    <pre><code>CREATE OR REPLACE PYTHON3 SCALAR SCRIPT sim_qgram
-(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
-def run(ctx):
-    # TODO: implement it here
-    # you can access the parameters via ctx.a, ctx.b and ctx.q
-    return None                # TODO: return similarity value
-/;</code></pre>
-
-<pre><code>CREATE OR REPLACE JAVA SCALAR SCRIPT sim_qgram
-(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
-class SIM_QGRAM {
-    static Double run(ExaMetadata exa, ExaIterator ctx) throws Exception {
-        // todo: implement it here
-        // you can access the parameters via ctx.getString("a"), ctx.getInteger("q")
-        return null;    // todo: return similarity value
-    }
-}
-/;</code></pre>
-
-<pre><code>CREATE OR REPLACE LUA SCALAR SCRIPT sim_qgram
-(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
-function run(ctx)
-    -- todo: implement it here
-    -- you can access the parameters via ctx.a, ctx.b, ctx.q
-    return NULL             -- todo: return similarity value
-end
-/;</code></pre>
-
-<pre><code>CREATE OR REPLACE R SCALAR SCRIPT sim_qgram
-(a VARCHAR(2000000), b VARCHAR(2000000), q int) RETURNS DOUBLE AS
-run <- function(ctx) {
-    # todo: implement it here
-    # you can access the parameters via ctx.a, ctx.b, ctx.q
-    NA                      # todo: return similarity value
-}
-/;</code></pre>
+<section>
+    <h1>Exercise 2: Model</h1>
+    <p>Basically, you can create Discoveries directly on your Direct Model from Exercise 1. But if you want to use all features (e.g., Time Intelligence), create a new Model Lite.</p>
+    <ul>
+        <li>Create a Model Lite: Target: In-Memory, new Database. Then choose your Exasol connection, your schema, and your tables. Select all important columns, check their role (dimension, measure), check foreign keys between your tables.</li>
+    </ul>
 </section>
+
+<section>
+    <h1>Exercise 3: Discover, Present, Publish</h1>
+    <p>Create a presentation and / or poster that shows the results of your project: interesting facts and findings; do not focus on how you did it.</p>
+    <ol>
+        <li>Use Discover to create charts.</li>
+        <li>If you present your results on July 5 or 7, prepare a 5-minute presentation using Pyramid's Present module. Please write your title and your name on the first slide.</li>
+        <li>If you present your results on July 8 (Open-University Day), create a poster using Pyramid's Publish module. Choose Landscape or Portrait format, A3 (actually, we will print it on A2 format). Please write your title and your name on the poster.</li>
+        <li>Export your presentation / poster as a PDF by clicking on the gray-blue Run button on the top left. For presentations, this will start your presentation. Then, click on the menu button on the top left, and then Print.</li>
+        <li>Choose your presentation slot in ELO and Upload your presentation and / or poster PDF to ELO before the deadline (July 4, 23:59). We will print your poster for you.</li>
+    </ol>
+</section>
+
+
+<script src="./js/exercises.js"></script>
 
     
 </body>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 5</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,33 +12,48 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 5 (2022-04-27/29, 2022-05-02)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
-<section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Data Modelling</h1>
-    <p>When you solve this exercise on your local database, create a new schema for this exercise: <code>CREATE SCHEMA IF NOT EXISTS ex5;</code> If you use the OTH database, use your <code>FIRSTNAME_LASTNAME</code> user and schema.</p>
-    <p>In this exercise, we are planning a data warehouse schema for a bike-rental company.<br>
-        They will load customer data from a relational database. Each customer has a cust_id, name, email, phone, street, area, city, plan, price.<br>
-        Furthermore, bikes are imported from Excel files which are provided by the different bike manufacturers. Each bike has bike_id, bike_type, model, brand.<br>
-        The company has different bike stations which have a station_id, street, area, city<br>
-        The bike-rental events can be loaded via an API. This API provides the information which customers drove which bike when from which station to which station. It shows the timestamp of issue, the rental duration, the rental price, and the number of bikes that parked at the return station after the rental.</p>
+
+    <div style="padding-top: 2.5cm;">
+    <div style="background-color: gainsboro;">
+        <p><b>You will need some of your answers and queries from this exercise sheet for the next submission (Challenge 3). It is recommended to work on the OTH Exasol database.</b></p>
+    </div>
+    </div>
+
+<section>
+    <h1>Exercise 1: Schema Integration</h1>
+    
+    <p>In the previous exercise sheet, you created a star and a snowflake schema for your data-warehouse project. Now, decide how your final schema will look and perform a schema integration.</p>
     <ol>
-        <li>Draw an ME/R Model for this scenario. Which dimensions are hierarchical?</li>
-        <li>For each measure, which data type, range, and aggregation type do they have?</li>
-        <li>Map your model to a relational star schema by writing <code>CREATE TABLE</code> commands to create a star schema in your database. Which ones are the dimension tables, which one is the fact table?</li>
-        <li>Insert two example rows in each of your tables.</li>
-        <li>Transform your star schema (including the data) into a snowflake schema with <code>CREATE TABLE</code> and <code>INSERT INTO ... SELECT</code> commands. Use a prefix <code>sf_</code> for the new tables (e.g., <code>sf_markets</code>). You can use the <code>IDENTITY</code> option to automatically generate unique primary-key values: <code>my_id INT INDENTITY</code></li>
+        <li>Inspect the schema of the data that you want to import. For example: If you want to import data from CSV files, open the files in a text editor (not in Excel!) to see its attributes, value formats (date/number formats, ...), and properties (column-separation symbol, ...). A good text editor also shows you which encoding is used (e.g., UTF-8) and which line ending (LF (Unix), CRLF (Windows), CR(Mac)). Write down those details, you need them later in your IMPORT command.</li>
+        <li>Do the same for at least one more data source which.</li>
+        <li>Prepare your staging area in Exasol: For each data source (e.g., for each file), create a table in the Exasol database with the same attributes as in your input data. Of course, you can skip the attributes that you never need.</li>
+        <li>Which forms of heterogeneity exist between two of your data sources (technical, data model, semantical, syntactical, schematic, and/or structural)? Only list a few and give examples.</li>
+        <li>Perform a schema matching between the two schemas (e.g., on a piece of paper). Which attributes from the one data source correspond with which attributes from the other data source?</li>
+        <li>As a last step, you should create an integrated schema in your Exasol database. This is a schema (multiple tables) that can store data from all your data sources. You can use your solution from the previous exercise sheet (your star or snowflake schema) for this, and - if necessary - extend or adjust it. As a result, you will have the final version of your integrated schema. Write down the <code>CREATE TABLE</code> commands to create the schema. Do not yet fill the tables with data.</li>
     </ol>
+    
 </section>
 
+<section>
+    <h1>Exercise 2: IMPORT</h1>
+    <ol>
+        <li>Write down Exasol <code>IMPORT</code> commands to import data from your data sources into your staging area. If your data is not in CSV format, it can be a good idea to write a little Python program that outputs CSV files (e.g. a converter from JSON to CSV, or a tool that accesses an API and stores the data in a CSV file). At the end of your <code>IMPORT</code> command, write: <code>ERRORS INTO error_tbl REJECT LIMIT UNLIMITED;</code> (drop the table error_tbl if it is already there). Exasol will write errors that happen during the import process into that table.</li>
+        <li>Inspect your target tables and the error table (both with <code>LIMIT 50</code> or so). When there are errors, try to fix them, truncate the target table again and re-import the data.</li>
+        <li>When you are fine with your result, count for each of your tables in the staging area, how many rows are in these tables?</li>
+    </ol>
 
+</section>
+
+<script src="./js/exercises.js"></script>
     
 </body>
 </html>

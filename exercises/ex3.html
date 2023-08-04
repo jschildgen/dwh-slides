@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 3</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,30 +12,32 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 3 (2022-04-06/08/11)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Multi-Version Concurrency Control</h1>
-    <p>When you solve this exercise on your local database, create a new schema for this exercise: <code>CREATE SCHEMA IF NOT EXISTS ex3;</code> If you use the OTH database (194.95.108.54), a user is created for every student. As username, password and schema name use <code>upper(replace(substr(email, 0, instr(email, '@')-1),'.','_'))</code>. Example: When your OTH email address is <code>firstname.lastname@oth-regensburg.de</code>, your username, password, and schema name is <code>FIRSTNAME_LASTNAME</code>.</p>
+    <h1>Exercise 1: Your DWH Project</h1>
+    <p>Submission Deadline: 09.05.2023 23:59</p>
+    <p>In ELO, you find the Workbook file for Challenge 1.</p>
     <ol>
-        <li>Create a table <code>SETTINGS</code> with two <code>VARCHAR(2000000)</code> columns <code>K</code> and <code>V</code> (key and value).</li>
-        <li>Insert a row <code>('GREETING', 'Hello')</code> in the settings table.</li>
-        <li>In your DBeaver settings (Window/Fenster, Settings/Einstellungen), under Editors, SQL-Editor enable &quot;Open a separate connection for each editor&quot; This means, when you open multiple tabs, they will not use the same session but open multiple sessions.</li>
-        <li>Open two editor tabs and check whether they use different sessions: <code>SELECT CURRENT_SESSION;</code></li>
-        <li>Disable autocommit (Database, Transaction Mode, Manual Commit) in both sessions.</li>
-        <li>Commit in both editors to start new transactions.</li>
-        <li>In one transaction, update the greeting to 'Hi', in the other one insert a new row in the table. Then commit both transactions. Was there a waiting situation?</li>
-        <li>In both transactions, <code>SELECT * FROM settings;</code>, and then, again, perform an update in one and an insert in the other transaction. The second transaction will be rolled back. Why?</li>
+        <li>Fill out the workbook using a Markdown editor (e.g., Zettlr)</li>
+        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
+        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
+        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
+        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
+        <li>Find out when the hard disk was accessed most.</li>
+        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
     </ol>
 </section>
 
+
+<script src="./js/exercises.js"></script>
     
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 2</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,43 +12,32 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 2 (2022-03-30, 2022-04-01/04)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Working with Duplicates, Strings, Dates, and Timestamps</h1>
-    <p>Write SQL queries on the tables in the RETAIL schema from exercise sheet 1.</p>
+    <h1>Exercise 1: Exasol System Tables</h1>
+    <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
+    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
     <ol>
-        <li>Does the EAN column in the article table contain unique values? If not, return the duplicate EAN values.</li>
-        <li>Based on 1., find the articles that have a non-unique EAN value.</li>
-        <li>Exasol supports the clause <code>WITH INVALID ...</code>. Find out how to use this feature and solve problem 1 and 2 again.</li>
-        <li>For each product group, generate a list (separated by a comma and a space) of articles in that product group that cost less than 0.50 EUR.<br>
-        <table><tr><th>PRODUCT_GROUP_DESC</th><th>ARTICLES</th></tr>
-        <tr><td>Frozen Foods</td><td>Baguettebrötchen, Brinkchen Semmel, ...</td></tr></table><br></li>
-        <li>The same query as 4., but this time include the prices in the list of artices in parentheses, and order the list from low to high prices.
-            <table><tr><th>PRODUCT_GROUP_DESC</th><th>ARTICLES</th></tr>
-                <tr><td>Frozen Foods</td><td>Lang.Multi 5 Squeezy Milcheis (0 EUR), ...</td></tr></table><br>
-        </li>
-        <li>Print the current date in the following format: 12. January 2023</li>
-        <li>For each article in the product group Pharmacy, return the article_id, the description and the timestamp of its last sale.</li>
-        <li>For every hour of the day 2014-10-01, how many sales were there within that hour?
-            <table><tr><th>HOUR_OF_DAY</th><th>NUM_SALES</th></tr>
-                <tr><td>2014-10-01-00.00.00.000000</td><td>6</td></tr>
-                <tr><td>2014-10-01-01.00.00.000000</td><td>7</td></tr></table><br>
-            	
-        </li>
-        <li>Take a look in the system table <code>EXA_SQL_LAST_DAY</code>. It shows statistics about all SQL queries that were sent to the database within the last 24 hours. How many SELECT queries were executed within the last 30 minutes?</li>
-        <li>Calculate your age in days.</li>
-
+        <li>Find out when your user was created.</li>
+        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
+        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
+        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
+        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
+        <li>Find out when the hard disk was accessed most.</li>
+        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
     </ol>
 </section>
 
+
+<script src="./js/exercises.js"></script>
     
 </body>
 </html>

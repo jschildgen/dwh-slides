@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Warehousing - Exercise Sheet 4</title>
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
 </head>
@@ -12,31 +12,42 @@
     <header>
         <div>
         <div>
-            <b>Data Warehousing - SS 2022</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Exercise Sheet 4 (2022-04-20/22/25)</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Exasol System Tables</h1>
-    <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
-    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
+    <h1>Exercise 0: Connecting to the Database</h1>
+    
+    <p>On the OTH Exasol database, a user and a schema is created for you based on your email address. The IP address is <code>194.95.108.54</code> and your username, password (case-sensitive!) and schema is generated with the following expression based on your ELO email address:<br><code>upper(replace(substr(email, 0, instr(email, '@')-1),'.','_'))</code><br>Example: When your email address is <code>peter1.smith-miller@example.com</code>, then your username, password, and schema is <code>PETER1_SMITH-MILLER</code><br>
+    Change your password with<br><code>ALTER USER "YOUR_USERNAME" IDENTIFIED BY "new_pw" REPLACE "OLD_PW";</code></p>
+
+    <p>When you solve this exercise sheet on your local database, create a new schema, e.g. <code>CREATE SCHEMA IF NOT EXISTS dwh_project;</code></p>
+    
+</section>
+
+<section>
+    <h1>Exercise 1: Data Modelling</h1>
+    <p>In this exercise, you will plan a data warehouse schema for your project.<br>
+        In a later exercise, you will load data from different sources into that schema.</p>
+        <p>Write down your commands and save your solutions (e.g., the ME/R model as an image file). You will need it in the next workbook for challenge 3.<br>
+        
     <ol>
-        <li>Find out when your user was created.</li>
-        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
-        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
-        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
-        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
-        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
-        <li><code>EXA_DB_SIZE_%</code> shows object-count values. These are the number of database objects (schemas, tables, views, ...) at that point in time. Find out the top 5 hours where this value increased the most.</li>
+        <li>Draw an ME/R Model for your scenario. What is the fact relationship? Which dimensions are hierarchical? Use a pen and a paper, or draw on a tablet, or use a drawing tool. You do not need put all attributes in the diagram, only the most important ones.</li>
+        <li>For each measure, which data type, range, and aggregation type (FLOW, STOCK, VPU) do they have?</li>
+        <li>Map your model to a relational star schema by writing <code>CREATE TABLE</code> commands to create a star schema in your database. Which ones are the dimension tables, which one is the fact table? Do not create a dimension table for the date dimension. Simply store dates/timestamps as <code>DATE</code> or <code>TIMESTAMP</code> values directly in the fact table. Please use identical column names for foreign-keys (e.g. sales(market_id) and markets(market_id)). Also here: Is it really necessary to have all attributes of your sources? Think of which descriptive attributes in dimension tables and which measures you need and which of them you can throw away.</li>
+        <li>Insert two example rows in each of your tables.</li>
+        <li>Transform your star schema (including the data) into a snowflake schema with <code>CREATE TABLE</code> and <code>INSERT INTO sf_... SELECT</code> commands. Use a prefix <code>sf_</code> for the new tables (e.g., <code>sf_markets</code>). You can use the <code>IDENTITY</code> option to automatically generate unique primary-key values: <code>my_id INT INDENTITY</code></li>
+        <li>Discuss pros and cons of the star and snowflake schema and decide which one you will use for your project. For now, keep both and do not drop tables and do not delete your example data.</li>
     </ol>
 </section>
 
-
+<script src="./js/exercises.js"></script>
     
 </body>
 </html>
