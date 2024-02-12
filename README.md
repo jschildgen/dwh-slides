@@ -1,4 +1,4 @@
-# mdc-slides
+# dwh-slides
 
 Lecture slides for Data Warehousing.
 
