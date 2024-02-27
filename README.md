@@ -1,7 +1,8 @@
-# mdc-slides
+# dwh-slides
 
-Lecture slides for modern database concepts.
+Lecture slides for Data Warehousing.
 
+Documentation: https://github.com/jschildgen/db-slides/
 
 ## License
 
