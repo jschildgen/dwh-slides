@@ -624,6 +624,28 @@ ORDER BY bonus_points DESC;</code></pre>
 							</section>
 
 							<section>
+								<h3><code>LAG</code> and <code>LEAD</code></h3>
+								<p class="small">Access the value of the previous or next row.</p>
+								<p class="small" style="margin-top: -2mm;"><code>LAG(expression [,offset [,default_value]])<br>OVER ([PARTITION BY ...] ORDER BY ...)</code></p>
+								<pre style="margin-top: -2mm;"><code class="sql">SELECT sales_timestamp, sales_date, price,
+LAG(price) OVER (ORDER BY sales_date) AS previous_price,
+LEAD(price) OVER (ORDER BY sales_date) AS next_price
+FROM sales ORDER BY sales_timestamp;</code></pre>
+
+								<table class="small" style="margin-top: -2mm;">
+
+									<tr>
+										<th>sales_timestamp</th><th>price</th><th>previous_price</th><th>next_price</th>
+									</tr>
+									<tr><td>2014-03-16 01:12:41</td><td>2.712,74</td><td>-</td><td>16.771,88</td></tr>
+									<tr><td>2014-03-17 14:41:48</td><td>16.771,88</td><td>2.712,74</td><td>14.818,57</td></tr>
+									<tr><td>2014-03-18 08:00:05</td><td>14.818,57</td><td>16.771,88</td><td>-</td></tr>
+								</table>
+
+								<aside class="notes"><code>LAG</code> and <code>LEAD</code> can be used as window functions in combination with <code>ORDER BY</code> (optionally also <code>PARTITION BY</code>). It provides us the value in a specific column of the previous (<code>LAG</code>) or next row (<code>LEAD</code>) with respect to the <code>ORDER BY</code> criterion. The offset parameter can be used to get the upper-next value, for example (default offset is 1). When there are no more rows, the default_value is taken (default: NULL).</aside>
+							</section>
+
+							<section>
 								<h3>Statistical Aggregation Functions</h3>
 
 								<p class="small">In SQL:2003, new aggregation functions were introduced:</p>
