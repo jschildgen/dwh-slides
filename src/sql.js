@@ -16,31 +16,80 @@
  *
  * By Johannes Schildgen, 2019
  */
+
+var useExternalDatabase = false;
+
+function dbquery (query, tx, success, error) {
+        $.post({ url: "sqlproxy.php",
+               data: {stmt: query, engine: tx.engine},
+               async: false,
+               success: function (result) {
+                       if (success) {
+                               console.log(query);
+                               var data = JSON.parse(result).data;
+                               var errmsg = JSON.parse(result).error;
+                               if (data) {
+                                       rows = { item : function (i) { return data[i]; }, length: data.length };
+                                       success(tx, { rows : rows });
+                               }
+                               if (error && errmsg) {
+                                       error(tx, { message : errmsg });
+                               }
+                       }
+               }
+        });
+}
+
+function openExternalDatabase (dbname, arg2, arg3, arg4) {
+        ret = {};
+
+        ret.transaction = function (fun) {
+                tx = {};
+                tx.executeSql = function(query, arg2, success, error) {
+                        dbquery(query, tx, success, error);
+                }
+                fun(tx);
+        }
+
+        return ret;
+}
+
+if (typeof openDatabase === "function" && useExternalDatabase !== true) {
+        openDB = openDatabase;
+} else {
+        openDB = openExternalDatabase;
+}
+
  
 var SQLPlugin = (function(){
     
     if( window.Reveal ) Reveal.registerKeyboardShortcut( 'CTRL + Enter', 'Execute SQL Query' );
 
-	return {
-		init: function() {        
-            db = create_db();
+        return {
+                init: function() {        
+            db = openDB("SQL", "1", "SQL", 5*1024*1024);
+            //create_db(db, null);
+            document.querySelectorAll('[data-sql-init]').forEach(function(item) {
+                 create_db(db, item.getAttribute('data-sql-engine'));
+            });
+            
             document.querySelectorAll('.sql,.hlsql').forEach(function(item) {
                 if(get_result_element(item) == null
                    || item.classList.contains('dont_execute_sql')) { return; }
-                execute_query(item.innerText, get_result_element(item));
+                execute_query(item.innerText, item.getAttribute('data-sql-engine'), get_result_element(item));
                 item.addEventListener('keydown', function (e) {
                     if (e.ctrlKey && e.keyCode==13) { // 13 is enter
-                      execute_query(item.innerText, get_result_element(this));
+                      execute_query(item.innerText, item.getAttribute('data-sql-engine'), get_result_element(this));
                 }});
             });
 
             document.querySelectorAll('[data-sql-query]').forEach(function(item) {
-                var pk = item.getAttribute('data-sql-pk') != undefined ? item.getAttribute('data-sql-pk').split(',').map(function(e) { return e.trim() }) : [];
+                var pk = item.getAttribute('data-sql-pk') != undefined ? item.getAttribute('data-sql-pk').split(',').map(function(e) { return e.trim().toLowerCase() }) : [];
                 var tablename = item.getAttribute('data-sql-tablename') != undefined ? item.getAttribute('data-sql-tablename') : null;
-                execute_query(item.getAttribute('data-sql-query'), item, pk, tablename);
+                execute_query(item.getAttribute('data-sql-query'), item.getAttribute('data-sql-engine'), item, pk, tablename);
             });
-		}
-	}
+                }
+        }
 
 })();
 
@@ -66,17 +115,10 @@ function errorFunction(tx, e) {
   alert(e.message);
 }
 
-function create_db() {
-    
-    db = openDatabase("DWH", "1", "DWH", 5*1024*1024);
-    
+function create_db(db, engine) {
     db.transaction(function(tx) {
-        query = function(sql) { 
-            onError = function(tx, e) {
-                alert(e.message+"\n"+sql);
-            }
-            tx.executeSql(sql, [], null, onError); 
-        }
+        tx.engine = engine;
+        query = tx.executeSql;
         query("DROP TABLE IF EXISTS dim_date");
         query("CREATE TABLE dim_date (date_id INTEGER PRIMARY KEY AUTOINCREMENT, d_date date, d_year int, d_month int, d_week int, d_yearmonth char(7), holiday boolean)");
         query("INSERT INTO dim_date (d_date, holiday) VALUES('2022-01-01', true)");
@@ -137,21 +179,18 @@ function create_db() {
         query("INSERT INTO bestellungen_positionen VALUES(101, 18, 10)");
         query("INSERT INTO bestellungen_positionen VALUES(102, 91, 1)");
         query("INSERT INTO bestellungen_positionen VALUES(103, 17, 1)");*/
-
-
     });
     
-    
-    
-    return db
+    return db;
 }
 
 
-function execute_query(query, res_element, pk=[], tablename = null) {
+function execute_query(query, engine, res_element, pk=[], tablename = null) {
     db.transaction(function(tx) {
+        tx.engine = engine;
         tx.executeSql(query, [], function(tx, results) {
             if(results.rows.length == 0) { // empty result set
-                res_element.innerHTML = '- empty result set -';
+                res_element.innerHTML = '- leere Ergebnismenge -';
                 return;
             }
 
@@ -165,7 +204,7 @@ function execute_query(query, res_element, pk=[], tablename = null) {
 
             //header
             for(var column in header) {
-                if(pk.indexOf(column)>-1) { column = '<u>'+column+'</u>'; }
+                if(pk.indexOf(column.toLowerCase())>-1) { column = '<u>'+column+'</u>'; }
                 html += '<th style="padding-top:0px;">'+column+'</th>';
             }
 

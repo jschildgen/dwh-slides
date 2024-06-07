@@ -23,37 +23,38 @@
     </header>
 
     <div style="padding-top: 2.5cm;">
-    <div style="background-color: gainsboro;">
-        <p><b>You will need some of your answers and queries from this exercise sheet for the next submission (Challenge 3). It is recommended to work on the OTH Exasol database.</b></p>
-    </div>
-    </div>
+        <div style="background-color: gainsboro;">
+            <p><b>In the next workbook (Challenge 4), there will only some short questions about this exercise sheet. You need to write a few words about how you performed your data integration and data cleaning, and you need to write down a <code>MERGE</code> command.</b></p>
+        </div>
+        </div>
 
 <section>
-    <h1>Exercise 1: Schema Integration</h1>
-    
-    <p>In the previous exercise sheet, you created a star and a snowflake schema for your data-warehouse project. Now, decide how your final schema will look and perform a schema integration.</p>
+    <h1>Exercise 1: Data Integration</h1>
+    <p>This exercise is the continuation of the previous exercise sheet. Make sure that you have a staging area with tables that contain data from different sources (Sheet 4, Exercises 1.3 and 2) and empty tables in your integrated schema (Sheet 4, Exercise 1.6).</p>
+        
+    <p></p>
+
     <ol>
-        <li>Inspect the schema of the data that you want to import. For example: If you want to import data from CSV files, open the files in a text editor (not in Excel!) to see its attributes, value formats (date/number formats, ...), and properties (column-separation symbol, ...). A good text editor also shows you which encoding is used (e.g., UTF-8) and which line ending (LF (Unix), CRLF (Windows), CR(Mac)). Write down those details, you need them later in your IMPORT command.</li>
-        <li>Do the same for at least one more data source which.</li>
-        <li>Prepare your staging area in Exasol: For each data source (e.g., for each file), create a table in the Exasol database with the same attributes as in your input data. Of course, you can skip the attributes that you never need.</li>
-        <li>Which forms of heterogeneity exist between two of your data sources (technical, data model, semantical, syntactical, schematic, and/or structural)? Only list a few and give examples.</li>
-        <li>Perform a schema matching between the two schemas (e.g., on a piece of paper). Which attributes from the one data source correspond with which attributes from the other data source?</li>
-        <li>As a last step, you should create an integrated schema in your Exasol database. This is a schema (multiple tables) that can store data from all your data sources. You can use your solution from the previous exercise sheet (your star or snowflake schema) for this, and - if necessary - extend or adjust it. As a result, you will have the final version of your integrated schema. Write down the <code>CREATE TABLE</code> commands to create the schema. Do not yet fill the tables with data.</li>
+        <li>In which of your source tables do you have errors or duplicates in your data? For those, add a column <code>error_info</code> of type <code>VARCHAR(2000)</code>.</li>
+        <li>For each of your individual source tables (not cross-table!), find out whether there are duplicate rows (rows describing the same real-world entity). For the matching rows, set the error code to an appropriate error message.</li>
+        <li>Which other errors are there? Set appropriate error messages to the erroneous rows.</li>
+        <li>Now perform entity-matching across multiple source tables. For each row in one source table, find matching rows in the other table, using (a) equal join, (b) similarity join with a Levenshtein less than an appropriate threshold, (c) similarity join using Soundex. For each approach, write down the number of rows that find a match.</li>
+        <li>Which entities find a match with Levenshtein that do not find a match with Soundex and vice versa? Are there false positives (match found but it shouldn't be a match)? Are there false negatives (it should be a match but no match was found)?</li>
+        <li>Choose an appropriate matching method (equal join, Levenshtein, or Soundex) to integrate the data from the source tables into the target table.</li>
+        <li>Also integrate the rows that only appear in one of the source tables in the target table.</li>
+        <li>Integrate all other data also in your DWH schema. Skip the erroneous rows (or fix the errors somehow). Perform entity matching, data integration, deduplication, data scrubbing, data cleaning, and normalization.</li>
     </ol>
-    
+
+<p>Remark: Most tasks on this exercise sheet are made for String values in your data. These values are typically in your dimension tables. Examples: city names, person names, song titles, product names, categories, ... For numeric data, you can only check for errors (are the values in a meaningful range, outlier detection, ...). For dates and timestamps (and strings/numbers where suitable), convert them into a homogeneous form. Depending on your topic, some of the tasks from this exercise sheet make sense, others don't. Decide which data transformations and error handlings you can do and how.</p>
 </section>
 
 <section>
-    <h1>Exercise 2: IMPORT</h1>
-    <ol>
-        <li>Write down Exasol <code>IMPORT</code> commands to import data from your data sources into your staging area. If your data is not in CSV format, it can be a good idea to write a little Python program that outputs CSV files (e.g. a converter from JSON to CSV, or a tool that accesses an API and stores the data in a CSV file). At the end of your <code>IMPORT</code> command, write: <code>ERRORS INTO error_tbl REJECT LIMIT UNLIMITED;</code> (drop the table error_tbl if it is already there). Exasol will write errors that happen during the import process into that table.</li>
-        <li>Inspect your target tables and the error table (both with <code>LIMIT 50</code> or so). When there are errors, try to fix them, truncate the target table again and re-import the data.</li>
-        <li>When you are fine with your result, count for each of your tables in the staging area, how many rows are in these tables?</li>
-    </ol>
-
+    <h1>Exercise 2: MERGE</h1>
+    <p>Extend your ETL job by writing a MERGE command. MERGE is a combination of INSERT, UPDATE, and DELETE. Use it to insert rows from source tables from your staging area into target tables that are not there yet, and update those rows which already exist in the target table. You can also use multiple MERGE commands to integrate data from different source tables into the same target table.</p>
 </section>
 
 <script src="./js/exercises.js"></script>
+
     
 </body>
 </html>

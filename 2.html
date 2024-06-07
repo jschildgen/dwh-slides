@@ -60,11 +60,27 @@
 									<div class="fragment">
 									<h4>Deployment options:</h4>
 									<ul class="small">
-										<li>On-premise: Community Edition (free), Exasol One, Enterprise Cluster</li>
+										<li>On-premise: Single Host, Cluster, Docker</li>
 										<li>Cloud: AWS, Azure, Google Cloud Platform, Exacloud</li>
 									</ul>
 								</div>
 								<aside class="notes">Exasol is the winner of the TPC-H benchmark. This benchmark consists of business-orientated ad-hoc queries and concurrent data modifications on a large dataset.</aside>
+							</section>
+
+							<section>
+								<h3>Dockerized Version of Exasol</h3>
+								<p class="small">Free version for testing purposes that allows up to 10 GiB of Raw Data.</p>
+								<pre><code class="bash">docker run --name exasoldb -p 127.0.0.1:9563:8563 --detach \
+--privileged --stop-timeout 120 -v exa_volume:/exa \
+exasol/docker-db:latest</code></pre>
+								<p class="small">Exasol DB runs on <code>localhost:9563</code>
+
+								<h4>Start Container</h4>
+								<pre><code class="bash">sudo docker start exasoldb</code></pre>
+
+								<h4>Stop Database and Stop Container</h4>
+								<pre><code class="bash">sudo docker exec -ti exasoldb dwad_client stop-wait DB1
+sudo docker stop exasoldb</code></pre>
 							</section>
 
 							<section>
@@ -194,24 +210,6 @@
 							</div>
 
 								<aside class="notes">Each block is stored in a master segment on one node and additionally on a neighbor's node's slave segment. A reserve node does not store any data and is inactive most of the time. But when a node fails (e.g. the second node in this picture), the reserve node can copy the data from node 3's slave segments and node 1's master-segments. The copying process runs in the background so that the database downtime only a few seconds. When the failed node is back again, it will be the new reserve node.</aside>
-							</section>
-
-							<section>
-								<h3>EXAClusterOS</h3>
-								<p class="small">Exasol's own operation system (based on Linux).</p>
-								<ul class="small">
-									<li>easy installation</li>
-									<li>easy administration via web interface EXAoperation</li>
-									<li>automatic failover mechanism</li>
-									<li>backup functionality
-										<ul>
-											<li>local backups on archive volumns</li>
-											<li>remote backups on file server or Amazon S3 bucket</li>
-										</ul>
-									</li>
-								</ul>
-
-								<aside class="notes">Exasol can be installed on a cluster via an ISO image (USB-Stick, network book, VMware, ...). During the installation, the MAC addresses of all other cluster nodes are configured so that the cluster installation is fully automated.</aside>
 							</section>
 
 							<section>
@@ -388,6 +386,25 @@ SELECT * FROM t;   -- 2023-01-31 22:59:11.123</code></pre>
 </div>
 <aside class="notes"><code>trunc</code> rounds down a date or timestamp to the last full hour (<code>'HH'</code>), month (<code>'MM')</code>, Monday (<code>'IW'</code> ), ...</aside>
 		</section>
+
+		<section>
+			<h3>JSON Functions</h3>
+			<pre style="width:100%"><code class="sql">CREATE TABLE people(json VARCHAR(2000000));
+INSERT INTO people VALUES ('{"id":1,
+"name":{"firstname":"Jane", "lastname":"Miller"},
+"hobbies":["tennis","board games"]}');
+SELECT json IS JSON FROM people;                        -- true</code></pre>
+
+<h4 style="font-size: 80%;"><code>json_value(json, path)</code></h4>
+<pre style="width:100%"><code class="sql">SELECT json_value(json,'$.id') FROM people;             -- 1
+SELECT json_value(json,'$.name.firstname') FROM people; -- Jane
+SELECT json_value(json,'$.hobbies[0]') FROM people;     -- tennis</code></pre>
+
+<h4 style="font-size: 80%;"><code>json_extract(json, path) EMITS (col type, ...)</code></h4>
+<pre style="width:100%"><code class="sql">SELECT json_extract(json, '$.id', '$.hobbies#') 
+       EMITS (id INT, hobby VARCHAR(5000)) FROM people;</code></pre>
+<span data-sql-query="select 1 as id, 'tennis' as hobby union select 1, 'board games'"></span>
+</section>
 
 		<section>
 			<h3>Row Numbering</h3>

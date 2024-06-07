@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Data Warehousing - Exercise Sheet %%%EX_NO%%%</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Exercise Sheet %%%EX_NO%%% (%%%EX_DATES%%%)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Exercise 1: Exasol System Tables</h1>
+    <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
+    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
+    <ol>
+        <li>Find out when your user was created.</li>
+        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
+        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
+        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
+        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
+        <li>Find out when the hard disk was accessed most.</li>
+        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
+    </ol>
+</section>
+
+
+<script src="./js/exercises.js"></script>
+    
+</body>
+</html>

@@ -22,19 +22,100 @@
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Exasol System Tables</h1>
-    <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
-    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
+    <h1>Exercise 1: Presentation, Peer-Review (Challenge 1 and 2)</h1>
+    <p>Submission Deadline: 18.04.2024 11:30</p>
     <ol>
-        <li>Find out when your user was created.</li>
-        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
-        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
-        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
-        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
-        <li>Find out when the hard disk was accessed most.</li>
-        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
+        <li><b>Choose a presentation slot in ELO.</b></li>
+        <li>Prepare a short presentation to present your project idea. <b>Duration: 4-5 minutes.</b></li>
+        <li>You can present in <b>English or German</b>.</li>
+        <li>You can use any presentation tool to create your presentation (PowerPoint, Canva, LaTeX, reveal.js, ...).</li>
+        <li>Create your presentation with care. It will be graded with points. Create high-class content, but be compact. Before you submit, read everything again and improve.</li>
+        <li><b>Write your name on the first slide and in the file name!</b></li>
+        <li><b>Upload your presentation file in ELO before the deadline.</b> Upload it as <b>PDF</b>.</li>
+        <li>The PDF will be shared within ELO to three other students for review (challenge 2).</li>
+        <li>You can present your PDF presentation on the professor's notebook, so you do not need to use your own notebook.</li>
+        <li><b>Please attend all other presentations within your 90-minute slot.</b></li>
+        <li>For three of the other presentations within your slot, you need to write a peer review (challenge 2).</li>
+        <li><b>Fill out the peer review form after the presentation</b> and before the deadline for challenge 2 (April 29).</li>
+        <li>You will receive the points and feedback for your presentation from the other students and the professor, as well as points for your feedback, a few days after the deadline for challenge 2.</li>
+        <li>See exercise 2 for project criteria and content of your presentation.</li>
     </ol>
 </section>
+
+<section style="page-break-inside:avoid; padding-top: 2.5cm">
+    <h1>Exercise 2: Your DWH Project</h1>
+    <p>During this semester, you will work on an individual project: your data-warehousing scenario. You will integrate data from different data sources into an Exasol database, model and create your own data warehouse, perform an Extract-Transform-Load process (ETL), and analyze and visualize your data.</p>
+    <p><b>Rules:</b>
+    <ul>
+        <li>Work on your own. Do not copy solutions from other students, chatbots, or the internet.</li>
+        <li>It's important that all data that you want to integrate is freely available on the web (or produced by you).</li>
+        <li>Prefer numeric and time-related data sets. Do not focus on text analytics, and do not analyze images, audio, or video data. </li>
+        <li>Think big, but not too big: it's not necessary to integrate many gigabytes of data.</li>
+    </ul>
+    
+    <p>When you submit your presentation, you agree with the rules and confirm that you will solve all challenges on your own.</p>
+
+    <p>Now it's your turn: Which kind of data do you want to load into your data warehouse? Which kind of analytics do you want to do? Why and for whom is this important? These and more questions, you will shortly answer in your presentation.</p>
+
+    <ol>
+        <li><b>Title</b> - Give your scenario a meaningful and promising title.</li>
+        <li><b>Description</b> - Describe your scenario shortly.</li>
+        <li><b>Relevance</b> - Why is your topic relevant?</li>
+        <li><b>Main Data Source(s)</b> - Where do you get the data from?</li>
+        <li><b>Data Format</b> - How you can access your data (API, download files, ...). What data format does the data have (CSV, JSON, ...)</li>
+        <li><b>Schema</b> - Name one or more entity types and their main attributes.</li>
+        <li><b>Additional Data Sources</b> - Which other data sources can be useful to integrate? Why are they useful for your scenario?</li>
+        <li><b>Size</b> - Guess how big the data will be that you store in your data warehouse (DWH).</li>
+        <li><b>Dimensions</b> - Data in a data warehouse is multi-dimensional. Temporal data is described with the "When?"-dimension, and geodata with the "Where?"-dimension. Which dimensions does your data have? Describe them with a question word (e.g. Who?) and a noun (e.g., Customer). Is your data temporal (related to time) and/or geo-spatial (related to geo locations (positions on Earth))?</li>
+        <li><b>Queries</b> - Which typical queries (in spoken language, not SQL) can be sent to your DWH?</li>
+        <li><b>Newspaper Headline</b> - Write an amazing newspaper headline about what your approach could have found out: "A researcher at the Regensburg University of Applied Sciences found out that ..."</li>
+        <li><b>You</b> - Why are you so emotionally invested in this topic? What is the reason why you chose it? How are you personally involved with this topic?</li>
+    </ol>
+</section>
+
+
+<section style="padding-top: 2.5cm">
+    <div style="page-break-inside:avoid;">
+    <h1>Example</h1>
+    <p>This is an example project. Just for inspiration, it is not complete and not perfect. Mind that this example solution is in text-only form. When you create presentation slides, of course, you do not write such long sentences on your slides.</p>
+    
+    <ol>
+        <li><b>Title</b> - Kitty-Door Analysis - Which cats want to enter our house? When and why?</li>
+        <li><b>Description</b> - For three years, we have had three camera- and AI-based kitty doors in our house. They do only open for our three cats and no foreign cats. Furthermore, they recognize whether a cat has a mouse or a bird in their mouth. In that case, they do not let the cat in. In this project, I will import the data that I collected during the last 3 years, enrich it with auxiliary data, and perform analytics on when cats want to enter or leave the house. </li>
+        <li><b>Relevance</b> - AI-based cat doors are the future, but they are very expensive. Analysis can help to find optimal positions where cat doors should be installed in houses. With our analytics, we want to reduce the number of mice, birds, and foreign cats entering our house. Furthermore, we want to find out as much about our cat's behavior and how to reduce heating costs caused by kitty doors.</li>
+        <li><b>Main Data Source(s)</b> - The main data source are the files collected on my own Raspberry Pi which is connected to our kitty-door cameras. On the Raspberry Pi, the open-source software "Calgonte Kitty-Door AI" uses machine learning to classify and label camera images and controls the door. All events are logged in a large log file.</li>
+        <li><b>Data Format</b> - The log files produced by the Calgonte Kitty-Door AI software are in CSV format.</li>
+        <li><b>Schema</b>
+<pre><code>KittyDoorEvent ( 
+ timestamp, 
+ door_id, 
+ access_granted,  -- boolean 
+ cat_id,          -- or NULL
+ exception,       -- 'bird', 'mouse', ...
+)</code></pre></li>
+        <li><b>Additional Data Sources</b><br>
+            - Weather data: Do cats leave or enter the house when it rains? Does the outside temperature influence the cat's behavior? 
+            <br>- Cat health data: Our cats have a smart collar that measures and logs the cat's body temperature. Does the body temperature correlate with the cat's behavior?
+            <br>- Smart-home and calendar data: Our smart home logs a lot of events, e. g. when the light is turned on or when the garage door opens. This data can be used to find correlations. Do those events or specific calendar events make the cats come home?
+        <li><b>Size</b> - 5 MB kitty-door log data + 45 MB additional data = 50 MB</li>
+        </ol>
+        </div>
+        <div style="page-break-inside:avoid; padding-top: 2.5cm">
+        <ol start="10">
+        <li><b>Dimensions</b><br>
+            When: The timestamp when the event happened; 
+            <br>Who: Which Cat
+            <br>Where: Which kitty-door</li>
+        <li><b>Queries</b><br>
+            - For every hour of the day, how many cats successfully enter and leave the house, and how many times was access denied?
+            <br>- For every cat, find out the typical times of the day when the can leaves and enters the house.
+            <br>- Find out, which cat prefers which kitty doors.</li>
+        <li><b>Newspaper Headline</b> - A Researcher at Regensburg University of Applied Sciences Found out that cats can predict rain with 99% Accuracy by coming inside long before it starts to rain.</li>
+        <li><b>You</b> - We have cats.</li>
+    </ol>
+    </div>
+</section>
+
 
 
 <script src="./js/exercises.js"></script>

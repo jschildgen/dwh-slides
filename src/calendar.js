@@ -29,12 +29,14 @@ var CalendarPlugin = (function(){
 													break;
 								}
 
+								var end_date = item.getAttribute('data-calendar-end');
+
 								var colors = {
 									"red" : item.getAttribute('data-calendar-red') == null ? [] : item.getAttribute('data-calendar-red').split(","),
 									"yellow" : item.getAttribute('data-calendar-yellow') == null ? [] : item.getAttribute('data-calendar-yellow').split(","),
 									"green" : item.getAttribute('data-calendar-green') == null ? [] : item.getAttribute('data-calendar-green').split(","),
-									"blue" : item.getAttribute('data-calendar-blue') == null ? [] : item.getAttribute('data-calendar-blue').split(","),
 									"orange" : item.getAttribute('data-calendar-orange') == null ? [] : item.getAttribute('data-calendar-orange').split(","),
+									"blue" : item.getAttribute('data-calendar-blue') == null ? [] : item.getAttribute('data-calendar-blue').split(","),
 									"gray" : item.getAttribute('data-calendar-gray') == null ? [] : item.getAttribute('data-calendar-gray').split(",")
 								}
 								var monthName = monthNames[date.getMonth()];
@@ -84,6 +86,11 @@ var CalendarPlugin = (function(){
 									html += '<td'+classinfo+'>';
 									html += newDate.getDate();
 									html += '</td>';
+
+									if(newDate.getDate() == end_date) {
+										html += '</tr>';
+										break;
+									}
 									
 									if(newDate.getDay() == 5) {  // Friday
 										html += '</tr>';

@@ -22,27 +22,27 @@
     <hr>
     </header>
 <section style="padding-top: 2.5cm">
+    <h1>Exercise 1A: Exasol (OTH Database)</h1>
+    <p>We will use the Exasol database in almost all exercise sheets. You can set up a local database (see Exercise 1B), or use the OTH Exasol server. When working on CIP pool computers, please use the OTH database. When working from home, you a VPN connection to the OTH network is required.</p>
+    <ol>
+        <li>If you do not have the SQL client <a href="https://www.dbeaver.io" target="_blank">DBeaver</a> on your PC, install it.</li>
+        <li>Set up a connection to the OTH Exasol database. The connection string is <code>10.127.0.33</code>.</li>
+        <li>On the OTH Exasol database, a user and a schema is created for you based on your email address. Your username, password (case-sensitive!) and schema is generated with the following expression based on your ELO email address:<br><code>upper(replace(substr(email, 0, instr(email, '@')-1),'.','_'))</code><br>Example: When your email address is <code>peter1.smith-miller@example.com</code>, then your username, password, and schema is <code>PETER1_SMITH-MILLER</code><br>
+        <li>Change your password with<br><code>ALTER USER "YOUR_USERNAME" IDENTIFIED BY "new_pw" REPLACE "OLD_PW";</code></li>
+        <li>When you connect for the first time, the connection will fail. In the error message, you see the fingerprint of the server. Add the fingerprint to the connection string: <code>10.127.0.33/...</code></li>
+    </ol>
+</section>
+
+<section>
     <h1>Exercise 1A: Exasol (Local installation)</h1>
-    <p>We will use the Exasol database in almost all exercise sheets. In this exercise sheet, you set up and connect to an Exasol database (or use the OTH Exasol DB, see Exercise 1B).</p>
-    <p>Exasol cannot simply be installed on Windows/Linux/MacOS. You have to install VirtualBox, VMWare or another VM player (or use Docker) and import the OVA image that you can download from the <a href="https://www.exasol.com" target="_blank">Exasol website</a> (do not install Exasol via the ISO file!). You need a lot of free disk space and more than 4 GB RAM. If you do not want to install Exasol on your machine, work on exercise 1B instead.</p>
+    <p>Exasol can be installed locally by using Docker: <a href="https://github.com/exasol/docker-db" target="_blank">https://github.com/exasol/docker-db</a> You need a lot of free disk space and more than 4 GB RAM. If you do not want to install Exasol on your machine, work on exercise 1A instead.</p>
+    <p><code>docker run --name exasoldb -p 127.0.0.1:9563:8563 --detach --privileged --stop-timeout 120 -v exa_volume:/exa exasol/docker-db:latest</code></p>
     <ol>
         <li>Download the Exasol database image (OVA file) and import it into VirtualBox. Then start the VM.</li>
         <li>If you do not have the SQL client <a href="https://www.dbeaver.io" target="_blank">DBeaver</a> on your PC, install it.</li>
         <li>Set up a connection to your Exasol database (connection details are shown in the VM).</li>
         <li>Download and unzip the retail_mini.zip from ELO. Open retail_mini.sql in DBeaver and take a look at the create table commands to inform yourself what the dataset is about.</li>
         <li>Edit the file paths on all <code>IMPORT</code> commands. Then execute all commands - but not all together, one statement after the other to better see whether it worked! If you use the OTH database, the tables and the data are already there.</li>
-        
-        
-
-    </ol>
-</section>
-
-<section style="">
-    <h1>Exercise 1B: Exasol (OTH Database)</h1>
-    <p>When working on CIP pool computers, please use the OTH database. When working from home, you a VPN connection to the OTH network is required.</p>
-    <ol>
-        <li>If you do not have the SQL client <a href="https://www.dbeaver.io" target="_blank">DBeaver</a> on your PC, install it.</li>
-        <li>Set up a connection to the OTH Exasol database. The connection string is <code>194.95.108.54</code>, user and password: <code>STUDENT</code> </li>
     </ol>
 </section>
 
@@ -81,7 +81,21 @@ group by 1 order by 1;
         </li>
         <li>Take a look in the system table <code>EXA_SQL_LAST_DAY</code>. It shows statistics about all SQL queries that were sent to the database within the last 24 hours. How many SELECT queries were executed within the last 30 minutes? Execute the command <code>FLUSH STATISTICS;</code> before, to refresh the statistical system tables.</li>
         <li>Calculate your age in days.</li>
+    </ol>
+</section>
 
+<section style="page-break-inside: avoid; padding-top: 2.5cm">
+    <h1>Exercise 3: Exasol System Tables</h1>
+    <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
+    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
+    <ol>
+        <li>Find out when your user was created.</li>
+        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
+        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
+        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
+        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
+        <li>Find out when the hard disk was accessed most.</li>
+        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
     </ol>
 </section>
 

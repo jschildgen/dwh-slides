@@ -21,21 +21,27 @@
     </div>
     <hr>
     </header>
-<section style="padding-top: 2.5cm">
-    <h1>Exercise 1: Your DWH Project</h1>
-    <p>Submission Deadline: 09.05.2023 23:59</p>
-    <p>In ELO, you find the Workbook file for Challenge 1.</p>
+
+    <div style="padding-top: 3cm;">
+        <div style="background-color: gainsboro;">
+            <p><b>You will need the answers and queries from this exercise sheet for the next submission (Challenge 3). Write down your commands and save your solutions (e.g., a photo of your ME/R model as an image file). It is recommended to work on the OTH Exasol database (see Exercise Sheet 1).</b></p>
+        </div>
+        </div>
+
+<section>
+    <h1>Exercise 1: Data Modelling</h1>
+    <p>In this exercise, you will plan a data warehouse schema for your project.<br>
+        In a later exercise, you will load data from different sources into that schema.</p>
+        
     <ol>
-        <li>Fill out the workbook using a Markdown editor (e.g., Zettlr)</li>
-        <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
-        <li>For each table on which you have access, list the table name, the raw-object size, mem-object size and compute the compression ratio (the higher the better).</li>
-        <li>For each weekday (Monday, Tuesday, ...), compute the average idle time of the database.</li>
-        <li>List the 5 top hours within a week (e.g., on Tuesdays 15:00 - 16:00) when most users are connected to the database.</li>
-        <li>Find out when the hard disk was accessed most.</li>
-        <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
+        <li>Draw an ME/R Model for your scenario. What is the fact relationship? Which dimensions are hierarchical? Use a pen and a paper, or draw on a tablet, or use a drawing tool. You do not need put all attributes in the diagram, only the most important ones.</li>
+        <li>For each measure, which data type, range, and aggregation type (FLOW, STOCK, VPU) do they have?</li>
+        <li>Map your model to a relational star schema by writing <code>CREATE TABLE</code> commands to create a star schema in your database. Which ones are the dimension tables, which one is the fact table? Do not create a dimension table for the date dimension. Simply store dates/timestamps as <code>DATE</code> or <code>TIMESTAMP</code> values directly in the fact table. Please use identical column names for foreign-keys (e.g. sales(market_id) and markets(market_id)). Also here: Is it really necessary to have all attributes of your sources? Think of which descriptive attributes in dimension tables and which measures you need and which of them you can throw away.</li>
+        <li>Insert two example rows in each of your tables.</li>
+        <li>How would a snowflake schema look for your scenario?</li>
+        <li>Discuss pros and cons of the star and snowflake schema and decide which one you will use for your project. You can also use a combination of both.</li>
     </ol>
 </section>
-
 
 <script src="./js/exercises.js"></script>
     

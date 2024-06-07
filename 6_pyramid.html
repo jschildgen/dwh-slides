@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>DWH - Chapter 6 - Visualizations</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName( "head" )[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+			</script>
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h2>Data Warehousing</h2>
+                    <h4 style="text-align:center">&nbsp;</h4>
+                    <h3 style="font-size: 140%">Chapter 6: Visualizations</h3>
+										<h3>&nbsp;</h3>
+                    <h4 style="text-align:center">&nbsp;<br>&nbsp;</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-80px;">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-80px; box-shadow:none">
+                </section>
+                
+								<section>
+									<h3>Business Intelligence (BI)</h3>
+									<div style="position: absolute; top: 140px; right:-20px;"><img src="img/6_pyramid/sales.png" style="width: 12cm;" class="noborder"></div>
+									<p class="small">Strategies and technologies to access and analyze business information.</p>
+									<ul class="small">
+										<li>reporting</li>
+										<li>dashboard development</li>
+										<li>data mining</li>
+										<li>predictive analytics</li>
+										<li>...</li>
+									</ul>
+									<p class="small">&Rightarrow; support business decision-making</p>
+									<div class="fragment">
+										<h4>BI Tools:</h4>
+										<ul class="small">
+											<li>Tableau</li>
+											<li>Microsoft Power BI</li>
+											<li>Qlik</li>
+											<li>MicroStrategy</li>
+											<li>Pyramid</li>
+											<li>...</li>
+										</ul>
+									</div>
+									<aside class="notes">The goal of BI is getting insights into data to support business decisions. </aside>
+								</section>
+
+								<section>
+									<h3>Pyramid</h3>
+									<img src="img/6_pyramid/pyramid.png" alt="Pyramid" class="stretch">
+									<aside class="notes">Pyramid is a comprehensive business intelligence (BI) platform that empowers organizations to discover, analyze, and visualize their data for better decision-making. It provides a unified environment for data modeling, data exploration, and reporting, making it a versatile tool for business intelligence and analytics.</aside>
+								</section>
+
+								<section>
+									<h3>Pyramid: Modules</h3>
+									<p style="position: absolute; top: 2cm; left: 5mm;">
+										<img src="img/6_pyramid/pyramid_modules.png" style="height: 15cm">
+									</p>
+									<div style="position: absolute; left: 8cm; width: 70%">
+										<p class="small"><b>Model:</b> Connect, clean, mashup, enrich data from multiple sources (files, DBs, ...).</p>
+										<p class="small" style="margin-top: 10mm"><b>Discover:</b> Create visualizations.</p>
+										<p class="small" style="margin-top: 15mm"><b>Formulate:</b> Custom columns, scripts, visuals, ...</p>
+										<p class="small" style="margin-top: 12mm"><b>Present:</b> Create, layout, and design interactive dashboards.</p>
+										<p class="small" style="margin-top: 10mm"><b>Publish:</b> Create reports and publications for distribution.</p>
+										<p class="small" style="margin-top: 12mm"><b>Illustrate:</b> Design infographics to enhance presentations and publications.</p>
+									</div>
+								</section>
+
+								<section>
+									<h3>Model <i class="fa-solid fa-database yellow"></i> </h3>
+									<div style="position: absolute; top: 80px; right:-20px;"><img src="img/6_pyramid/retail_model_flow.png" style="width: 11cm;" class="noborder"></div>
+									<p class="small">Prepare, transform, structure data for analysis.</p>
+									<ul class="small" style="width: 13cm;">
+										<li>How to import, prepare, transform data from sources?</li>
+										<li>Schema definition (tables, columns, data&nbsp;types, relationships)</li>
+										<li>Security definition (who gets access to the model?)</li>
+									</ul>
+									<div style="position: absolute; top: 350px; right:-20px;"><img src="img/6_pyramid/pyramid_model_wizard.png" style="width: 11cm;" class="noborder"></div>
+									<p class="small">Different ways how to create a model:</p>
+									<ul class="small" style="width: 13cm;">
+										<li>Smart Model (file upload)</li>
+										<li>Direct Model (to existing db, connection details need to be provided)</li>
+										<li>Model Lite (step-by-step wizard)</li>
+										<li>Model Pro (Advanced)</li>
+									</ul>
+								</section>
+
+								<section>
+									<h3>Model User Interface</h3>
+									<h4 style="margin-bottom: -4mm;">Direct Model</h4>
+									<p class="small">Directly connect to data source (e.g. Exasol DB); very limited!</p>
+
+									<h4 style="margin-bottom: 1mm;">Model Lite</h4>
+									<ul class="small">
+										<li>Data Flow: Data source &rightarrow; Pyramid In-Memory DB</li>
+									</ul>
+									<img src="img/6_pyramid/pyramid_model_types.png" alt="Model Types" class="noborder stretch" style="margin-top: -2mm;">
+									<aside class="notes">Using the &quot;Model Lite&quot; wizard, custom transformations can be made, and data can be combined from multiple sources. The data for the visualizations is materialized in Pyramid's in-memory database.</aside>
+								</section>
+
+								<section>
+									<h3>Data Modelling</h3>
+									<p class="small">When connecting to a data warehouse (e.g., an Exasol DB), the data is not physically copied to Pyramid, only the schema information.</p>
+									<img src="img/6_pyramid/pyramid_model_schema_display.png" alt="Schema Display" class="stretch noborder">
+									<aside class="notes">In the given example, we connect Pyramid to the RETAIL schema in an Exasol database. After selecting the tables, Pyramid automatically detects columns, data types, and relationships (based on equal column names). All this can be manually adjusted before saving the model. The relationships define how tables fit to each other, how they should be joined when querying.</aside>
+								</section>
+
+								<section>
+									<h3>Time Intelligence</h3>
+									<p class="small">Add date/time-related columns to the model that will help with time-related data analysis (not available in Direct Model).</p>
+									<div class="columns">
+										<div>
+											<p style="font-size: 14pt; margin-bottom:-3mm">Click on table and blue icon on date/time column.</p>
+											<img src="img/6_pyramid/time_intelligence_1.png" style="width: 180px;" alt="" class="noborder">
+										</div>
+										<div>&nbsp;</div>
+
+										<div>
+											<p style="font-size: 14pt; margin-bottom:-3mm">Click at &quot;Add Time Intelligence&quot;.</p>
+											<img src="img/6_pyramid/time_intelligence.png" style="width: 800px;" alt="" class="noborder">
+										</div>
+									</div>
+								</section>
+
+								<section>
+									<h3>Hierarchies</h3>
+									<p class="small">Construct different hierarchies amongst different columns by which users wants to analyze their data by.</p>
+									<img src="img/6_pyramid/hierarchies.png" alt="" class="stretch noborder">
+									<aside class="notes">As we added time intelligence, Pyramid automatically added two timestamp hierarchies.</aside>
+								</section>
+
+								<section>
+									<h3>Process Model</h3>
+									<div style="position: absolute; top: 0px; right:50px; font-size:230px"><img src="img/6_pyramid/process_model.png" style="width:4cm"></div>
+									<p class="small" style="width: 20cm">Executes data preparation steps, creates a database, publishes model definition. The definition is materialized (not the data).</p>
+									<img src="img/6_pyramid/process_model_1.png" class="noborder" style="width:12cm">
+									<aside class="notes">Under &quot;Reporting Action&quot;, a new Discovery can directly be created. By selecting &quot;None&quot;, the model is just processed and no new Discovery is created.</aside>
+								</section>
+
+								<section>
+									<h3>Discover <i class="fa-solid fa-chart-simple green"></i></h3>
+									<p class="small">Main interface in Pyramid to build visualizations, perform ad-hoc, interactive analytics, and create content for presentations and publications.</p>
+									<img src="img/6_pyramid/discover.png" class="noborder stretch">
+								</section>
+
+								<section>
+									<h3>Discover: Dimensions and Measures</h3>
+									<p style="position: absolute; right:5px; top: 50px">
+										<img src="img/6_pyramid/discover_dim_measures.png" style="width:5.5cm" class="noborder">
+									</p>
+									<p class="small">Right click on dimension / measure attribute:</p>
+									<ul class="small">
+										<li>Add to visualization</li>
+										<li>Aggregate dim. attribute: count, count distinct, min, max</li>
+										<li>Extract date part (year, ...)</li>
+										<li>Computations on measures (round, sum, variance, ...) </li>
+									</ul>
+								</section>
+
+								<section>
+									<h3>Ad-hoc Analysis</h3>
+									<ul class="small">
+										<li>Hierarchies can be expanded and collapsed</li>
+										<li>Drill down / up / to level (for hierarchical attributes)</li>
+										<li>Dice: fix attributes to a specific value</li>
+									</ul>
+									<img src="img/6_pyramid/discover_ad-hoc.png" class="noborder stretch">
+
+									<aside class="notes">When we click drill down on the state Bavaria, we see all cities in Bavaria. When we click dice on the date 2014-06-07, and then Markets / Cities, then we see the sales per city on that day.</aside>
+								</section>
+
+								<section>
+									<h3>Maps</h3>
+									<div style="position: absolute; right:5px; top:120px"><img src="img/6_pyramid/geo_lon_lat.png" class="noborder" style="width: 300px;"></div>
+									<p class="small">Bubble Maps, Shape Maps, and Heat Maps can be created using ...</p>
+									<ul class="small">
+										<li>longitude and latitude attributes</li>
+										<li>city or country attribute (GeoCode) <img src="img/6_pyramid/geo_city.png" class="noborder" style="vertical-align: sub; margin-top: -5mm;"></li>
+										<li>GeoCode in Model (generates longitude/latitude attributes)</li>
+									</ul>
+									<img src="img/6_pyramid/geocode.png" class="noborder">
+								</section>
+
+
+								
+			</div>
+		</div>
+
+		<script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+		<script src="lib/chart.min.js"></script>
+		<script src="plugins/revealjs-chart.js"></script>
+		
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+				<script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>
