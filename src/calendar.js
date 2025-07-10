@@ -86,9 +86,9 @@ var CalendarPlugin = (function(){
 									html += '<td'+classinfo+'>';
 									html += newDate.getDate();
 									html += '</td>';
-
+									
 									if(newDate.getDate() == end_date) {
-										html += '</tr>';
+										html += '</tr>'; 
 										break;
 									}
 									

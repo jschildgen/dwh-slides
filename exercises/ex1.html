@@ -34,11 +34,10 @@
 </section>
 
 <section>
-    <h1>Exercise 1A: Exasol (Local installation)</h1>
+    <h1>Exercise 1B: Exasol (Local installation)</h1>
     <p>Exasol can be installed locally by using Docker: <a href="https://github.com/exasol/docker-db" target="_blank">https://github.com/exasol/docker-db</a> You need a lot of free disk space and more than 4 GB RAM. If you do not want to install Exasol on your machine, work on exercise 1A instead.</p>
     <p><code>docker run --name exasoldb -p 127.0.0.1:9563:8563 --detach --privileged --stop-timeout 120 -v exa_volume:/exa exasol/docker-db:latest</code></p>
     <ol>
-        <li>Download the Exasol database image (OVA file) and import it into VirtualBox. Then start the VM.</li>
         <li>If you do not have the SQL client <a href="https://www.dbeaver.io" target="_blank">DBeaver</a> on your PC, install it.</li>
         <li>Set up a connection to your Exasol database (connection details are shown in the VM).</li>
         <li>Download and unzip the retail_mini.zip from ELO. Open retail_mini.sql in DBeaver and take a look at the create table commands to inform yourself what the dataset is about.</li>
@@ -60,14 +59,14 @@ and m.city = 'Hannover'
 and s.sales_date between '2014-08-01' and '2014-08-31'
 group by 1 order by 1;
         -->
-        <li>In DBeaver, write <code>SELECT CURRENT_</code> and the auto-completion feature shows to you some variables. Guess what they deliver and try them out. Not all of the suggested variables are valid in Exasol.</li>
+        <!--<li>In DBeaver, write <code>SELECT CURRENT_</code> and the auto-completion feature shows to you some variables. Guess what they deliver and try them out. Not all of the suggested variables are valid in Exasol.</li>-->
         <li>Does the EAN column in the article table contain unique values? If not, return the duplicate EAN values.</li>
-        <li>Based on 4., find the articles that have a non-unique EAN value.</li>
-        <li>Exasol supports the clause <code>WITH INVALID ...</code>. Find out how to use this feature and solve problem 4 and 5 again.</li>
+        <li>Based on 3., find the articles that have a non-unique EAN value.</li>
+        <li>Exasol supports the clause <code>WITH INVALID ...</code>. Find out how to use this feature and solve problem 3 and 4 again.</li>
         <li>For each product group, generate a list (separated by a comma and a space) of articles in that product group that cost less than 0.50 EUR.<br>
         <table><tr><th>PRODUCT_GROUP_DESC</th><th>ARTICLES</th></tr>
         <tr><td>Frozen Foods</td><td>Baguettebrötchen, Brinkchen Semmel, ...</td></tr></table><br></li>
-        <li>The same query as 4., but this time include the prices in the list of artices in parentheses, and order the list from low to high prices.
+        <li>The same query as 6., but this time include the prices in the list of artices in parentheses, and order the list from low to high prices.
             <table><tr><th>PRODUCT_GROUP_DESC</th><th>ARTICLES</th></tr>
                 <tr><td>Frozen Foods</td><td>Lang.Multi 5 Squeezy Milcheis (0 EUR), ...</td></tr></table><br>
         </li>
@@ -87,7 +86,7 @@ group by 1 order by 1;
 <section style="page-break-inside: avoid; padding-top: 2.5cm">
     <h1>Exercise 3: Exasol System Tables</h1>
     <p>Take a look at the system tables in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code>. These queries are more interesting on the OTH database server than on your local system. Write SQL queries to answer the following questions:</p>
-    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects.</p>
+    <p>Remark: You can make the system tables (actually, they are views) in the schemas <code>SYS</code> and <code>EXA_STATISTICS</code> visible in DBeaver's schema explorer by editing your Exasol connection: General/Allgemein, Navigation View: Customize, Show System Objects. (or see screenshot below)</p>
     <ol>
         <li>Find out when your user was created.</li>
         <li>What's the total raw-object size (uncompressed) and mem-object size (compressed) of all tables where you have access.</li>
@@ -97,6 +96,7 @@ group by 1 order by 1;
         <li>Find out when the hard disk was accessed most.</li>
         <li>What was the average duration of all successful <code>SELECT</code> queries within the last 14 days?</li>
     </ol>
+    <img src="img/system_schemas.png" alt="System Tables in DBeaver" style="width: 12cm; max-width: 800px; height: auto;">
 </section>
 
 <script src="./js/exercises.js"></script>

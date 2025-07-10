@@ -44,7 +44,7 @@
 </section>
 
 <section>
-    <h1>Exercise 2: IMPORT</h1>
+    <h1 style="margin-top: -1mm; margin-bottom: -1mm;">Exercise 2: IMPORT</h1>
     <ol>
         <li>Write down Exasol <code>IMPORT</code> commands to import data from your data sources into your staging area. If your data is not in CSV format, it can be a good idea to write a little Python program that outputs CSV files (e.g. a converter from JSON to CSV, or a tool that accesses an API and stores the data in a CSV file). At the end of your <code>IMPORT</code> command, write: <code>ERRORS INTO error_tbl REJECT LIMIT UNLIMITED;</code> (drop the table error_tbl if it is already there). Exasol will write errors that happen during the import process into that table.</li>
         <li>Inspect your target tables and the error table (both with <code>LIMIT 50</code> or so). When there are errors, try to fix them, truncate the target table again and re-import the data.</li>

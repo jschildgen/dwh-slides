@@ -2,19 +2,19 @@ config = {
   "LECTURE": "Data Warehousing",
   "LECTURER": "Prof. Dr. Johannes Schildgen",
   "LECTURER_EMAIL": "johannes.schildgen@oth-regensburg.de",
-  "SEMESTER": "SS 2024"
+  "SEMESTER": "SS 2025"
 };
 
-START_DATE = "2024-04-04";
+START_DATE = "2025-04-02";
 
 data = {
-  "1": { "EX_DATES": mult_days(START_DATE,12,13) },
-  "2": { "EX_DATES": mult_days(add_weeks(START_DATE, 2), 4,5,6) },
-  "3": { "EX_DATES": mult_days(add_weeks(START_DATE, 4), 5,6) },
-  "4": { "EX_DATES": mult_days(add_weeks(START_DATE, 7), 5,6) },
-  "5": { "EX_DATES": mult_days(add_weeks(START_DATE, 9), 5,6) },
-  "6": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 5,6) },
-  "7": { "EX_DATES": mult_days(add_weeks(START_DATE, 9), 2) },
+  "1": { "EX_DATES": mult_days(START_DATE,6) },
+  "2": { "EX_DATES": mult_days(add_weeks(START_DATE, 2), 13) },
+  "3": { "EX_DATES": mult_days(add_weeks(START_DATE, 6), 6) },
+  "4": { "EX_DATES": mult_days(add_weeks(START_DATE, 7), 6) },
+  "5": { "EX_DATES": "2025-06-03" },
+  "6": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 6) },
+  "7": { "EX_DATES": "2025-06-25" },
   "8": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 2) },
   "9": { "EX_DATES": mult_days(add_weeks(START_DATE, 11), 2) },
   "10": { "EX_DATES": mult_days(add_weeks(START_DATE, 12), 2) },
